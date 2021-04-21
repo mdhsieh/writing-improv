@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Writing Improv</string>
+    <!-- buttons -->
+    <string name="practice">Practice</string>
+    <string name="go">Go</string>
+    <string name="submit">Submit</string>
+    <string name="menu">Menu</string>
+    <!-- labels -->
+    <string name="label_time">Time:</string>
+    <string name="label_prompt">Prompt:</string>
+    <string name="label_instructions">Use the image and the prompt below!</string>
+    <!-- hints-->
+    <string name="hint_time">Minutes</string>
+    <string name="hint_writing">Write here!</string>
+    <!--    content descriptions-->
+    <string name="desc_image">Image</string>
+    <string name="desc_time">Time</string>
+    <string name="desc_check">Check</string>
+    <string name="desc_cross">Cross</string>
+    <!--    error-->
+    <string name="error_minutes">Please enter a time!</string>
+    <string name="error_loading_image">Sorry, an error occurred. Please check your Internet connection.</string>
+    <!--    prompts-->
+    <string name="prompt_feel">How does this make you feel?</string>
+    <string name="prompt_story">What is the story behind this?</string>
+    <string name="prompt_mystery">Use genre: Mystery.</string>
+    <string name="prompt_action">Use genre: Action.</string>
+    <string name="prompt_thriller">Use genre: Thriller.</string>
+    <string name="prompt_comedy">Use genre: Comedy.</string>
+    <!--    other-->
+    <string name="timer_default">00:00</string>
+    <string name="out_of_time">Sorry, you ran out of time!</string>
+    <string name="on_time">Nice job, you did it!</string>
+
+</resources>

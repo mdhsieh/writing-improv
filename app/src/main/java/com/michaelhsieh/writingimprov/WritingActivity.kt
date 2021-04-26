@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso
  *
  * References:
  * https://codinginflow.com/tutorials/android/countdowntimer/part-1-countdown-timer
- * https://github.com/square/picasso/issues/1896
+ * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
 // private const val RAND_IMAGE_URL:String = "https://source.unsplash.com/random/800x800"
 private const val RAND_IMAGE_URL:String = "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
@@ -116,6 +116,8 @@ class WritingActivity : AppCompatActivity() {
         timerText.text = timeLeftFormatted
     }
 
+    // Update Provider to fix Picasso 504 timeout error on older device,
+    // example API 17 tablet
     private fun updateAndroidSecurityProvider(callingActivity: Activity) {
         try {
             ProviderInstaller.installIfNeeded(this)

@@ -36,6 +36,9 @@ dependencies {
     // load images
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // try update Android's security Provider, fix image load connection error
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

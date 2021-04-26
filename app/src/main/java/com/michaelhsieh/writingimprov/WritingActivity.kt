@@ -1,6 +1,6 @@
 package com.michaelhsieh.writingimprov
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -8,12 +8,13 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.security.ProviderInstaller
 import com.squareup.picasso.Callback
-import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
-import okhttp3.OkHttpClient
-import java.security.cert.X509Certificate
-import javax.net.ssl.*
+
 
 /**
  * Load random image and start countdown timer if loaded successfully
@@ -23,8 +24,7 @@ import javax.net.ssl.*
  * https://github.com/square/picasso/issues/1896
  */
 // private const val RAND_IMAGE_URL:String = "https://source.unsplash.com/random/800x800"
-private const val RAND_IMAGE_URL:String = "https://images.unsplash.com/photo-1618053448492-2b629c2c912c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
-// private const val RAND_IMAGE_URL:String = "http://source.unsplash.com/random/800x800"
+private const val RAND_IMAGE_URL:String = "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
 private const val TAG:String = "WritingActivity"
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_END_TIME:String = "endTime"
@@ -40,6 +40,8 @@ class WritingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_writing)
+
+        updateAndroidSecurityProvider(this)
 
         // Set the prompt
         val promptText = findViewById<TextView>(R.id.tv_prompt)
@@ -59,9 +61,6 @@ class WritingActivity : AppCompatActivity() {
         // Load the random image
         val image = findViewById<ImageView>(R.id.iv_image)
         Picasso.get().load(RAND_IMAGE_URL)
-        // Allow HTTP requests to fix Picasso 504 timeout error on older devices,
-        // example API 17 tablet
-        // getPicassoUnsafeCertificate(this).load(RAND_IMAGE_URL)
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {
@@ -117,44 +116,17 @@ class WritingActivity : AppCompatActivity() {
         timerText.text = timeLeftFormatted
     }
 
-    private fun getUnsafeOkHttpClient(): OkHttpClient {
-        // Create a trust manager that does not validate certificate chains
-        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-            override fun checkClientTrusted(
-                chain: Array<out X509Certificate>?,
-                authType: String?
-            ) {
-            }
-
-            override fun checkServerTrusted(
-                chain: Array<out X509Certificate>?,
-                authType: String?
-            ) {
-            }
-
-            override fun getAcceptedIssuers() = arrayOf<X509Certificate>()
-        })
-
-        // Install the all-trusting trust manager
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
-        // Create an ssl socket factory with our all-trusting manager
-        val sslSocketFactory = sslContext.socketFactory
-
-        return OkHttpClient.Builder()
-            .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
-            .hostnameVerifier(HostnameVerifier { _, _ -> true })
-            .build()
-    }
-
-    // add client to Picasso
-    private fun getPicassoUnsafeCertificate(context: Context): Picasso {
-        val client = getUnsafeOkHttpClient()
-        Log.d(TAG, "got unsafe builder")
-        val picasso = Picasso.Builder(context).downloader(OkHttp3Downloader(client)).build()
-        picasso.isLoggingEnabled = true
-        Log.d(TAG, "got new picasso")
-        return picasso
+    private fun updateAndroidSecurityProvider(callingActivity: Activity) {
+        try {
+            ProviderInstaller.installIfNeeded(this)
+            Log.d(TAG, "Installed provider if needed")
+        } catch (e: GooglePlayServicesRepairableException) {
+            // Thrown when Google Play Services is not installed, up-to-date, or enabled
+            // Show dialog to allow users to install, update, or otherwise enable Google Play services.
+            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), callingActivity, 0)
+        } catch (e: GooglePlayServicesNotAvailableException) {
+            Log.e("SecurityException", "Google Play Services not available.")
+        }
     }
 
     // Keep timer running after configuration change, example on rotation

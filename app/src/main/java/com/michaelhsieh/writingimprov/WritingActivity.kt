@@ -25,9 +25,6 @@ import com.squareup.picasso.Picasso
  * https://codinginflow.com/tutorials/android/countdowntimer/part-1-countdown-timer
  * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
-private const val RAND_IMAGE_URL:String = "https://source.unsplash.com/random/800x800"
-// private const val RAND_IMAGE_URL:String = "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
-// private const val RAND_IMAGE_URL:String = "https://images.unsplash.com/photo-1617386564901-be7cfcaa4c60?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
 private const val TAG:String = "WritingActivity"
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_END_TIME:String = "endTime"
@@ -65,9 +62,9 @@ class WritingActivity : AppCompatActivity() {
 
         // Load the random image
         val image = findViewById<ImageView>(R.id.iv_image)
-        Picasso.get().load(RAND_IMAGE_URL)
+        Picasso.get().load(getRandomImageUrl())
                         // skips looking for image and storing it in the cache
-                        .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                        // .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {
@@ -136,6 +133,20 @@ class WritingActivity : AppCompatActivity() {
         } catch (e: GooglePlayServicesNotAvailableException) {
             Log.e("SecurityException", "Google Play Services not available.")
         }
+    }
+
+    /** Returns a random image URL. */
+    private fun getRandomImageUrl():String {
+        val imageUrls = arrayOf(
+            "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
+            "https://images.unsplash.com/photo-1617386564901-be7cfcaa4c60?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
+            "https://images.unsplash.com/photo-1618085579752-d666c8ad12b6?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
+            "https://images.unsplash.com/photo-1619440482145-3133e2abb77d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
+            "https://images.unsplash.com/photo-1617393011273-1810cbe747ad?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
+        )
+        // generated random number from 0 to last index included
+        val randNum = (imageUrls.indices).random()
+        return imageUrls[randNum]
     }
 
     // Keep timer running after configuration change, example on rotation

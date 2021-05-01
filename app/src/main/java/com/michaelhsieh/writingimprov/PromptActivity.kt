@@ -55,7 +55,6 @@ class PromptActivity : AppCompatActivity() {
         )
         // generated random number from 0 to last index included
         val randNum = (promptArray.indices).random()
-        Log.d(TAG, promptArray[randNum])
         return promptArray[randNum]
     }
 }

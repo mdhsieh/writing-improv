@@ -13,9 +13,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
 import com.squareup.picasso.Callback
-import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
-
 
 /**
  * Load random image and start countdown timer if loaded successfully
@@ -41,8 +39,6 @@ class WritingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_writing)
 
-        Log.d(TAG, "onCreate")
-
         updateAndroidSecurityProvider(this)
 
         // Set the prompt
@@ -63,8 +59,6 @@ class WritingActivity : AppCompatActivity() {
         // Load the random image
         val image = findViewById<ImageView>(R.id.iv_image)
         Picasso.get().load(getRandomImageUrl())
-                        // skips looking for image and storing it in the cache
-                        // .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {

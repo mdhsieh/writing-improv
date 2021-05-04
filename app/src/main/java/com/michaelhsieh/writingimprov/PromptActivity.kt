@@ -19,14 +19,23 @@ class PromptActivity : AppCompatActivity() {
         const val KEY_PROMPT = "prompt"
     }
 
+    private lateinit var promptText:TextView
+
+    private lateinit var minutesInput:EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prompt)
 
-        val minutesInput = findViewById<EditText>(R.id.et_time)
+        promptText = findViewById(R.id.tv_prompt)
+        minutesInput = findViewById(R.id.et_time)
 
-        val promptText = findViewById<TextView>(R.id.tv_prompt)
-        promptText.text = createRandomPrompt()
+        if (savedInstanceState != null) {
+            promptText.text = savedInstanceState.getString(KEY_PROMPT)
+            minutesInput.setText(savedInstanceState.getString(KEY_MINUTES))
+        } else {
+            promptText.text = createRandomPrompt()
+        }
 
         val goButton = findViewById<Button>(R.id.btn_go)
         goButton.setOnClickListener {
@@ -41,6 +50,13 @@ class PromptActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    // Save prompt and minutes on configuration change, example screen rotate
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_PROMPT, promptText.text.toString())
+        outState.putString(KEY_MINUTES, minutesInput.text.toString())
     }
 
     /** Generates a random prompt using String resources. */

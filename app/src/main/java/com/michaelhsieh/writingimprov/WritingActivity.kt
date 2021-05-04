@@ -136,7 +136,7 @@ class WritingActivity : AppCompatActivity() {
             "https://images.unsplash.com/photo-1617386564901-be7cfcaa4c60?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
             "https://images.unsplash.com/photo-1618085579752-d666c8ad12b6?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
             "https://images.unsplash.com/photo-1619440482145-3133e2abb77d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
-            "https://images.unsplash.com/photo-1617393011273-1810cbe747ad?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
+            "https://images.unsplash.com/photo-1618053448492-2b629c2c912c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
         )
         // generated random number from 0 to last index included
         val randNum = (imageUrls.indices).random()

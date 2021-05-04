@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso
 private const val TAG:String = "WritingActivity"
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_END_TIME:String = "endTime"
+private const val KEY_IMAGE_URL:String = "imageUrl"
 
 class WritingActivity : AppCompatActivity() {
 
@@ -34,6 +35,8 @@ class WritingActivity : AppCompatActivity() {
     private var endTime:Long = 0
     private lateinit var timerText: TextView
     private lateinit var countDownTimer: CountDownTimer
+
+    private lateinit var imageUrl:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +60,17 @@ class WritingActivity : AppCompatActivity() {
         timerText = findViewById(R.id.tv_timer)
 
         // Load the random image
+        if (savedInstanceState != null) {
+            val savedUrl = savedInstanceState.getString(KEY_IMAGE_URL)
+            if (savedUrl != null) {
+                imageUrl = savedUrl
+            }
+        } else {
+            imageUrl = getRandomImageUrl()
+        }
+
         val image = findViewById<ImageView>(R.id.iv_image)
-        Picasso.get().load(getRandomImageUrl())
+        Picasso.get().load(imageUrl)
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {
@@ -144,10 +156,13 @@ class WritingActivity : AppCompatActivity() {
     }
 
     // Keep timer running after configuration change, example on rotation
+    // Save image URL
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
         outState.putLong(KEY_END_TIME, endTime)
+
+        outState.putString(KEY_IMAGE_URL, imageUrl)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

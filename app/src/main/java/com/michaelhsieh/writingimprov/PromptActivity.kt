@@ -21,18 +21,18 @@ class PromptActivity : AppCompatActivity() {
 
     private lateinit var promptText:TextView
 
-    private lateinit var minutesInput:EditText
+    //private lateinit var minutesInput:EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prompt)
 
         promptText = findViewById(R.id.tv_prompt)
-        minutesInput = findViewById(R.id.et_time)
+        val minutesInput = findViewById<EditText>(R.id.et_time)
 
         if (savedInstanceState != null) {
             promptText.text = savedInstanceState.getString(KEY_PROMPT)
-            minutesInput.setText(savedInstanceState.getString(KEY_MINUTES))
+            //minutesInput.setText(savedInstanceState.getString(KEY_MINUTES))
         } else {
             promptText.text = createRandomPrompt()
         }
@@ -56,7 +56,7 @@ class PromptActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_PROMPT, promptText.text.toString())
-        outState.putString(KEY_MINUTES, minutesInput.text.toString())
+        //outState.putString(KEY_MINUTES, minutesInput.text.toString())
     }
 
     /** Generates a random prompt using String resources. */

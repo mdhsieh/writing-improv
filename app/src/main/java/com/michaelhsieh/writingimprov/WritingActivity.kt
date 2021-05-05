@@ -1,9 +1,7 @@
 package com.michaelhsieh.writingimprov
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -125,13 +123,10 @@ class WritingActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                Log.d(TAG, "finished timer " + countDownTimer.toString())
                 intent = Intent(this@WritingActivity, OutOfTimeActivity::class.java)
                 startActivity(intent)
             }
         }.start()
-
-        Log.d(TAG, "started timer " + countDownTimer.toString())
 
     }
 
@@ -183,7 +178,6 @@ class WritingActivity : AppCompatActivity() {
 
         // cancel existing timer
         countDownTimer.cancel()
-        Log.d(TAG, "canceled timer " + countDownTimer.toString())
     }
 
     /**

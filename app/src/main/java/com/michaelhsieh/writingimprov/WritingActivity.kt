@@ -1,7 +1,9 @@
 package com.michaelhsieh.writingimprov
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -21,18 +23,25 @@ import com.squareup.picasso.Picasso
  * References:
  * https://source.unsplash.com/
  * https://codinginflow.com/tutorials/android/countdowntimer/part-1-countdown-timer
+ * https://www.youtube.com/watch?v=LMYQS1dqfo8
+ * https://www.youtube.com/watch?v=lvibl8YJfGo
  * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
 private const val TAG:String = "WritingActivity"
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_END_TIME:String = "endTime"
+//private const val KEY_TIMER_RUNNING:String = "timerRunning"
 private const val KEY_IMAGE_URL:String = "imageUrl"
+//private const val PREFS:String = "prefs"
 
 class WritingActivity : AppCompatActivity() {
+
+//    private var timerRunning:Boolean = false
 
     private var startTimeInMillis:Long = 0
     private var timeLeftInMillis:Long = startTimeInMillis
     private var endTime:Long = 0
+
     private lateinit var timerText: TextView
     private lateinit var countDownTimer: CountDownTimer
 
@@ -74,8 +83,10 @@ class WritingActivity : AppCompatActivity() {
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {
-                                // successfully loaded, start countdown timer
-                                startTimer()
+                                if (savedInstanceState == null) {
+                                    // successfully loaded, start countdown timer
+                                    startTimer()
+                                }
                                 //  hide progress bar
                                 progressBar.visibility = View.GONE
                             }
@@ -111,10 +122,16 @@ class WritingActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
+//                timerRunning = false
+                Log.d(TAG, "finished timer " + countDownTimer.toString())
                 intent = Intent(this@WritingActivity, OutOfTimeActivity::class.java)
                 startActivity(intent)
             }
         }.start()
+
+        Log.d(TAG, "started timer " + countDownTimer.toString())
+
+//        timerRunning = true
     }
 
     private fun updateCountDownText() {
@@ -154,6 +171,57 @@ class WritingActivity : AppCompatActivity() {
         val randNum = (imageUrls.indices).random()
         return imageUrls[randNum]
     }
+
+    override fun onStop() {
+        super.onStop()
+
+        // cancel existing timer
+        countDownTimer.cancel()
+        Log.d(TAG, "canceled timer " + countDownTimer.toString())
+    }
+
+    // Keep timer running after configuration change, example on rotation,
+    // and when user closes app
+//    override fun onStop() {
+//        super.onStop()
+//
+//        val prefs:SharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+//        val editor:SharedPreferences.Editor = prefs.edit()
+//
+//        editor.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
+////        editor.putBoolean(KEY_TIMER_RUNNING, timerRunning)
+//        editor.putLong(KEY_END_TIME, endTime)
+//
+//        editor.apply()
+//
+//        countDownTimer.cancel()
+//    }
+
+    // onStart() called after onCreate()
+//    override fun onStart() {
+//        super.onStart()
+//
+//        val prefs:SharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+//        // default val set to default starting time
+//        timeLeftInMillis = prefs.getLong(KEY_MILLIS_LEFT, startTimeInMillis)
+////        timerRunning = prefs.getBoolean(KEY_TIMER_RUNNING, false)
+//
+//        updateCountDownText()
+//
+//        if (timerRunning) {
+//            endTime = prefs.getLong(KEY_END_TIME, 0)
+//            timeLeftInMillis = endTime - System.currentTimeMillis()
+//
+//            if (timeLeftInMillis < 0) {
+//                timeLeftInMillis = 0
+////                timerRunning = false
+//                updateCountDownText()
+//            } else {
+//                startTimer()
+//            }
+//        }
+//
+//    }
 
     // Keep timer running after configuration change, example on rotation
     // Save image URL

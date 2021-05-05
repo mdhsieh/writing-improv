@@ -18,7 +18,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 /**
- * Load random image and start countdown timer if loaded successfully
+ * Load random image and start countdown timer if loaded successfully.
  *
  * References:
  * https://source.unsplash.com/
@@ -30,16 +30,14 @@ import com.squareup.picasso.Picasso
 private const val TAG:String = "WritingActivity"
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_END_TIME:String = "endTime"
-//private const val KEY_TIMER_RUNNING:String = "timerRunning"
 private const val KEY_IMAGE_URL:String = "imageUrl"
-//private const val PREFS:String = "prefs"
 
 class WritingActivity : AppCompatActivity() {
-
-//    private var timerRunning:Boolean = false
-
+    // countdown start time
     private var startTimeInMillis:Long = 0
+    // time left in the countdown
     private var timeLeftInMillis:Long = startTimeInMillis
+    // end time in milliseconds = current time in milliseconds + time left in countdown
     private var endTime:Long = 0
 
     private lateinit var timerText: TextView
@@ -83,6 +81,9 @@ class WritingActivity : AppCompatActivity() {
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {
+                                // If savedInstanceState is set,
+                                // then don't start a timer since it is already created
+                                // in onRestoreInstanceState()
                                 if (savedInstanceState == null) {
                                     // successfully loaded, start countdown timer
                                     startTimer()
@@ -110,7 +111,9 @@ class WritingActivity : AppCompatActivity() {
         }
     }
 
-    // Create a new countdown timer and start it
+    /**
+     * Create a new countdown timer and start it.
+     */
     fun startTimer() {
 
         endTime = System.currentTimeMillis() + timeLeftInMillis
@@ -122,7 +125,6 @@ class WritingActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-//                timerRunning = false
                 Log.d(TAG, "finished timer " + countDownTimer.toString())
                 intent = Intent(this@WritingActivity, OutOfTimeActivity::class.java)
                 startActivity(intent)
@@ -131,9 +133,11 @@ class WritingActivity : AppCompatActivity() {
 
         Log.d(TAG, "started timer " + countDownTimer.toString())
 
-//        timerRunning = true
     }
 
+    /**
+     * Update timer TextView.
+     */
     private fun updateCountDownText() {
         val minutes:Int = (timeLeftInMillis.toInt() / 1000) / 60
         val seconds:Int = (timeLeftInMillis.toInt() / 1000) % 60
@@ -143,8 +147,10 @@ class WritingActivity : AppCompatActivity() {
         timerText.text = timeLeftFormatted
     }
 
-    // Update Provider to fix Picasso 504 timeout error on older device,
-    // example API 17 tablet
+    /**
+     * Update Provider to fix Picasso 504 timeout error on older device,
+     * example API 17 tablet
+     */
     private fun updateAndroidSecurityProvider(callingActivity: Activity) {
         try {
             ProviderInstaller.installIfNeeded(this)
@@ -180,51 +186,14 @@ class WritingActivity : AppCompatActivity() {
         Log.d(TAG, "canceled timer " + countDownTimer.toString())
     }
 
-    // Keep timer running after configuration change, example on rotation,
-    // and when user closes app
-//    override fun onStop() {
-//        super.onStop()
-//
-//        val prefs:SharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-//        val editor:SharedPreferences.Editor = prefs.edit()
-//
-//        editor.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
-////        editor.putBoolean(KEY_TIMER_RUNNING, timerRunning)
-//        editor.putLong(KEY_END_TIME, endTime)
-//
-//        editor.apply()
-//
-//        countDownTimer.cancel()
-//    }
-
-    // onStart() called after onCreate()
-//    override fun onStart() {
-//        super.onStart()
-//
-//        val prefs:SharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-//        // default val set to default starting time
-//        timeLeftInMillis = prefs.getLong(KEY_MILLIS_LEFT, startTimeInMillis)
-////        timerRunning = prefs.getBoolean(KEY_TIMER_RUNNING, false)
-//
-//        updateCountDownText()
-//
-//        if (timerRunning) {
-//            endTime = prefs.getLong(KEY_END_TIME, 0)
-//            timeLeftInMillis = endTime - System.currentTimeMillis()
-//
-//            if (timeLeftInMillis < 0) {
-//                timeLeftInMillis = 0
-////                timerRunning = false
-//                updateCountDownText()
-//            } else {
-//                startTimer()
-//            }
-//        }
-//
-//    }
-
-    // Keep timer running after configuration change, example on rotation
-    // Save image URL
+    /**
+     * Keep time the same after configuration change, example on rotation,
+     * by saving time variables.
+     * The current timer is canceled in onStop() and
+     * variables will be used by a new CountDownTimer in onRestoreInstanceState().
+     *
+     * Also save image URL.
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
@@ -233,6 +202,9 @@ class WritingActivity : AppCompatActivity() {
         outState.putString(KEY_IMAGE_URL, imageUrl)
     }
 
+    /**
+     * Create and start a new CountDownTimer with saved times.
+     */
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 

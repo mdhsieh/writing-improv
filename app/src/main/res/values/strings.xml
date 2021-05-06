@@ -6,7 +6,7 @@
     <string name="submit">Submit</string>
     <string name="menu">Menu</string>
     <!-- labels -->
-    <string name="label_time">Time:</string>
+    <string name="label_time">Time (in minutes):</string>
     <string name="label_prompt">Prompt:</string>
     <string name="label_instructions">Use the image and the prompt below!</string>
     <!-- hints-->

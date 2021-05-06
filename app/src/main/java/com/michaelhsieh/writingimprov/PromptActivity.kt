@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 
@@ -20,24 +19,30 @@ class PromptActivity : AppCompatActivity() {
     }
 
     private lateinit var promptText:TextView
+    private lateinit var minutesText:TextView
+
+    private val MIN_MINUTES:Int = 1
+    private val MAX_MINUTES:Int = 3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prompt)
 
         promptText = findViewById(R.id.tv_prompt)
-        val minutesInput = findViewById<EditText>(R.id.et_time)
+        minutesText = findViewById(R.id.tv_time)
 
         if (savedInstanceState != null) {
             promptText.text = savedInstanceState.getString(KEY_PROMPT)
+            minutesText.text = savedInstanceState.getString(KEY_MINUTES)
         } else {
             promptText.text = getRandomPrompt()
+            minutesText.text = getRandomTime(MIN_MINUTES, MAX_MINUTES).toString()
         }
 
         val goButton = findViewById<Button>(R.id.btn_go)
         goButton.setOnClickListener {
             val intent = Intent(this, WritingActivity::class.java)
-            val minutes = minutesInput.text.toString()
+            val minutes = minutesText.text.toString()
             if (minutes.trim().isNotEmpty()) {
                 intent.putExtra(KEY_MINUTES, minutes.toInt())
                 intent.putExtra(KEY_PROMPT, promptText.text.toString())
@@ -53,6 +58,7 @@ class PromptActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_PROMPT, promptText.text.toString())
+        outState.putString(KEY_MINUTES, minutesText.text.toString())
     }
 
     /** Generates a random prompt using String resources. */
@@ -68,5 +74,13 @@ class PromptActivity : AppCompatActivity() {
         // generated random number from 0 to last index included
         val randNum = (promptArray.indices).random()
         return promptArray[randNum]
+    }
+
+    /** Generates a random integer time in minutes.
+     * @param min The minimum time limit
+     * @param max The maximum time limit
+     * @return A number from min to max, included */
+    private fun getRandomTime(min:Int, max:Int):Int {
+        return (min..max).random()
     }
 }

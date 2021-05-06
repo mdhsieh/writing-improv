@@ -155,7 +155,7 @@ class WritingActivity : AppCompatActivity() {
             // Show dialog to allow users to install, update, or otherwise enable Google Play services.
             GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), callingActivity, 0)
         } catch (e: GooglePlayServicesNotAvailableException) {
-            Log.e("SecurityException", "Google Play Services not available.")
+            Log.e(TAG, "Google Play Services not available.")
         }
     }
 

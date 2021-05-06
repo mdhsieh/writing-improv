@@ -31,7 +31,7 @@ class PromptActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             promptText.text = savedInstanceState.getString(KEY_PROMPT)
         } else {
-            promptText.text = createRandomPrompt()
+            promptText.text = getRandomPrompt()
         }
 
         val goButton = findViewById<Button>(R.id.btn_go)
@@ -56,7 +56,7 @@ class PromptActivity : AppCompatActivity() {
     }
 
     /** Generates a random prompt using String resources. */
-    private fun createRandomPrompt():String {
+    private fun getRandomPrompt():String {
         val promptArray = arrayOf(
             getString(R.string.prompt_feel),
             getString(R.string.prompt_story),

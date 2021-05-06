@@ -64,7 +64,7 @@
 
         <TextView
             android:id="@+id/tv_prompt"
-            android:layout_width="250dp"
+            android:layout_width="@dimen/prompt_width"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"

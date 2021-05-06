@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--use wrap_content in sw600dp = 600dp wide and bigger-->
+    <!--<item name="match_parent" format="integer" type="dimen">-1</item>-->
+    <item name="wrap_content" format="integer" type="dimen">-2</item>
+    <dimen name="prompt_width">250dp</dimen>
+</resources>

@@ -1,7 +1,7 @@
 package com.michaelhsieh.writingimprov
 
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -45,5 +45,19 @@ class MainActivityTest {
         onView(withId(R.id.btn_practice)).perform(click())
 
         onView(withId(R.id.scroll_view_prompt)).check(matches(isDisplayed()))
+    }
+
+    // go to PromptActivity, then go back to MainActivity
+    @Test
+    fun test_backPress_toMainActivity() {
+
+        onView(withId(R.id.btn_practice)).perform(click())
+
+        onView(withId(R.id.scroll_view_prompt)).check(matches(isDisplayed()))
+
+        pressBack()
+
+        onView(withId(R.id.main)).check(matches(isDisplayed()))
+
     }
 }

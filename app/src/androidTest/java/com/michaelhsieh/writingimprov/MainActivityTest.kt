@@ -3,8 +3,7 @@ package com.michaelhsieh.writingimprov
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,5 +16,25 @@ class MainActivityTest {
         val activityScenario = ActivityScenario.launch(MainActivity::class.java)
 
         onView(withId(R.id.main)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_visibility_practiceButton() {
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+
+        onView(withId(R.id.btn_practice))
+            .check(matches(isDisplayed()))
+
+        // same as above
+        /*onView(withId(R.id.btn_practice))
+            .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))*/
+    }
+
+    @Test
+    fun test_isPracticeButtonTextDisplayed() {
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+
+        onView(withId(R.id.btn_practice))
+            .check(matches(withText(R.string.practice)))
     }
 }

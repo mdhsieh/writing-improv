@@ -2,6 +2,7 @@ package com.michaelhsieh.writingimprov
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -24,10 +25,6 @@ class MainActivityTest {
 
         onView(withId(R.id.btn_practice))
             .check(matches(isDisplayed()))
-
-        // same as above
-        /*onView(withId(R.id.btn_practice))
-            .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))*/
     }
 
     @Test
@@ -36,5 +33,15 @@ class MainActivityTest {
 
         onView(withId(R.id.btn_practice))
             .check(matches(withText(R.string.practice)))
+    }
+
+    // go to PromptActivity when practice button clicked
+    @Test
+    fun test_navPromptActivity() {
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+
+        onView(withId(R.id.btn_practice)).perform(click())
+
+        onView(withId(R.id.scroll_view_prompt)).check(matches(isDisplayed()))
     }
 }

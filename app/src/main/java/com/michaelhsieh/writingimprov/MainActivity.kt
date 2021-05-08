@@ -9,11 +9,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val practiceButton = findViewById<Button>(R.id.btn_practice)
-        practiceButton.setOnClickListener {
-            val intent = Intent(this, PromptActivity::class.java)
-            startActivity(intent)
-        }
     }
 }

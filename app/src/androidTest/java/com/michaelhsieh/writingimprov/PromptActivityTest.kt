@@ -1,5 +1,7 @@
 package com.michaelhsieh.writingimprov
 
+import android.content.pm.ActivityInfo
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.test.espresso.Espresso
@@ -11,10 +13,20 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import org.hamcrest.Matcher
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+/**
+ * References:
+ * https://stackoverflow.com/questions/45597008/espresso-get-text-of-element
+ */
+
+private const val TAG:String = "PromptActivityTest"
+
+@RunWith(AndroidJUnit4ClassRunner::class)
 class PromptActivityTest {
 
     @get:Rule
@@ -45,6 +57,28 @@ class PromptActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    /**
+     * Check random time text and prompt text is the same after device rotation.
+     */
+    @Test
+    fun test_isTimeTextSameAfterRotation() {
+        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+        val timeText = getText(timeTextResult)
+        Log.d(TAG, "time test: " + timeText)
+
+        activityScenario.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+
+        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
     }
 
     @Test

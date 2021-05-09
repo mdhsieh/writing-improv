@@ -63,7 +63,7 @@ class PromptActivityTest {
      * Check random time text is the same after device rotation to landscape.
      */
     @Test
-    fun test_isTimeTextSameAfterRotation_landscape() {
+    fun test_isSameAfterRotation_landscape_timeText() {
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -88,7 +88,7 @@ class PromptActivityTest {
      * Check random time text is the same after device rotation to portrait.
      */
     @Test
-    fun test_isTimeTextSameAfterRotation_portrait() {
+    fun test_isSameAfterRotation_portrait_timeText() {
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

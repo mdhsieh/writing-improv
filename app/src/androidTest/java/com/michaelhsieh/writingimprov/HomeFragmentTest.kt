@@ -39,7 +39,7 @@ class HomeFragmentTest {
      * Go to PromptFragment when practice button clicked
      */
     @Test
-    fun test_navPromptActivity() {
+    fun test_navPromptFragment() {
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_practice)).perform(ViewActions.click())
 

@@ -27,6 +27,8 @@
     <string name="prompt_action">Use genre: Action.</string>
     <string name="prompt_thriller">Use genre: Thriller.</string>
     <string name="prompt_comedy">Use genre: Comedy.</string>
+    <!-- time left toast -->
+    <string name="time_left_secs">%1$d seconds left!</string>
     <!--    other-->
     <string name="timer_default">00:00</string>
     <string name="out_of_time">Sorry, you ran out of time!</string>

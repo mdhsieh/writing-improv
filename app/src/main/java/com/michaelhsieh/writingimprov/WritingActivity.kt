@@ -7,12 +7,14 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
 /**
@@ -91,7 +93,7 @@ class WritingActivity : AppCompatActivity() {
 
                             override fun onError(e: Exception?) {
                                 // display error message
-                                Toast.makeText(this@WritingActivity, R.string.error_loading_image, Toast.LENGTH_LONG).show()
+                                Toasty.error(this@WritingActivity, R.string.error_loading_image, Toast.LENGTH_LONG,true).show()
                                 Timber.e(e)
                                 //  hide progress bar
                                 progressBar.visibility = View.GONE
@@ -139,6 +141,23 @@ class WritingActivity : AppCompatActivity() {
         val timeLeftFormatted:String = String.format("%02d:%02d", minutes, seconds)
 
         timerText.text = timeLeftFormatted
+
+        // warn user when time is almost out
+
+        // time to display first info toast
+        val secsFirstToast = 30
+        // time to display second info toast and change text to red
+        val secsSecondToast = 10
+        if (minutes == 0 && seconds == secsFirstToast) {
+            Toasty.info(this@WritingActivity, getString(R.string.time_left_secs, seconds), Toast.LENGTH_LONG, true).show()
+        } else if (minutes == 0 && seconds == secsSecondToast) {
+            Toasty.info(this@WritingActivity, getString(R.string.time_left_secs, seconds), Toast.LENGTH_LONG, true).show()
+        }
+
+        // change countdown text to red
+        if (minutes == 0 && seconds <= secsSecondToast) {
+            timerText.setTextColor(ContextCompat.getColor(this@WritingActivity, R.color.errorColor))
+        }
     }
 
     /**

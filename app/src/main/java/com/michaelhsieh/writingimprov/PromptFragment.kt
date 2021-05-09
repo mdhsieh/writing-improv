@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import es.dmoral.toasty.Toasty
 
 /**
  * Displays question mark icon, random time limit text in minutes, random prompt text,
@@ -49,7 +50,7 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
                 intent.putExtra(KEY_PROMPT, promptText.text.toString())
                 startActivity(intent)
             } else {
-                Toast.makeText(this@PromptFragment.activity, R.string.error_minutes, Toast.LENGTH_LONG).show()
+                this@PromptFragment.activity?.let { it1 -> Toasty.info(it1, R.string.error_minutes, Toast.LENGTH_LONG, true).show() }
             }
 
         }

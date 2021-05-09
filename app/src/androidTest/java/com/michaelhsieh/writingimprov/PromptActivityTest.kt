@@ -60,10 +60,35 @@ class PromptActivityTest {
     }
 
     /**
-     * Check random time text and prompt text is the same after device rotation.
+     * Check random time text is the same after device rotation to landscape.
      */
     @Test
-    fun test_isTimeTextSameAfterRotation() {
+    fun test_isTimeTextSameAfterRotation_landscape() {
+        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        // get the current time text
+        val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+        val timeText = getText(timeTextResult)
+        Log.d(TAG, "time test: " + timeText)
+
+        // rotate to landscape
+        activityScenario.scenario.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+
+        // check if same
+        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
+    }
+
+    /**
+     * Check random time text is the same after device rotation to portrait.
+     */
+    @Test
+    fun test_isTimeTextSameAfterRotation_portrait() {
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -72,13 +97,15 @@ class PromptActivityTest {
         val timeText = getText(timeTextResult)
         Log.d(TAG, "time test: " + timeText)
 
+        // rotate to portrait
         activityScenario.scenario.onActivity {
-            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
+
     }
 
     @Test

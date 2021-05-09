@@ -28,7 +28,6 @@ import timber.log.Timber
  * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
-private const val KEY_END_TIME:String = "endTime"
 private const val KEY_IMAGE_URL:String = "imageUrl"
 
 class WritingActivity : AppCompatActivity() {
@@ -75,18 +74,20 @@ class WritingActivity : AppCompatActivity() {
             imageUrl = getRandomImageUrl()
         }
 
+        // If savedInstanceState is set,
+        // set time left to saved milliseconds
+        if (savedInstanceState != null) {
+            Timber.d("onCreate, savedInstanceState has value")
+            timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT)
+        } else {
+            Timber.d("onCreate, savedInstanceState is null")
+        }
+
         val image = findViewById<ImageView>(R.id.iv_image)
         Picasso.get().load(imageUrl)
                         .error(R.drawable.ic_error_outline_72)
                         .into(image, object : Callback {
                             override fun onSuccess() {
-                                // If savedInstanceState is set,
-                                // then don't start a timer since it is already created
-                                // in onRestoreInstanceState()
-                                if (savedInstanceState == null) {
-                                    // successfully loaded, start countdown timer
-                                    startTimer()
-                                }
                                 //  hide progress bar
                                 progressBar.visibility = View.GONE
                             }
@@ -191,11 +192,27 @@ class WritingActivity : AppCompatActivity() {
         return imageUrls[randNum]
     }
 
+    /**
+     * Create and start a new countdown timer
+     */
+    override fun onStart() {
+        super.onStart()
+
+        startTimer()
+
+        Timber.d("onStart, created and started timer")
+    }
+
+    /**
+     * Cancel existing timer
+     */
     override fun onStop() {
         super.onStop()
 
-        // cancel existing timer
         countDownTimer.cancel()
+
+        Timber.d("onStop, canceled existing timer")
+
     }
 
     /**
@@ -209,22 +226,9 @@ class WritingActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
-        outState.putLong(KEY_END_TIME, endTime)
 
         outState.putString(KEY_IMAGE_URL, imageUrl)
-    }
 
-    /**
-     * Create and start a new CountDownTimer with saved times.
-     */
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT)
-        endTime = savedInstanceState.getLong(KEY_END_TIME)
-        timeLeftInMillis = endTime - System.currentTimeMillis()
-        updateCountDownText()
-
-        startTimer()
+        Timber.d("onSaveInstanceState")
     }
 }

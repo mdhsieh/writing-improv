@@ -35,8 +35,8 @@ class HomeFragmentTest {
             .check(ViewAssertions.matches(ViewMatchers.withText(R.string.practice)))
     }
 
-    /** Go to PromptFragment when practice button clicked
-     *
+    /**
+     * Go to PromptFragment when practice button clicked
      */
     @Test
     fun test_navPromptActivity() {
@@ -48,8 +48,8 @@ class HomeFragmentTest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
-    /** Go to PromptFragment, then go back to HomeFragment
-     *
+    /**
+     * Go to PromptFragment, then go back to HomeFragment
      */
     @Test
     fun test_backPress_toHomeFragment() {

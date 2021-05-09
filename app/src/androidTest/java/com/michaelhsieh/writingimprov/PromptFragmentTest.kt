@@ -1,6 +1,5 @@
 package com.michaelhsieh.writingimprov
 
-import android.content.pm.ActivityInfo
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -25,19 +24,19 @@ import org.junit.runner.RunWith
  * https://stackoverflow.com/questions/45597008/espresso-get-text-of-element
  */
 
-private const val TAG:String = "PromptActivityTest"
+private const val TAG:String = "PromptFragmentTest"
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-class PromptActivityTest {
+class PromptFragmentTest {
 
 //    @get:Rule
-//    var activityRule: ActivityScenarioRule<MainActivity>
+//    val activityRule: ActivityScenarioRule<MainActivity>
 //            = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun test_isPromptActivityInView() {
 
-        val scenario = launchFragmentInContainer<PromptFragment>()
+        launchFragmentInContainer<PromptFragment>()
 
         Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -48,6 +47,7 @@ class PromptActivityTest {
      */
 //    @Test
 //    fun test_visibility_image_timeText_promptText() {
+//        launchFragmentInContainer<PromptFragment>()
 //
 //        Espresso.onView(ViewMatchers.withId(R.id.iv_image))
 //            .perform(ViewActions.scrollTo())
@@ -68,6 +68,9 @@ class PromptActivityTest {
      */
 //    @Test
 //    fun test_isSameAfterRotation_landscape_timeText_promptText() {
+//
+//        launchFragmentInContainer<PromptFragment>()
+//
 //        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
 //            .perform(ViewActions.scrollTo())
 //            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -101,6 +104,8 @@ class PromptActivityTest {
      */
 //    @Test
 //    fun test_isSameAfterRotation_portrait_timeText() {
+//        launchFragmentInContainer<PromptFragment>()
+//
 //        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
 //            .perform(ViewActions.scrollTo())
 //            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -126,40 +131,44 @@ class PromptActivityTest {
 //
 //    }
 
-//    @Test
-//    fun test_visibility_goButton() {
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
-//            .perform(ViewActions.scrollTo())
-//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-//    }
-//
-//    @Test
-//    fun test_isGoButtonTextDisplayed() {
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
-//            .check(ViewAssertions.matches(ViewMatchers.withText(R.string.go)))
-//    }
+    @Test
+    fun test_visibility_goButton() {
+        launchFragmentInContainer<PromptFragment>()
 
-    /** Go to WritingActivity when go button clicked
-     *
+        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    @Test
+    fun test_isGoButtonTextDisplayed() {
+        launchFragmentInContainer<PromptFragment>()
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+            .check(ViewAssertions.matches(ViewMatchers.withText(R.string.go)))
+    }
+
+    /**
+     * Go to WritingActivity when go button clicked
      */
-//    @Test
-//    fun test_navWritingActivity() {
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
-//            .perform(ViewActions.scrollTo())
-//            .perform(ViewActions.click())
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
-//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-//    }
+    @Test
+    fun test_navWritingActivity() {
+        launchFragmentInContainer<PromptFragment>()
 
-    /** Go to WritingActivity, then go back to PromptFragment
-     *
+        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    /**
+     * Go to WritingActivity, then go back to PromptFragment
      */
 //    @Test
 //    fun test_backPress_toHomeFragment() {
+//        launchFragmentInContainer<PromptFragment>()
 //
 //        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
 //            .perform(ViewActions.scrollTo())

@@ -72,12 +72,10 @@ class PromptActivityTest {
         // get current time text
         val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
         val timeText = getText(timeTextResult)
-        Log.d(TAG, "time text landscape: " + timeText)
 
         // get current prompt text
         val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
         val promptText = getText(promptTextResult)
-        Log.d(TAG, "prompt text landscape: " + promptText)
 
         // rotate to landscape
         activityScenario.scenario.onActivity {
@@ -106,11 +104,9 @@ class PromptActivityTest {
 
         val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
         val timeText = getText(timeTextResult)
-        Log.d(TAG, "time text portrait: " + timeText)
 
         val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
         val promptText = getText(promptTextResult)
-        Log.d(TAG, "prompt text portrait: " + promptText)
 
         // rotate to portrait
         activityScenario.scenario.onActivity {

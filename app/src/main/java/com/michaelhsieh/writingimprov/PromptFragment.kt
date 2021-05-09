@@ -8,8 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
-private const val TAG:String = "PromptFragment"
-
 /**
  * Displays question mark icon, random time limit text in minutes, random prompt text,
  * button to go to writing screen.

@@ -1,7 +1,6 @@
 package com.michaelhsieh.writingimprov
 
 import android.content.pm.ActivityInfo
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.test.espresso.Espresso
@@ -24,8 +23,6 @@ import org.junit.runner.RunWith
  * References:
  * https://stackoverflow.com/questions/45597008/espresso-get-text-of-element
  */
-
-private const val TAG:String = "PromptFragmentTest"
 
 @RunWith(AndroidJUnit4ClassRunner::class)
 class PromptFragmentTest {
@@ -175,9 +172,6 @@ class PromptFragmentTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        // extra back to close keyboard
-        Espresso.pressBack()
 
         Espresso.pressBack()
 

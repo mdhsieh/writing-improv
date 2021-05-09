@@ -52,6 +52,13 @@ dependencies {
     // update Android's security Provider to fix Picasso image load error
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
+    // log
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Navigation Component
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
 
@@ -64,8 +71,4 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidx_test"
     androidTestImplementation "androidx.test:core:$androidx_test"
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
-
-    // Navigation Component
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 }

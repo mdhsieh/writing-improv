@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import timber.log.Timber
 
 /**
  * Load random image and start countdown timer if loaded successfully.
@@ -25,7 +25,6 @@ import com.squareup.picasso.Picasso
  * https://www.youtube.com/watch?v=lvibl8YJfGo
  * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
-private const val TAG:String = "WritingActivity"
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_END_TIME:String = "endTime"
 private const val KEY_IMAGE_URL:String = "imageUrl"
@@ -93,7 +92,7 @@ class WritingActivity : AppCompatActivity() {
                             override fun onError(e: Exception?) {
                                 // display error message
                                 Toast.makeText(this@WritingActivity, R.string.error_loading_image, Toast.LENGTH_LONG).show()
-                                Log.e(TAG, "error loading image", e)
+                                Timber.e(e)
                                 //  hide progress bar
                                 progressBar.visibility = View.GONE
                             }
@@ -149,13 +148,13 @@ class WritingActivity : AppCompatActivity() {
     private fun updateAndroidSecurityProvider(callingActivity: Activity) {
         try {
             ProviderInstaller.installIfNeeded(this)
-            Log.d(TAG, "Installed provider if needed")
+            Timber.d("Installed provider if needed")
         } catch (e: GooglePlayServicesRepairableException) {
             // Thrown when Google Play Services is not installed, up-to-date, or enabled
             // Show dialog to allow users to install, update, or otherwise enable Google Play services.
             GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), callingActivity, 0)
         } catch (e: GooglePlayServicesNotAvailableException) {
-            Log.e(TAG, "Google Play Services not available.")
+            Timber.e("Google Play Services not available.")
         }
     }
 

@@ -10,6 +10,7 @@ Clone this repository, open the cloned folder in Android Studio, and run the app
 
 ## Libraries
 - [Unsplash Source](https://source.unsplash.com/)
+- [Timber](https://github.com/JakeWharton/timber)
 
 ## AndroidX
 - Espresso UI Testing

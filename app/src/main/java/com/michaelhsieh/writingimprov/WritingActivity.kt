@@ -77,10 +77,7 @@ class WritingActivity : AppCompatActivity() {
         // If savedInstanceState is set,
         // set time left to saved milliseconds
         if (savedInstanceState != null) {
-            Timber.d("onCreate, savedInstanceState has value")
             timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT)
-        } else {
-            Timber.d("onCreate, savedInstanceState is null")
         }
 
         val image = findViewById<ImageView>(R.id.iv_image)
@@ -199,8 +196,6 @@ class WritingActivity : AppCompatActivity() {
         super.onStart()
 
         startTimer()
-
-        Timber.d("onStart, created and started timer")
     }
 
     /**
@@ -210,9 +205,6 @@ class WritingActivity : AppCompatActivity() {
         super.onStop()
 
         countDownTimer.cancel()
-
-        Timber.d("onStop, canceled existing timer")
-
     }
 
     /**
@@ -228,7 +220,5 @@ class WritingActivity : AppCompatActivity() {
         outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
 
         outState.putString(KEY_IMAGE_URL, imageUrl)
-
-        Timber.d("onSaveInstanceState")
     }
 }

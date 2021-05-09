@@ -138,6 +138,40 @@ class PromptActivityTest {
             .check(ViewAssertions.matches(ViewMatchers.withText(R.string.go)))
     }
 
+    /** Go to WritingActivity when go button clicked
+     *
+     */
+    @Test
+    fun test_navWritingActivity() {
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    /** Go to WritingActivity, then go back to PromptActivity
+     *
+     */
+    @Test
+    fun test_backPress_toHomeFragment() {
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.pressBack()
+
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+    }
+
     /**
      * Get the text of a TextView.
      * Used to check if a TextView value is the same after rotation.

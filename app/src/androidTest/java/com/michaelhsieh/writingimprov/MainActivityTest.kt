@@ -13,12 +13,11 @@ import org.junit.runner.RunWith
 class MainActivityTest {
 
     @get:Rule
-    var activityScenario: ActivityScenarioRule<MainActivity>
+    var activityRule: ActivityScenarioRule<MainActivity>
             = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun test_isActivityInView() {
-
         onView(withId(R.id.main)).check(matches(isDisplayed()))
     }
 

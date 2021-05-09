@@ -11,7 +11,7 @@ import org.junit.Test
 class HomeFragmentTest {
 
     @get:Rule
-    var activityScenario: ActivityScenarioRule<MainActivity>
+    var activityRule: ActivityScenarioRule<MainActivity>
             = ActivityScenarioRule(MainActivity::class.java)
 
     @Test

@@ -51,14 +51,14 @@ class WritingActivity : AppCompatActivity() {
 
         // Set the prompt
         val promptText = findViewById<TextView>(R.id.tv_prompt)
-        promptText.text = intent.getStringExtra(PromptActivity.KEY_PROMPT)
+        promptText.text = intent.getStringExtra(PromptFragment.KEY_PROMPT)
 
         // Create progress bar so user knows image is loading
         val progressBar = findViewById<ProgressBar>(R.id.pb_loading_image)
         progressBar.visibility = View.VISIBLE
 
         // Set minutes of timer
-        val minutes = intent.getIntExtra(PromptActivity.KEY_MINUTES, 0)
+        val minutes = intent.getIntExtra(PromptFragment.KEY_MINUTES, 0)
         startTimeInMillis = minutes.toLong() * 60 * 1000
         timeLeftInMillis = startTimeInMillis
 

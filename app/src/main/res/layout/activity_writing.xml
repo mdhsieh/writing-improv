@@ -6,9 +6,14 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     tools:context=".WritingActivity">
+
+    <!--put focus on parent layout so EditText doesn't
+    automatically have focus and block other Views like image-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/tv_timer"

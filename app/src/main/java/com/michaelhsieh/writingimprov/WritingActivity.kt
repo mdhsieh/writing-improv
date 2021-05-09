@@ -1,6 +1,5 @@
 package com.michaelhsieh.writingimprov
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -8,10 +7,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.GooglePlayServicesUtil
-import com.google.android.gms.security.ProviderInstaller
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
@@ -20,12 +15,6 @@ import timber.log.Timber
 /**
  * Load random image and start countdown timer if loaded successfully.
  *
- * References:
- * https://source.unsplash.com/
- * https://codinginflow.com/tutorials/android/countdowntimer/part-1-countdown-timer
- * https://www.youtube.com/watch?v=LMYQS1dqfo8
- * https://www.youtube.com/watch?v=lvibl8YJfGo
- * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_IMAGE_URL:String = "imageUrl"
@@ -46,8 +35,6 @@ class WritingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_writing)
-
-        updateAndroidSecurityProvider(this)
 
         // Set the prompt
         val promptText = findViewById<TextView>(R.id.tv_prompt)
@@ -155,23 +142,6 @@ class WritingActivity : AppCompatActivity() {
         // change countdown text to red
         if (minutes == 0 && seconds <= secsSecondToast) {
             timerText.setTextColor(ContextCompat.getColor(this@WritingActivity, R.color.errorColor))
-        }
-    }
-
-    /**
-     * Update Provider to fix Picasso 504 timeout error on older device,
-     * example API 17 tablet
-     */
-    private fun updateAndroidSecurityProvider(callingActivity: Activity) {
-        try {
-            ProviderInstaller.installIfNeeded(this)
-            Timber.d("Installed provider if needed")
-        } catch (e: GooglePlayServicesRepairableException) {
-            // Thrown when Google Play Services is not installed, up-to-date, or enabled
-            // Show dialog to allow users to install, update, or otherwise enable Google Play services.
-            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), callingActivity, 0)
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            Timber.e("Google Play Services not available.")
         }
     }
 

@@ -35,7 +35,7 @@ class HomeFragmentTest {
             .check(ViewAssertions.matches(ViewMatchers.withText(R.string.practice)))
     }
 
-    /** Go to PromptActivity when practice button clicked
+    /** Go to PromptFragment when practice button clicked
      *
      */
     @Test
@@ -43,11 +43,12 @@ class HomeFragmentTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_practice)).perform(ViewActions.click())
 
+        // parent ScrollView of PromptFragment
         Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
-    /** Go to PromptActivity, then go back to HomeFragment
+    /** Go to PromptFragment, then go back to HomeFragment
      *
      */
     @Test

@@ -60,18 +60,24 @@ class PromptActivityTest {
     }
 
     /**
-     * Check random time text is the same after device rotation to landscape.
+     * Check random time text and prompt text are unchanged after
+     * device rotation to landscape.
      */
     @Test
-    fun test_isSameAfterRotation_landscape_timeText() {
+    fun test_isSameAfterRotation_landscape_timeText_promptText() {
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        // get the current time text
+        // get current time text
         val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
         val timeText = getText(timeTextResult)
-        Log.d(TAG, "time test: " + timeText)
+        Log.d(TAG, "time text landscape: " + timeText)
+
+        // get current prompt text
+        val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        val promptText = getText(promptTextResult)
+        Log.d(TAG, "prompt text landscape: " + promptText)
 
         // rotate to landscape
         activityScenario.scenario.onActivity {
@@ -82,10 +88,15 @@ class PromptActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
+
+        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.withText(promptText)))
     }
 
     /**
-     * Check random time text is the same after device rotation to portrait.
+     * Check random time text and prompt text are unchanged after
+     * device rotation to portrait.
      */
     @Test
     fun test_isSameAfterRotation_portrait_timeText() {
@@ -95,7 +106,11 @@ class PromptActivityTest {
 
         val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
         val timeText = getText(timeTextResult)
-        Log.d(TAG, "time test: " + timeText)
+        Log.d(TAG, "time text portrait: " + timeText)
+
+        val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        val promptText = getText(promptTextResult)
+        Log.d(TAG, "prompt text portrait: " + promptText)
 
         // rotate to portrait
         activityScenario.scenario.onActivity {
@@ -105,6 +120,10 @@ class PromptActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.tv_time))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
+
+        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+            .perform(ViewActions.scrollTo())
+            .check(ViewAssertions.matches(ViewMatchers.withText(promptText)))
 
     }
 

@@ -8,9 +8,10 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.clearText
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import org.hamcrest.Matcher
@@ -19,46 +20,37 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/**
- * References:
- * https://stackoverflow.com/questions/45597008/espresso-get-text-of-element
- */
-
 @RunWith(AndroidJUnit4ClassRunner::class)
-class PromptFragmentTest {
-
+class WritingFragmentTest {
     @get:Rule
     val activityRule: ActivityScenarioRule<MainActivity>
             = ActivityScenarioRule(MainActivity::class.java)
 
     /**
-     * Go to PromptFragment before running any tests.
+     * Go to WritingFragment before running any tests.
      */
     @Before
-    fun navPromptFragment() {
+    fun navWritingFragment() {
         Espresso.onView(ViewMatchers.withId(R.id.btn_practice)).perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+
     }
 
     @Test
-    fun test_isPromptFragmentInView() {
+    fun test_isWritingFragmentInView() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     /**
-     * Check question mark image, random time text, and random prompt text are visible.
+     * Check random prompt text is visible.
      */
     @Test
-    fun test_visibility_image_timeText_promptText() {
-
-        Espresso.onView(ViewMatchers.withId(R.id.iv_image))
-            .perform(ViewActions.scrollTo())
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
-            .perform(ViewActions.scrollTo())
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    fun test_visibility_promptText() {
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
             .perform(ViewActions.scrollTo())
@@ -66,19 +58,15 @@ class PromptFragmentTest {
     }
 
     /**
-     * Check random time text and prompt text are unchanged after
+     * Check random prompt text is unchanged after
      * device rotation to landscape.
      */
     @Test
-    fun test_isSameAfterRotation_landscape_timeText_promptText() {
+    fun test_isSameAfterRotation_landscape_promptText() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        // get current time text
-        val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
-        val timeText = getText(timeTextResult)
 
         // get current prompt text
         val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
@@ -90,28 +78,21 @@ class PromptFragmentTest {
         }
 
         // check if same
-        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
-            .perform(ViewActions.scrollTo())
-            .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
-
         Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(promptText)))
     }
 
     /**
-     * Check random time text and prompt text are unchanged after
+     * Check random prompt text is unchanged after
      * device rotation to portrait.
      */
     @Test
-    fun test_isSameAfterRotation_portrait_timeText() {
+    fun test_isSameAfterRotation_portrait_promptText() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        val timeTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_time))
-        val timeText = getText(timeTextResult)
 
         val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
         val promptText = getText(promptTextResult)
@@ -121,10 +102,6 @@ class PromptFragmentTest {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_time))
-            .perform(ViewActions.scrollTo())
-            .check(ViewAssertions.matches(ViewMatchers.withText(timeText)))
-
         Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(promptText)))
@@ -132,53 +109,59 @@ class PromptFragmentTest {
     }
 
     @Test
-    fun test_visibility_goButton() {
+    fun test_visibility_submitButton() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+        Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
-    fun test_isGoButtonTextDisplayed() {
+    fun test_isSubmitButtonTextDisplayed() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
-            .check(ViewAssertions.matches(ViewMatchers.withText(R.string.go)))
+        Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
+            .check(ViewAssertions.matches(ViewMatchers.withText(R.string.submit)))
     }
 
     /**
-     * Go to WritingFragment when go button clicked
+     * Go to CompletedOnTimeActivity when submit button clicked
      */
     @Test
-    fun test_navWritingFragment() {
+    fun test_navCompletedOnTimeActivity() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
+        val someText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+
+        Espresso.onView(ViewMatchers.withId(R.id.et_writing))
+            .perform(ViewActions.scrollTo())
+            .perform(clearText(), typeText(someText))
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
             .perform(ViewActions.scrollTo())
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
+        Espresso.onView(ViewMatchers.withId(R.id.completed_on_time))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     /**
-     * Go to WritingFragment, then go back to PromptFragment
+     * Go to CompletedOnTimeActivity, then go back to HomeFragment
      */
-    @Test
-    fun test_backPress_toHomeFragment() {
-
-        Espresso.onView(ViewMatchers.withId(R.id.btn_go))
-            .perform(ViewActions.scrollTo())
-            .perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.pressBack()
-
-        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-    }
+//    @Test
+//    fun test_backPress_toHomeFragment() {
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
+//            .perform(ViewActions.scrollTo())
+//            .perform(ViewActions.click())
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.completed_on_time))
+//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//        Espresso.pressBack()
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.home))
+//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//    }
 
     /**
      * Get the text of a TextView.
@@ -188,7 +171,7 @@ class PromptFragmentTest {
         var text = String()
         matcher.perform(object : ViewAction {
             override fun getConstraints(): Matcher<View> {
-                return isAssignableFrom(TextView::class.java)
+                return ViewMatchers.isAssignableFrom(TextView::class.java)
             }
 
             override fun getDescription(): String {
@@ -203,5 +186,4 @@ class PromptFragmentTest {
 
         return text
     }
-
 }

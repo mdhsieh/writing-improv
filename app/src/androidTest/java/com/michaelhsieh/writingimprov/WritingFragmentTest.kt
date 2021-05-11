@@ -146,22 +146,22 @@ class WritingFragmentTest {
     /**
      * Go to CompletedOnTimeFragment, then go back to HomeFragment
      */
-//    @Test
-//    fun test_backPress_toHomeFragment() {
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
-//            .perform(ViewActions.scrollTo())
-//            .perform(ViewActions.click())
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.completed_on_time))
-//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-//
-//        Espresso.pressBack()
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.home))
-//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-//
-//    }
+    @Test
+    fun test_backPress_toHomeFragment() {
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.completed_on_time))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.pressBack()
+
+        Espresso.onView(ViewMatchers.withId(R.id.home))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+    }
 
     /**
      * Get the text of a TextView.

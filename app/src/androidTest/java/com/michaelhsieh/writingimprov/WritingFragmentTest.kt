@@ -124,7 +124,7 @@ class WritingFragmentTest {
     }
 
     /**
-     * Go to CompletedOnTimeActivity when submit button clicked
+     * Go to CompletedOnTimeFragment when submit button clicked
      */
     @Test
     fun test_navCompletedOnTimeActivity() {
@@ -144,7 +144,7 @@ class WritingFragmentTest {
     }
 
     /**
-     * Go to CompletedOnTimeActivity, then go back to HomeFragment
+     * Go to CompletedOnTimeFragment, then go back to HomeFragment
      */
 //    @Test
 //    fun test_backPress_toHomeFragment() {

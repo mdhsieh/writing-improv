@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".CompletedOnTimeActivity" />
         <activity android:name=".OutOfTimeActivity" />
-        <activity android:name=".WritingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

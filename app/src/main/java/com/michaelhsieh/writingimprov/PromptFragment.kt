@@ -12,16 +12,10 @@ import timber.log.Timber
  * Displays question icon, random time limit text in minutes, random prompt text,
  * button to go to writing screen.
  */
-//const val KEY_MINUTES = "minutes"
-//const val KEY_PROMPT = "prompt"
+const val KEY_MINUTES = "minutes"
+const val KEY_PROMPT = "prompt"
 
 class PromptFragment:Fragment(R.layout.fragment_prompt) {
-
-    // need to use key when passing time and prompt to WritingActivity
-    companion object {
-        const val KEY_MINUTES = "minutes"
-        const val KEY_PROMPT = "prompt"
-    }
 
     private lateinit var promptText: TextView
     private lateinit var minutesText: TextView

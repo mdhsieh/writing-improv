@@ -115,8 +115,8 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             }
 
             override fun onFinish() {
-                val intent = Intent(this@WritingFragment.requireContext(), OutOfTimeActivity::class.java)
-                startActivity(intent)
+                val action = WritingFragmentDirections.actionWritingFragmentToOutOfTimeFragment()
+                findNavController().navigate(action)
             }
         }.start()
 

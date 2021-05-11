@@ -144,10 +144,10 @@ class WritingFragmentTest {
     }
 
     /**
-     * Go to CompletedOnTimeFragment, then go back to HomeFragment
+     * Go to CompletedOnTimeFragment, then go back to WritingFragment
      */
     @Test
-    fun test_backPress_toHomeFragment() {
+    fun test_backPress_toWritingFragment() {
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
             .perform(ViewActions.scrollTo())
@@ -158,7 +158,7 @@ class WritingFragmentTest {
 
         Espresso.pressBack()
 
-        Espresso.onView(ViewMatchers.withId(R.id.home))
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
     }

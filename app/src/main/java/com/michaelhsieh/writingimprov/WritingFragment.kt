@@ -40,8 +40,10 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         super.onViewCreated(view, savedInstanceState)
 
         // Set the prompt
-        val promptText = view.findViewById<TextView>(R.id.tv_prompt)
+        val promptText = view.findViewById<TextView>(R.id.tv_writing_prompt)
         promptText.text = args.prompt
+
+//        Timber.d("onViewCreated, promptText initialized")
 
         // Create progress bar so user knows image is loading
         val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_image)

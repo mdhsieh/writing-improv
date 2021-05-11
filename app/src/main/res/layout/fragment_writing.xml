@@ -69,7 +69,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_label_instructions" />
 
         <TextView
-            android:id="@+id/tv_prompt"
+            android:id="@+id/tv_writing_prompt"
             android:layout_width="@dimen/prompt_width"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -95,7 +95,7 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_prompt" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_writing_prompt" />
 
         <Button
             android:id="@+id/btn_submit"

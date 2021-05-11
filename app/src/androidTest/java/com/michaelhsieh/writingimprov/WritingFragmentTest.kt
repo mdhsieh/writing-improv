@@ -52,7 +52,7 @@ class WritingFragmentTest {
     @Test
     fun test_visibility_promptText() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
@@ -64,12 +64,12 @@ class WritingFragmentTest {
     @Test
     fun test_isSameAfterRotation_landscape_promptText() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         // get current prompt text
-        val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
         val promptText = getText(promptTextResult)
 
         // rotate to landscape
@@ -78,7 +78,7 @@ class WritingFragmentTest {
         }
 
         // check if same
-        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(promptText)))
     }
@@ -90,11 +90,11 @@ class WritingFragmentTest {
     @Test
     fun test_isSameAfterRotation_portrait_promptText() {
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        val promptTextResult: ViewInteraction = Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
         val promptText = getText(promptTextResult)
 
         // rotate to portrait
@@ -102,7 +102,7 @@ class WritingFragmentTest {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_prompt))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
             .check(ViewAssertions.matches(ViewMatchers.withText(promptText)))
 

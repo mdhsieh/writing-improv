@@ -54,7 +54,7 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Timber.d("promptText initialized? " + this::promptText.isInitialized)
-        Timber.d("minutesText initialized? " + this::minutesText.isInitialized)
+//        Timber.d("minutesText initialized? " + this::minutesText.isInitialized)
         if (this::promptText.isInitialized && this::minutesText.isInitialized) {
             outState.putString(KEY_PROMPT, promptText.text.toString())
             outState.putString(KEY_MINUTES, minutesText.text.toString())

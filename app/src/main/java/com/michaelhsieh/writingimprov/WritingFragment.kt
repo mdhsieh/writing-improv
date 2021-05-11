@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -95,8 +96,8 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         submitButton.setOnClickListener {
             // stop timer
             countDownTimer.cancel()
-            val intent = Intent(this.requireContext(), CompletedOnTimeActivity::class.java)
-            startActivity(intent)
+            val action = WritingFragmentDirections.actionWritingFragmentToCompletedOnTimeFragment()
+            findNavController().navigate(action)
         }
     }
 

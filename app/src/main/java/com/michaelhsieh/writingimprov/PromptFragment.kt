@@ -7,25 +7,29 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import es.dmoral.toasty.Toasty
 
 /**
  * Displays question mark icon, random time limit text in minutes, random prompt text,
  * button to go to writing screen.
  */
-class PromptFragment:Fragment(R.layout.fragment_prompt) {
+//const val KEY_MINUTES = "minutes"
+//const val KEY_PROMPT = "prompt"
 
-    // need to use key when passing time and prompt to WritingActivity
-    companion object {
-        const val KEY_MINUTES = "minutes"
-        const val KEY_PROMPT = "prompt"
-    }
+class PromptFragment:Fragment(R.layout.fragment_prompt) {
 
     private lateinit var promptText: TextView
     private lateinit var minutesText: TextView
 
     private val MIN_MINUTES:Int = 1
     private val MAX_MINUTES:Int = 3
+
+    // need to use key when passing time and prompt to WritingActivity
+    companion object {
+        const val KEY_MINUTES = "minutes"
+        const val KEY_PROMPT = "prompt"
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,15 +47,20 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
 
         val goButton = view.findViewById<Button>(R.id.btn_go)
         goButton.setOnClickListener {
-            val intent = Intent(activity, WritingActivity::class.java)
+//            val intent = Intent(activity, WritingActivity::class.java)
+//            val minutes = minutesText.text.toString()
+//            if (minutes.trim().isNotEmpty()) {
+//                intent.putExtra(KEY_MINUTES, minutes.toInt())
+//                intent.putExtra(KEY_PROMPT, promptText.text.toString())
+//                startActivity(intent)
+//            } else {
+//                this@PromptFragment.activity?.let { it1 -> Toasty.info(it1, R.string.error_minutes, Toast.LENGTH_LONG, true).show() }
+//            }
+
             val minutes = minutesText.text.toString()
-            if (minutes.trim().isNotEmpty()) {
-                intent.putExtra(KEY_MINUTES, minutes.toInt())
-                intent.putExtra(KEY_PROMPT, promptText.text.toString())
-                startActivity(intent)
-            } else {
-                this@PromptFragment.activity?.let { it1 -> Toasty.info(it1, R.string.error_minutes, Toast.LENGTH_LONG, true).show() }
-            }
+
+            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), promptText.text.toString())
+            findNavController().navigate(action)
 
         }
     }

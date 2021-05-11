@@ -22,5 +22,25 @@
         android:id="@+id/promptFragment"
         android:name="com.michaelhsieh.writingimprov.PromptFragment"
         android:label="fragment_prompt"
-        tools:layout="@layout/fragment_prompt" />
+        tools:layout="@layout/fragment_prompt" >
+        <action
+            android:id="@+id/action_promptFragment_to_writingFragment"
+            app:destination="@id/writingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/writingFragment"
+        android:name="com.michaelhsieh.writingimprov.WritingFragment"
+        android:label="fragment_writing"
+        tools:layout="@layout/fragment_writing" >
+        <argument
+            android:name="minutes"
+            app:argType="integer" />
+        <argument
+            android:name="prompt"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -43,7 +43,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
 
     private val args: WritingFragmentArgs by navArgs()
 
-    private val BASE_URL:String = "https://unsplash.com/"
+    private val BASE_URL:String = "https://api.unsplash.com/"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

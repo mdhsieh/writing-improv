@@ -9,9 +9,15 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
+import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 /**
@@ -36,6 +42,8 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var imageUrl:String
 
     private val args: WritingFragmentArgs by navArgs()
+
+    private val BASE_URL:String = "https://unsplash.com/"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -160,7 +168,46 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         )
         // generated random number from 0 to last index included
         val randNum = (imageUrls.indices).random()
-        return imageUrls[randNum]
+        // return imageUrls[randNum]
+
+        // URL of random Unsplash image
+        var url = imageUrls[randNum]
+
+        // Create Retrofit to get random image
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val jsonUnsplashApi:JsonUnsplashApi = retrofit.create(JsonUnsplashApi::class.java)
+
+        val call: Call<List<UnsplashImage>> = jsonUnsplashApi.getRandomImage()
+
+        call.enqueue(object : retrofit2.Callback<List<UnsplashImage>> {
+            override fun onFailure(call: Call<List<UnsplashImage>>, t: Throwable) {
+                Timber.e(t.message)
+            }
+
+            override fun onResponse(call: Call<List<UnsplashImage>>, response: Response<List<UnsplashImage>>) {
+                if (!response.isSuccessful) {
+                    Timber.d("Code: %s", response.code())
+                    return
+                }
+
+                val images: List<UnsplashImage>? = response.body()
+
+                if (images != null) {
+                    for (image:UnsplashImage in images) {
+                        Timber.d(image.id)
+                        Timber.d(image.url)
+                        url = image.url
+                    }
+                }
+            }
+
+        })
+
+        return url
     }
 
     /**

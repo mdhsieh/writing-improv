@@ -181,6 +181,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
 
         val jsonUnsplashApi:JsonUnsplashApi = retrofit.create(JsonUnsplashApi::class.java)
 
+        // pass in access key
         val call: Call<List<UnsplashImage>> = jsonUnsplashApi.getRandomImage()
 
         call.enqueue(object : retrofit2.Callback<List<UnsplashImage>> {

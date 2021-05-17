@@ -187,11 +187,11 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
                 if (image != null) {
                     Timber.d("id: %s", image.id)
                     Timber.d("urls as JsonObject: %s", image.urls.asJsonObject.toString())
-                    val fullUrl = image.urls.asJsonObject.get("full")
-                    Timber.d("full url: %s", fullUrl.asString)
+                    val smallUrl = image.urls.asJsonObject.get("small")
+                    Timber.d("small url: %s", smallUrl.asString)
 
-                    // Set imageUrl to the new image full URL
-                    imageUrl = fullUrl.asString
+                    // Set imageUrl to the new image URL
+                    imageUrl = smallUrl.asString
                     loadImage(imageUrl)
                 }
             }

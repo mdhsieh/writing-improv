@@ -18,7 +18,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
-import javax.net.ssl.SSLContext
 
 /**
  * Load random image and start countdown timer if loaded successfully.
@@ -39,7 +38,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var timerText: TextView
     private lateinit var countDownTimer: CountDownTimer
 
-    private lateinit var imageUrl:String
+    private var imageUrl:String = "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
     // show image to user and loading progress
     private lateinit var imageView:ImageView
     private lateinit var progressBar:ProgressBar

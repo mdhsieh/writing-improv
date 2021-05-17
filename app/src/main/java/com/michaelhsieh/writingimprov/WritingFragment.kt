@@ -40,6 +40,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var countDownTimer: CountDownTimer
 
     private lateinit var imageUrl:String
+    // show image to user and loading progress
+    private lateinit var imageView:ImageView
+    private lateinit var progressBar:ProgressBar
 
     private val args: WritingFragmentArgs by navArgs()
 
@@ -51,10 +54,6 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         // Set the prompt
         val promptText = view.findViewById<TextView>(R.id.tv_writing_prompt)
         promptText.text = args.prompt
-        
-        // Create progress bar so user knows image is loading
-        val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_image)
-        progressBar.visibility = View.VISIBLE
 
         // Set minutes of timer
         val minutes = args.minutes
@@ -63,14 +62,26 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
 
         timerText = view.findViewById(R.id.tv_timer)
 
-        // Load the random image
+        // ImageView which will have random image
+        imageView = view.findViewById(R.id.iv_image)
+
+        // Create progress bar and show so user knows image is loading
+        progressBar = view.findViewById(R.id.pb_loading_image)
+        progressBar.visibility = View.VISIBLE
+
+        // Load the random image, or use saved URL after configuration change,
+        // example device rotated
         if (savedInstanceState != null) {
             val savedUrl = savedInstanceState.getString(KEY_IMAGE_URL)
             if (savedUrl != null) {
+                // configuration change, load the image with the saved URL
                 imageUrl = savedUrl
+                loadImage(imageUrl)
             }
         } else {
-            imageUrl = getRandomImageUrl()
+            // get a new random image and load it
+            // Don't need to call loadImage() since it is called by getRandomImageUrlAndLoadImage()
+            getRandomImageUrlAndLoadImage()
         }
 
         // If savedInstanceState is set,
@@ -78,25 +89,6 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         if (savedInstanceState != null) {
             timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT)
         }
-
-        val image = view.findViewById<ImageView>(R.id.iv_image)
-        Picasso.get().load(imageUrl)
-            .error(R.drawable.ic_error_outline_72)
-            .into(image, object : Callback {
-                override fun onSuccess() {
-                    //  hide progress bar
-                    progressBar.visibility = View.GONE
-                }
-
-                override fun onError(e: Exception?) {
-                    // display error message
-                    Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_image, Toast.LENGTH_LONG,true).show()
-                    Timber.e(e)
-                    //  hide progress bar
-                    progressBar.visibility = View.GONE
-                }
-
-            })
 
         val submitButton = view.findViewById<Button>(R.id.btn_submit)
         submitButton.setOnClickListener {
@@ -157,21 +149,13 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         }
     }
 
-    /** Returns a random image URL. */
-    private fun getRandomImageUrl():String {
-        val imageUrls = arrayOf(
-            "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
-            "https://images.unsplash.com/photo-1617386564901-be7cfcaa4c60?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
-            "https://images.unsplash.com/photo-1618085579752-d666c8ad12b6?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
-            "https://images.unsplash.com/photo-1619440482145-3133e2abb77d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800",
-            "https://images.unsplash.com/photo-1618053448492-2b629c2c912c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
-        )
-        // generated random number from 0 to last index included
-        val randNum = (imageUrls.indices).random()
-        // return imageUrls[randNum]
-
-        // URL of random Unsplash image
-        var url = imageUrls[randNum]
+    /**
+     *  Gets a random image URL and loads it if successful.
+     *  Otherwise, shows an error Toast.
+     *
+     *  This method calls {@link #loadImage(string) loadImage}.
+     */
+    private fun getRandomImageUrlAndLoadImage() {
 
         // Create Retrofit to get random image
         val retrofit: Retrofit = Retrofit.Builder()
@@ -182,33 +166,63 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         val jsonUnsplashApi:JsonUnsplashApi = retrofit.create(JsonUnsplashApi::class.java)
 
         // pass in access key
-        val call: Call<List<UnsplashImage>> = jsonUnsplashApi.getRandomImage(getString(R.string.access_key))
+        val call: Call<UnsplashImage> = jsonUnsplashApi.getRandomImage(getString(R.string.access_key))
 
-        call.enqueue(object : retrofit2.Callback<List<UnsplashImage>> {
-            override fun onFailure(call: Call<List<UnsplashImage>>, t: Throwable) {
+        call.enqueue(object : retrofit2.Callback<UnsplashImage> {
+            override fun onFailure(call: Call<UnsplashImage>, t: Throwable) {
                 Timber.e(t.message)
+                Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
             }
 
-            override fun onResponse(call: Call<List<UnsplashImage>>, response: Response<List<UnsplashImage>>) {
+            override fun onResponse(call: Call<UnsplashImage>, response: Response<UnsplashImage>) {
                 if (!response.isSuccessful) {
                     Timber.d("Code: %s", response.code())
+                    // Show error Toasty
+                    Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
                     return
                 }
 
-                val images: List<UnsplashImage>? = response.body()
+                val image: UnsplashImage? = response.body()
 
-                if (images != null) {
-                    for (image:UnsplashImage in images) {
-                        Timber.d(image.id)
-                        Timber.d(image.url)
-                        url = image.url
-                    }
+                if (image != null) {
+                    Timber.d("id: %s", image.id)
+                    Timber.d("urls as JsonObject: %s", image.urls.asJsonObject.toString())
+                    val fullUrl = image.urls.asJsonObject.get("full")
+                    Timber.d("full url: %s", fullUrl.asString)
+
+                    // Set imageUrl to the new image full URL
+                    imageUrl = fullUrl.asString
+                    loadImage(imageUrl)
                 }
             }
 
         })
+    }
 
-        return url
+    /**
+     * Display the image at a URL and
+     * remove progress bar if image was loaded successfully.
+     * Otherwise, display a Toast error message and remove progress bar.
+     * @param url The url of the image
+     */
+    private fun loadImage(url:String) {
+        Picasso.get().load(url)
+            .error(R.drawable.ic_error_outline_72)
+            .into(imageView, object : Callback {
+                override fun onSuccess() {
+                    //  hide progress bar
+                    progressBar.visibility = View.GONE
+                }
+
+                override fun onError(e: Exception?) {
+                    // display error message
+                    Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_image, Toast.LENGTH_LONG,true).show()
+                    Timber.e(e)
+                    //  hide progress bar
+                    progressBar.visibility = View.GONE
+                }
+
+            })
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.michaelhsieh.writingimprov
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -19,6 +18,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import javax.net.ssl.SSLContext
 
 /**
  * Load random image and start countdown timer if loaded successfully.

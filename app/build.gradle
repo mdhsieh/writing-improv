@@ -66,6 +66,14 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // Required to use GsonConverterFactory.create()
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    // force OkHttp 3.12 to fix error on older devices, ex. API 17 tablet
+    // java.lang.ExceptionInInitializerError
+    //        at okhttp3.OkHttpClient.newSslSocketFactory(OkHttpClient.java:263)
+    // and another error:
+    // ssl handshake aborted
+    implementation("com.squareup.okhttp3:okhttp:3.12.8") {
+        force = true
+    }
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

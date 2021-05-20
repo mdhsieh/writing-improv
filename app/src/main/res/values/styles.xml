@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <!--change all screen backgrounds to this color-->
         <item name="android:windowBackground">@color/background</item>
     </style>
 

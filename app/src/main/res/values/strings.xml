@@ -13,6 +13,7 @@
     <string name="hint_time">Minutes</string>
     <string name="hint_writing">Write here!</string>
     <!--    content descriptions-->
+    <string name="desc_menu_icon">Menu Icon</string>
     <string name="desc_image">Image</string>
     <string name="desc_time">Time</string>
     <string name="desc_check">Check</string>

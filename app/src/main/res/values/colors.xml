@@ -6,4 +6,5 @@
     <!--background screen color-->
     <color name="background">#81d4fa</color>
 <!--    <color name="background">#448AFF</color>-->
+    <color name="white">#ffffff</color>
 </resources>

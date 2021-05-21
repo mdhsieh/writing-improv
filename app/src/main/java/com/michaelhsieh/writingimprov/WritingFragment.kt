@@ -43,6 +43,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var imageView:ImageView
     private lateinit var progressBar:ProgressBar
 
+    // Show error if image URL can't load
+    private lateinit var errorText:TextView
+
     private val args: WritingFragmentArgs by navArgs()
 
     private val BASE_URL:String = "https://api.unsplash.com/"
@@ -67,6 +70,10 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         // Create progress bar and show so user knows image is loading
         progressBar = view.findViewById(R.id.pb_loading_image)
         progressBar.visibility = View.VISIBLE
+
+        // Hide error text
+        errorText = view.findViewById(R.id.tv_error)
+        errorText.visibility = View.GONE
 
         // Load the random image, or use saved URL after configuration change,
         // example device rotated
@@ -171,6 +178,11 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             override fun onFailure(call: Call<UnsplashImage>, t: Throwable) {
                 Timber.e(t.message)
                 Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
+
+                //  hide progress bar
+                progressBar.visibility = View.GONE
+                // show error text
+                errorText.visibility = View.VISIBLE
             }
 
             override fun onResponse(call: Call<UnsplashImage>, response: Response<UnsplashImage>) {

@@ -184,13 +184,11 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
                 val image: UnsplashImage? = response.body()
 
                 if (image != null) {
-                    Timber.d("id: %s", image.id)
-                    Timber.d("urls as JsonObject: %s", image.urls.asJsonObject.toString())
-                    val smallUrl = image.urls.asJsonObject.get("small")
-                    Timber.d("small url: %s", smallUrl.asString)
+
+                    val regularUrl = image.urls.asJsonObject.get("regular")
 
                     // Set imageUrl to the new image URL
-                    imageUrl = smallUrl.asString
+                    imageUrl = regularUrl.asString
                     loadImage(imageUrl)
                 }
             }

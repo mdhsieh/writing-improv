@@ -29,36 +29,36 @@
 
         <TextView
             android:id="@+id/tv_label_time"
+            style="@style/WhiteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/label_time"
-            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_image" />
 
         <TextView
             android:id="@+id/tv_label_prompt"
+            style="@style/WhiteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
             android:text="@string/label_prompt"
-            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_label_time" />
 
         <TextView
             android:id="@+id/tv_prompt"
+            style="@style/WhiteText"
             android:layout_width="@dimen/prompt_width"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:text="@string/prompt_mystery"
-            android:textSize="24sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_label_prompt"
             app:layout_constraintStart_toEndOf="@+id/tv_label_prompt" />
 
@@ -77,11 +77,11 @@
 
         <TextView
             android:id="@+id/tv_time"
+            style="@style/WhiteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:textSize="24sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_label_time"
             app:layout_constraintStart_toEndOf="@+id/tv_label_time"
             tools:text="1" />

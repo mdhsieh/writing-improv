@@ -8,11 +8,11 @@
 
     <TextView
         android:id="@+id/tv_out_of_time"
+        style="@style/BigWhiteText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="@string/out_of_time"
-        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

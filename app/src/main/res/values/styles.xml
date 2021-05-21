@@ -9,11 +9,32 @@
         <item name="android:windowBackground">@color/background</item>
     </style>
 
-<!--    button styles-->
+    <!--button styles-->
     <style name="ColoredButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textSize">24sp</item>
     </style>
 
-<!--    text styles-->
+    <!--text styles-->
+    <style name="BigWhiteText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="TimerWhiteText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">60sp</item>
+    </style>
+
+    <!--EditText-->
+    <style name="EditWhiteText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
+    <style name="WhiteText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">24sp</item>
+    </style>
 
 </resources>

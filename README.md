@@ -9,6 +9,7 @@ Clone this repository, open the cloned folder in Android Studio, and run the app
 ## Features
 
 ## Libraries
+- [Retrofit](https://square.github.io/retrofit)
 - [Unsplash API](https://unsplash.com/developers)
 - [Toasty](https://github.com/GrenderG/Toasty)
 - [Timber](https://github.com/JakeWharton/timber)

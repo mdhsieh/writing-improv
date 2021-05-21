@@ -25,10 +25,10 @@
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
     <string name="prompt_story">What is the story behind this?</string>
-    <string name="prompt_mystery">Use genre: Mystery.</string>
-    <string name="prompt_action">Use genre: Action.</string>
-    <string name="prompt_thriller">Use genre: Thriller.</string>
-    <string name="prompt_comedy">Use genre: Comedy.</string>
+    <string name="prompt_mystery">Mystery.</string>
+    <string name="prompt_action">Action.</string>
+    <string name="prompt_thriller">Thriller.</string>
+    <string name="prompt_comedy">Comedy.</string>
     <!-- time left toast -->
     <string name="time_left_secs">%1$d seconds left!</string>
     <!--    other-->

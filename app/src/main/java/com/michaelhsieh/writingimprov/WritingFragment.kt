@@ -8,15 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
-import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 /**
@@ -38,7 +32,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var timerText: TextView
     private lateinit var countDownTimer: CountDownTimer
 
-    private var imageUrl:String = "https://images.unsplash.com/photo-1617721042477-7c5c498e7dbf?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
+    private var imageUrl:String = ""
     // show image to user and loading progress
     private lateinit var imageView:ImageView
     private lateinit var progressBar:ProgressBar
@@ -47,8 +41,6 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var errorText:TextView
 
     private val args: WritingFragmentArgs by navArgs()
-
-    private val BASE_URL:String = "https://api.unsplash.com/"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,13 +74,12 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             if (savedUrl != null) {
                 // configuration change, load the image with the saved URL
                 imageUrl = savedUrl
-                loadImage(imageUrl)
             }
         } else {
-            // get a new random image and load it
-            // Don't need to call loadImage() since it is called by getRandomImageUrlAndLoadImage()
-            getRandomImageUrlAndLoadImage()
+            // Set the URL from previous fragment
+            imageUrl = args.url
         }
+        loadImage(imageUrl)
 
         // If savedInstanceState is set,
         // set time left to saved milliseconds
@@ -156,59 +147,6 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     }
 
     /**
-     *  Gets a random image URL and loads it if successful.
-     *  Otherwise, shows an error Toast.
-     *
-     *  This method calls {@link #loadImage(string) loadImage}.
-     */
-    private fun getRandomImageUrlAndLoadImage() {
-
-        // Create Retrofit to get random image
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val jsonUnsplashApi:JsonUnsplashApi = retrofit.create(JsonUnsplashApi::class.java)
-
-        // pass in access key
-        val call: Call<UnsplashImage> = jsonUnsplashApi.getRandomImage(getString(R.string.access_key))
-
-        call.enqueue(object : retrofit2.Callback<UnsplashImage> {
-            override fun onFailure(call: Call<UnsplashImage>, t: Throwable) {
-                Timber.e(t.message)
-                Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
-
-                //  hide progress bar
-                progressBar.visibility = View.GONE
-                // show error text
-                errorText.visibility = View.VISIBLE
-            }
-
-            override fun onResponse(call: Call<UnsplashImage>, response: Response<UnsplashImage>) {
-                if (!response.isSuccessful) {
-                    Timber.d("Code: %s", response.code())
-                    // Show error Toasty
-                    Toasty.error(this@WritingFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
-                    return
-                }
-
-                val image: UnsplashImage? = response.body()
-
-                if (image != null) {
-
-                    val regularUrl = image.urls.asJsonObject.get("regular")
-
-                    // Set imageUrl to the new image URL
-                    imageUrl = regularUrl.asString
-                    loadImage(imageUrl)
-                }
-            }
-
-        })
-    }
-
-    /**
      * Display the image at a URL and
      * remove progress bar if image was loaded successfully.
      * Otherwise, display a Toast error message and remove progress bar.
@@ -221,6 +159,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
                 override fun onSuccess() {
                     //  hide progress bar
                     progressBar.visibility = View.GONE
+                    Timber.d("finished getting image")
                 }
 
                 override fun onError(e: Exception?) {
@@ -229,6 +168,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
                     Timber.e(e)
                     //  hide progress bar
                     progressBar.visibility = View.GONE
+
+                    // show error text
+                    errorText.visibility = View.VISIBLE
                 }
 
             })

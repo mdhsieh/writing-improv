@@ -3,10 +3,7 @@ package com.michaelhsieh.writingimprov
 import android.content.pm.ActivityInfo
 import android.view.View
 import android.widget.TextView
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -14,6 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import org.hamcrest.Matcher
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,6 +35,24 @@ class PromptFragmentTest {
     @Before
     fun navPromptFragment() {
         Espresso.onView(ViewMatchers.withId(R.id.btn_practice)).perform(ViewActions.click())
+    }
+
+    /**
+     * Register the idling resource with the espresso test runner,
+     * so it can observe the count variable and wait accordingly during execution of the test.
+     */
+    @Before
+    fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(CountingIdlingResourceSingleton.countingIdlingResource)
+    }
+
+    /**
+     * Unregister after test finishes.
+     *
+     */
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(CountingIdlingResourceSingleton.countingIdlingResource)
     }
 
     @Test

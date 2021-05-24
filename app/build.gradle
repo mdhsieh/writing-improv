@@ -87,4 +87,8 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidx_test"
     androidTestImplementation "androidx.test:core:$androidx_test"
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
+
+    // idling resource
+    // use implementation since class needs to be in application code
+    implementation "androidx.test.espresso:espresso-idling-resource:$androidx_test_espresso"
 }

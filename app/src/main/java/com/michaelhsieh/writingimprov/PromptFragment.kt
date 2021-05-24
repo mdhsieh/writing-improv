@@ -86,6 +86,9 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
             // hide go button until got the url
             goButton.visibility = View.GONE
 
+            // while getting url button is not visible, so increment
+            CountingIdlingResourceSingleton.increment()
+
             getRandomImageUrl()
         }
 
@@ -187,6 +190,9 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
                     progressBar.visibility = View.GONE
                     // Make go button visible
                     goButton.visibility = View.VISIBLE
+
+                    // finished getting url so decrement
+                    CountingIdlingResourceSingleton.decrement()
                 }
             }
 

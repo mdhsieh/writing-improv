@@ -27,8 +27,7 @@ class WritingFragmentTest {
     /**
      * Go to WritingFragment before running any tests.
      */
-    @Before
-    fun navWritingFragment() {
+    private fun navWritingFragment() {
         Espresso.onView(ViewMatchers.withId(R.id.btn_practice)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_go))
@@ -37,8 +36,27 @@ class WritingFragmentTest {
 
     }
 
+    /**
+     * Register the idling resource with the espresso test runner,
+     * so it can observe the count variable and wait accordingly during execution of the test.
+     */
+    @Before
+    fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(CountingIdlingResourceSingleton.countingIdlingResource)
+    }
+
+    /**
+     * Unregister after test finishes.
+     *
+     */
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(CountingIdlingResourceSingleton.countingIdlingResource)
+    }
+
     @Test
     fun test_isWritingFragmentInView() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -49,6 +67,7 @@ class WritingFragmentTest {
      */
     @Test
     fun test_visibility_promptText() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
@@ -61,6 +80,7 @@ class WritingFragmentTest {
      */
     @Test
     fun test_isSameAfterRotation_landscape_promptText() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
@@ -87,6 +107,7 @@ class WritingFragmentTest {
      */
     @Test
     fun test_isSameAfterRotation_portrait_promptText() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_writing_prompt))
             .perform(ViewActions.scrollTo())
@@ -108,6 +129,7 @@ class WritingFragmentTest {
 
     @Test
     fun test_visibility_submitButton() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
             .perform(ViewActions.scrollTo())
@@ -116,6 +138,7 @@ class WritingFragmentTest {
 
     @Test
     fun test_isSubmitButtonTextDisplayed() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
             .check(ViewAssertions.matches(ViewMatchers.withText(R.string.submit)))
@@ -126,6 +149,7 @@ class WritingFragmentTest {
      */
     @Test
     fun test_navCompletedOnTimeActivity() {
+        navWritingFragment()
 
         val someText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 
@@ -146,6 +170,7 @@ class WritingFragmentTest {
      */
     @Test
     fun test_backPress_toWritingFragment() {
+        navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
             .perform(ViewActions.scrollTo())

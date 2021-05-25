@@ -2,7 +2,9 @@ package com.michaelhsieh.writingimprov
 
 import androidx.test.espresso.idling.CountingIdlingResource
 
-// class which will provide CountingIdlingResource to the rest of the app
+/** Class which will provide CountingIdlingResource to the rest of the app.
+ *
+ */
 object CountingIdlingResourceSingleton {
 
     private const val RESOURCE = "GLOBAL"

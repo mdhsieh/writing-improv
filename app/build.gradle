@@ -4,7 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 // Enable safe args plugin
 // to send data between Fragments in compile-safe way
 apply plugin: "androidx.navigation.safeargs.kotlin"
-
+// Enable Google services plugin to use Firebase
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
@@ -74,6 +75,14 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.12.8") {
         force = true
     }
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:28.0.1')
+    // Add the dependency for the Firebase SDK for Google Analytics
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    // Declare the dependency for the Cloud Firestore library
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

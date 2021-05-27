@@ -20,6 +20,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // use VectorDrawableCompat to load vector drawables
         vectorDrawables.useSupportLibrary = true
+
+        // Enabling multidex support.
+        // Adding Google services to use Firestore created too many methods
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -83,6 +87,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     // Declare the dependency for the Cloud Firestore library
     implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    // Enabling Multidex support
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -1,6 +1,7 @@
 package com.michaelhsieh.writingimprov
 
 import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar

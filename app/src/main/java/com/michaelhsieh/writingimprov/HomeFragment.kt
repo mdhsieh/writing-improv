@@ -43,11 +43,11 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             .set(user)
             .addOnSuccessListener {
                 Timber.d("Document added")
-                Toasty.info(this@HomeFragment.requireContext(), "Hello " + user.get(MAP_USERNAME) + "!", Toast.LENGTH_LONG, true)
+//                Toasty.info(this@HomeFragment.requireContext(), "Hello " + user.get(MAP_USERNAME) + "!", Toast.LENGTH_LONG, true)
             }
             .addOnFailureListener { e ->
                 Timber.w(e, "Error adding document")
-                Toasty.error(this@HomeFragment.requireContext(), "Error!", Toast.LENGTH_LONG, true)
+//                Toasty.error(this@HomeFragment.requireContext(), "Error!", Toast.LENGTH_LONG, true)
             }
     }
 }

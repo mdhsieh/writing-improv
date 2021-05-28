@@ -91,7 +91,10 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         submitButton.setOnClickListener {
             // stop timer
             countDownTimer.cancel()
-            val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment()
+            val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
+                isSubmittedChallenge = true,
+                isCompletedOnTime = true
+            )
             findNavController().navigate(action)
         }
     }
@@ -110,7 +113,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             }
 
             override fun onFinish() {
-                val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment()
+                val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
+                    isSubmittedChallenge = true,
+                    isCompletedOnTime = false)
                 findNavController().navigate(action)
             }
         }.start()

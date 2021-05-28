@@ -3,9 +3,11 @@ package com.michaelhsieh.writingimprov
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import es.dmoral.toasty.Toasty
 
@@ -33,6 +35,12 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
             } else {
                 Toasty.normal(this.requireContext(), getString(R.string.out_of_time), Toast.LENGTH_LONG, failIcon).show()
             }
+        }
+
+        val menuButton = view.findViewById<Button>(R.id.btn_menu)
+        menuButton.setOnClickListener {
+            val action = MyWritingFragmentDirections.actionMyWritingFragmentToHomeFragment()
+            findNavController().navigate(action)
         }
     }
 }

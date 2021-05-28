@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import es.dmoral.toasty.Toasty
 
+/**
+ * Displays all writing user has submitted.
+ * Displays a Toast if user has submitted writing from previous Fragment.
+ */
 class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
 
     private val args: MyWritingFragmentArgs by navArgs()

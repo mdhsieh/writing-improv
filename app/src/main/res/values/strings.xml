@@ -35,5 +35,6 @@
     <string name="timer_default">00:00</string>
     <string name="out_of_time">Sorry, you ran out of time!</string>
     <string name="on_time">Nice job, you did it!</string>
+    <string name="my_writing_empty">You have no writing submitted yet!</string>
 
 </resources>

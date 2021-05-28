@@ -145,10 +145,10 @@ class WritingFragmentTest {
     }
 
     /**
-     * Go to CompletedOnTimeFragment when submit button clicked
+     * Go to MyWritingFragment when submit button clicked
      */
     @Test
-    fun test_navCompletedOnTimeActivity() {
+    fun test_navMyWritingFragment() {
         navWritingFragment()
 
         val someText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
@@ -161,12 +161,12 @@ class WritingFragmentTest {
             .perform(ViewActions.scrollTo())
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.completed_on_time))
+        Espresso.onView(ViewMatchers.withId(R.id.my_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     /**
-     * Go to CompletedOnTimeFragment, then go back to WritingFragment
+     * Go to MyWritingFragment, then go back to WritingFragment
      */
     @Test
     fun test_backPress_toWritingFragment() {
@@ -176,7 +176,7 @@ class WritingFragmentTest {
             .perform(ViewActions.scrollTo())
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.completed_on_time))
+        Espresso.onView(ViewMatchers.withId(R.id.my_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.pressBack()

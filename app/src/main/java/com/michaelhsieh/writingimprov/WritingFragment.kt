@@ -15,7 +15,7 @@ import timber.log.Timber
 
 /**
  * Load random image and start countdown timer if loaded successfully.
- *
+ * User writes and submits their writing here.
  */
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_IMAGE_URL:String = "imageUrl"
@@ -91,7 +91,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         submitButton.setOnClickListener {
             // stop timer
             countDownTimer.cancel()
-            val action = WritingFragmentDirections.actionWritingFragmentToCompletedOnTimeFragment()
+            val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment()
             findNavController().navigate(action)
         }
     }
@@ -110,7 +110,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             }
 
             override fun onFinish() {
-                val action = WritingFragmentDirections.actionWritingFragmentToOutOfTimeFragment()
+                val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment()
                 findNavController().navigate(action)
             }
         }.start()

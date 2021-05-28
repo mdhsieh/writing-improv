@@ -59,6 +59,9 @@
         <argument
             android:name="url"
             app:argType="string" />
+        <action
+            android:id="@+id/action_writingFragment_to_myWritingFragment"
+            app:destination="@id/myWritingFragment" />
     </fragment>
     <fragment
         android:id="@+id/completedOnTimeFragment"
@@ -82,4 +85,9 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/myWritingFragment"
+        android:name="com.michaelhsieh.writingimprov.MyWritingFragment"
+        android:label="My Writing"
+        tools:layout="@layout/fragment_my_writing" />
 </navigation>

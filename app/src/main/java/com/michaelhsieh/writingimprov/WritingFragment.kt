@@ -16,6 +16,11 @@ import timber.log.Timber
 /**
  * Load random image and start countdown timer if loaded successfully.
  * User writes and submits their writing here.
+ *
+ * References:
+ * https://codinginflow.com/tutorials/android/countdowntimer/part-1-countdown-timer
+ * https://www.youtube.com/watch?v=LMYQS1dqfo8
+ * https://www.youtube.com/watch?v=lvibl8YJfGo
  */
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_IMAGE_URL:String = "imageUrl"

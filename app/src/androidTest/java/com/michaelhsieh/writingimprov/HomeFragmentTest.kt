@@ -49,7 +49,21 @@ class HomeFragmentTest {
     }
 
     /**
-     * Go to PromptFragment, then go back to HomeFragment
+     * Go to MyWriting when practice button clicked
+     */
+    @Test
+    fun test_navMyWritingFragment() {
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_my_writing)).perform(ViewActions.click())
+
+        // parent ConstraintLayout of MyWritingFragment
+        Espresso.onView(ViewMatchers.withId(R.id.my_writing))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    /**
+     * Go to PromptFragment, then go back to HomeFragment.
+     * Repeat with MyWritingFragment
      */
     @Test
     fun test_backPress_toHomeFragment() {
@@ -57,6 +71,17 @@ class HomeFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.btn_practice)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.pressBack()
+
+        Espresso.onView(ViewMatchers.withId(R.id.home))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        // MyWriting
+        Espresso.onView(ViewMatchers.withId(R.id.btn_my_writing)).perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.my_writing))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.pressBack()

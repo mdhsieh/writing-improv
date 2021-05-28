@@ -22,7 +22,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@id/btn_my_writing" />
 
         <ImageView
             android:id="@+id/iv_menu_icon"
@@ -49,5 +49,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_menu_icon" />
+
+        <Button
+            android:id="@+id/btn_my_writing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ColoredButton"
+            android:layout_marginTop="24dp"
+            android:text="@string/my_writing"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

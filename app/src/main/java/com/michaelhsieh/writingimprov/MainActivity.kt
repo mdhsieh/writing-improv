@@ -21,9 +21,6 @@ import javax.net.ssl.SSLContext
  *
  * References:
  * https://source.unsplash.com/
- * https://codinginflow.com/tutorials/android/countdowntimer/part-1-countdown-timer
- * https://www.youtube.com/watch?v=LMYQS1dqfo8
- * https://www.youtube.com/watch?v=lvibl8YJfGo
  * https://stackoverflow.com/questions/29916962/javax-net-ssl-sslhandshakeexception-javax-net-ssl-sslprotocolexception-ssl-han
  */
 class MainActivity : AppCompatActivity() {
@@ -37,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         // vector Drawables on older devices, example API 17 tablet
         // to avoid crashes
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        Timber.d("Enabled vector from resources")
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Writing Improv</string>
     <!-- buttons -->
+    <string name="my_writing">My Writing</string>
     <string name="practice">Practice</string>
     <string name="go">Go</string>
     <string name="submit">Submit</string>
@@ -31,10 +32,12 @@
     <string name="prompt_comedy">Comedy</string>
     <!-- time left toast -->
     <string name="time_left_secs">%1$d seconds left!</string>
-    <!--    other-->
-    <string name="timer_default">00:00</string>
+    <!-- submitted writing toast-->
     <string name="out_of_time">Sorry, you ran out of time!</string>
     <string name="on_time">Nice job, you did it!</string>
+    <!-- no writing -->
     <string name="my_writing_empty">You have no writing submitted yet!</string>
+    <!--    other-->
+    <string name="timer_default">00:00</string>
 
 </resources>

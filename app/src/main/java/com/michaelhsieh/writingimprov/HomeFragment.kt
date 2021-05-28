@@ -3,14 +3,13 @@ package com.michaelhsieh.writingimprov
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
-import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
 /**
+ * Home menu.
  * Displays user option buttons such as practice writing.
  */
 class HomeFragment:Fragment(R.layout.fragment_home) {
@@ -30,6 +29,15 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             findNavController().navigate(action)
         }
 
+        val myWritingButton = view.findViewById<Button>(R.id.btn_my_writing)
+        myWritingButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToMyWritingFragment(
+                isSubmittedChallenge = false,
+                isCompletedOnTime = false
+            )
+            findNavController().navigate(action)
+        }
+
         // Add user to check Firestore works
         // Create a new user with a first and last name
         val user = hashMapOf(
@@ -43,11 +51,9 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             .set(user)
             .addOnSuccessListener {
                 Timber.d("Document added")
-//                Toasty.info(this@HomeFragment.requireContext(), "Hello " + user.get(MAP_USERNAME) + "!", Toast.LENGTH_LONG, true)
             }
             .addOnFailureListener { e ->
                 Timber.w(e, "Error adding document")
-//                Toasty.error(this@HomeFragment.requireContext(), "Error!", Toast.LENGTH_LONG, true)
             }
     }
 }

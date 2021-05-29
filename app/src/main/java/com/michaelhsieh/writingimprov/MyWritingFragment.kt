@@ -4,20 +4,25 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
+
 
 /**
  * Displays all writing user has submitted.
  * Displays a Toast if user has submitted writing from previous Fragment.
  */
-class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
+class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapter.ItemClickListener {
 
     private val args: MyWritingFragmentArgs by navArgs()
 
@@ -26,6 +31,8 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
     private val MAP_USERNAME = "username"
     private val MAP_FIRST = "first"
     private val MAP_LAST = "last"
+
+    private lateinit var adapter: MyWritingAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,5 +75,41 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
             .addOnFailureListener { e ->
                 Timber.w(e, "Error adding document")
             }
+
+        // data to populate the RecyclerView with
+        val writingNames: ArrayList<String> = ArrayList()
+        writingNames.add("Challenge by mhdev")
+        writingNames.add("Challenge by mh2blue")
+        writingNames.add("Practice")
+        writingNames.add("Practice")
+
+        val emptyWritingText = view.findViewById<TextView>(R.id.tv_my_writing_empty)
+        if (writingNames.size > 0) {
+            emptyWritingText.visibility = View.GONE
+        } else {
+            emptyWritingText.visibility = View.VISIBLE
+        }
+
+        val context = this.requireContext()
+        // set up the RecyclerView
+        val recyclerView: RecyclerView = view.findViewById(R.id.rv_my_writing)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = MyWritingAdapter(context, writingNames)
+        adapter.setClickListener(this)
+        recyclerView.adapter = adapter
+
+        // add a divider between rows
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
+            (recyclerView.layoutManager as LinearLayoutManager).orientation
+        )
+        recyclerView.addItemDecoration(dividerItemDecoration)
+    }
+
+    override fun onItemClick(view: View?, position: Int) {
+        Toast.makeText(
+            this.requireContext(),
+            "You clicked " + adapter.getItem(position) + " on row number " + position,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

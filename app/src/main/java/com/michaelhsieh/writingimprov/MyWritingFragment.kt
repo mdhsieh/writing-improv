@@ -9,7 +9,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.firestore.FirebaseFirestore
 import es.dmoral.toasty.Toasty
+import timber.log.Timber
 
 /**
  * Displays all writing user has submitted.
@@ -18,6 +20,12 @@ import es.dmoral.toasty.Toasty
 class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
 
     private val args: MyWritingFragmentArgs by navArgs()
+
+    var db = FirebaseFirestore.getInstance()
+    private val DOC_ID = "my-first-user"
+    private val MAP_USERNAME = "username"
+    private val MAP_FIRST = "first"
+    private val MAP_LAST = "last"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,5 +50,23 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing) {
             val action = MyWritingFragmentDirections.actionMyWritingFragmentToHomeFragment()
             findNavController().navigate(action)
         }
+
+        // Add user to check Firestore works
+        // Create a new user with a first and last name
+        val user = hashMapOf(
+            MAP_USERNAME to "mdhsieh",
+            MAP_FIRST to "Michael",
+            MAP_LAST to "Hsieh"
+        )
+        // Add a new document with a generated ID
+        db.collection("users")
+            .document(DOC_ID)
+            .set(user)
+            .addOnSuccessListener {
+                Timber.d("Document added")
+            }
+            .addOnFailureListener { e ->
+                Timber.w(e, "Error adding document")
+            }
     }
 }

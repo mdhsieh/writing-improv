@@ -9,12 +9,12 @@ data class WritingItem(
 
     val time: String,
 
-    val thumbUrl: String
+    val url: String
 ):Serializable {
     // Serializable to pass object between Fragments
 
     // To debug
     override fun toString(): String {
-        return "name: $name, prompt: $prompt, time: $time, thumb url: $thumbUrl"
+        return "name: $name, prompt: $prompt, time: $time, url: $url"
     }
 }

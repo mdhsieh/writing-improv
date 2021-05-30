@@ -40,7 +40,7 @@ class MyWritingAdapter internal constructor(
         holder.nameText.text = writing.name
         holder.promptText.text = writing.prompt
         holder.timeText.text = writing.time
-        loadThumbnailImage(writing.thumbUrl, holder.thumbImage)
+        loadThumbnailImage(writing.url, holder.thumbImage)
     }
 
     // total number of rows

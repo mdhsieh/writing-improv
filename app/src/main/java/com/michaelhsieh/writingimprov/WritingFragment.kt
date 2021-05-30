@@ -102,7 +102,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             countDownTimer.cancel()
 
             // Create new WritingItem with all text and URL
-            val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), thumbUrl = imageUrl)
+            val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl)
 
             Timber.d("Passing: %s", item.toString())
 
@@ -130,7 +130,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
 
             override fun onFinish() {
                 // Create new WritingItem with all text and URL
-                val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), thumbUrl = imageUrl)
+                val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl)
 
                 Timber.d("Passing: %s", item.toString())
 

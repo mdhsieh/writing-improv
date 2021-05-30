@@ -109,10 +109,10 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toast.makeText(
-            this.requireContext(),
-            "You clicked " + adapter.getItem(position).name + " on row number " + position,
-            Toast.LENGTH_SHORT
-        ).show()
+//        Toast.makeText(
+//            this.requireContext(),
+//            "You clicked " + adapter.getItem(position).name + " on row number " + position,
+//            Toast.LENGTH_SHORT
+//        ).show()
     }
 }

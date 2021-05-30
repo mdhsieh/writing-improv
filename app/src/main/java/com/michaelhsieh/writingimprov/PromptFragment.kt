@@ -37,6 +37,8 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     private val BASE_URL:String = "https://api.unsplash.com/"
     // image URL
     private var url:String = ""
+    // image thumbnail URL
+    private var thumbUrl:String = ""
 
     // Show progress bar while getting image URL
     private lateinit var progressBar: ProgressBar
@@ -181,10 +183,15 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
                 if (image != null) {
 
                     val regularUrl = image.urls.asJsonObject.get("regular")
+                    val thumbnailUrl = image.urls.asJsonObject.get("thumb")
 
                     // Set var url to the new image URL
                     url = regularUrl.asString
                     Timber.d("finished getting url: %s", url)
+
+                    // Set var thumb url to the new image thumbnail URL
+                    thumbUrl = thumbnailUrl.asString
+                    Timber.d("finished getting thumbnail url: %s", thumbUrl)
 
                     //  hide progress bar
                     progressBar.visibility = View.GONE

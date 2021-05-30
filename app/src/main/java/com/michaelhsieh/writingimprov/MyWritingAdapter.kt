@@ -90,7 +90,7 @@ class MyWritingAdapter internal constructor(
     }
 
     /**
-     * Display the thumbnail URL of an image.
+     * Display an image from a thumbnail URL.
      * Otherwise, show placeholder error icon.
      * @param url The url of the image
      * @param imageView The ImageView which displays the image

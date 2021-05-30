@@ -7,8 +7,6 @@
     <color name="background">#448AFF</color>
     <color name="white">#ffffff</color>
     <!--my writing row color-->
-    <!--dark green 800-->
-<!--    <color name="row">#2e7d32</color>-->
     <!-- dark blue -->
     <color name="row">#003c8f</color>
 </resources>

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -14,8 +15,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -33,6 +32,8 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
     private val MAP_USERNAME = "username"
     private val MAP_FIRST = "first"
     private val MAP_LAST = "last"
+
+    private val COLLECTION_WRITING = "writing"
 
     private lateinit var adapter: MyWritingAdapter
 
@@ -60,6 +61,30 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             findNavController().navigate(action)
         }
 
+        // data to populate the RecyclerView with
+        val writingItems: ArrayList<WritingItem> = ArrayList()
+
+        val context = this.requireContext()
+        // set up the RecyclerView
+        val recyclerView: RecyclerView = view.findViewById(R.id.rv_my_writing)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter = MyWritingAdapter(context, writingItems)
+        adapter.setClickListener(this)
+        recyclerView.adapter = adapter
+
+        // add a divider between rows
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
+            (recyclerView.layoutManager as LinearLayoutManager).orientation
+        )
+        recyclerView.addItemDecoration(dividerItemDecoration)
+
+        // Make visible
+        val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_my_writing)
+        progressBar.visibility = View.VISIBLE
+        // Get reference to TextView
+        val emptyWritingText = view.findViewById<TextView>(R.id.tv_my_writing_empty)
+        emptyWritingText.visibility = View.GONE
+
         // Add user to check Firestore works
         // Create a new user with a first and last name
         val user = hashMapOf(
@@ -78,34 +103,62 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
                 Timber.w(e, "Error adding document")
             }
 
-        // data to populate the RecyclerView with
-        val writingItems: ArrayList<WritingItem> = ArrayList()
+        // Get existing writings by user from Firestore
+        val collection = db.collection("users")
+            .document(DOC_ID)
+            .collection(COLLECTION_WRITING)
+
+        collection
+            .get()
+            .addOnSuccessListener {
+
+                if (it.isEmpty) {
+                    Timber.d("Empty list")
+                } else {
+                    // Convert the whole Query Snapshot to a list
+                    // of objects directly
+                    val items: List<WritingItem> =
+                        it.toObjects(WritingItem::class.java)
+
+                    // Set to list
+                    writingItems.clear()
+                    writingItems.addAll(items)
+                    Timber.d("onSuccess: %s", writingItems)
+
+                    // Reload RecyclerView
+                    adapter.notifyDataSetChanged()
+                }
+
+                // Show or hide no writing text
+                setEmptyTextVisibility(writingItems.size, emptyWritingText)
+                // Hide progress bar
+                progressBar.visibility = View.GONE
+            }
+            .addOnFailureListener {
+                Timber.e(it)
+                Toasty.error(this.requireContext(), R.string.error_loading_my_writing, Toast.LENGTH_LONG).show()
+
+                // Hide progress bar
+                progressBar.visibility = View.GONE
+            }
+
+        // Add submitted writing from previous Fragment
         val item = args.writingItem
         if (item != null) {
             Timber.d("Receiving: %s", item.toString())
             writingItems.add(item)
+
+            // Add to user's writing collection
+            collection.add(item)
+
+            // Reload RecyclerView
+            // adapter.notifyDataSetChanged()
+
+            // Show or hide no writing text
+            // setEmptyTextVisibility(writingItems.size, emptyWritingText)
+            // Hide progress bar
+            // progressBar.visibility = View.GONE
         }
-
-        val emptyWritingText = view.findViewById<TextView>(R.id.tv_my_writing_empty)
-        if (writingItems.size > 0) {
-            emptyWritingText.visibility = View.GONE
-        } else {
-            emptyWritingText.visibility = View.VISIBLE
-        }
-
-        val context = this.requireContext()
-        // set up the RecyclerView
-        val recyclerView: RecyclerView = view.findViewById(R.id.rv_my_writing)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = MyWritingAdapter(context, writingItems)
-        adapter.setClickListener(this)
-        recyclerView.adapter = adapter
-
-        // add a divider between rows
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
-            (recyclerView.layoutManager as LinearLayoutManager).orientation
-        )
-        recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     override fun onItemClick(view: View?, position: Int) {
@@ -114,5 +167,18 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             "You clicked " + adapter.getItem(position).name + " on row number " + position,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    /**
+     * Show text to inform user if no writing available
+     * @param numItems Number of items in list
+     * @param textView The TextView displayed to user
+     */
+    private fun setEmptyTextVisibility(numItems:Int, textView: TextView) {
+        if (numItems > 0) {
+            textView.visibility = View.GONE
+        } else {
+            textView.visibility = View.VISIBLE
+        }
     }
 }

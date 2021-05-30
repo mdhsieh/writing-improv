@@ -12,6 +12,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
+import java.util.*
 
 
 /**
@@ -227,7 +228,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
      */
     private fun submitWriting(isOnTime:Boolean) {
         // Create new WritingItem with all text and URL
-        val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, writing = writeEditText.text.toString())
+        val item = WritingItem(UUID.randomUUID().toString(), "Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, writing = writeEditText.text.toString())
 
         Timber.d("Passing: %s", item.toString())
 

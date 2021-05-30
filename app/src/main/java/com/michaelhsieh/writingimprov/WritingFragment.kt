@@ -8,13 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
-import java.lang.reflect.Modifier
 
 
 /**
@@ -49,6 +46,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     // Show error if image URL can't load
     private lateinit var errorText:TextView
 
+    // EditText where user writes
+    private lateinit var writeEditText: EditText
+
     private val args: WritingFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,6 +76,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         errorText = view.findViewById(R.id.tv_error)
         errorText.visibility = View.GONE
 
+        // EditText
+        writeEditText = view.findViewById(R.id.et_writing)
+
         // Load the random image, or use saved URL after configuration change,
         // example device rotated
         if (savedInstanceState != null) {
@@ -101,17 +104,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             // stop timer
             countDownTimer.cancel()
 
-            // Create new WritingItem with all text and URL
-            val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl)
-
-            Timber.d("Passing: %s", item.toString())
-
-            val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
-                isSubmittedChallenge = true,
-                isCompletedOnTime = true,
-                writingItem = item
-            )
-            findNavController().navigate(action)
+            submitWriting(true)
         }
     }
 
@@ -129,16 +122,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             }
 
             override fun onFinish() {
-                // Create new WritingItem with all text and URL
-                val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl)
-
-                Timber.d("Passing: %s", item.toString())
-
-                val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
-                    isSubmittedChallenge = true,
-                    isCompletedOnTime = false,
-                    writingItem = item)
-                findNavController().navigate(action)
+                submitWriting(false)
             }
         }.start()
 
@@ -234,5 +218,24 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis)
 
         outState.putString(KEY_IMAGE_URL, imageUrl)
+    }
+
+    /**
+     * Create new WritingItem with all text and URL, then
+     * go to next Fragment.
+     * @param isOnTime Whether the writing was submitted on time
+     */
+    private fun submitWriting(isOnTime:Boolean) {
+        // Create new WritingItem with all text and URL
+        val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, writing = writeEditText.text.toString())
+
+        Timber.d("Passing: %s", item.toString())
+
+        val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
+            isSubmittedChallenge = true,
+            isCompletedOnTime = isOnTime,
+            writingItem = item
+        )
+        findNavController().navigate(action)
     }
 }

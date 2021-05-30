@@ -39,7 +39,7 @@ class MyWritingAdapter internal constructor(
         val writing = mData[position]
         holder.nameText.text = writing.name
         holder.promptText.text = writing.prompt
-        holder.timeText.text = writing.time
+        holder.timeText.text = writing.time + " minutes"
         loadThumbnailImage(writing.url, holder.thumbImage)
     }
 

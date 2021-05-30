@@ -38,7 +38,7 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     // image URL
     private var url:String = ""
     // image thumbnail URL
-    private var thumbUrl:String = ""
+//    private var thumbUrl:String = ""
 
     // Show progress bar while getting image URL
     private lateinit var progressBar: ProgressBar
@@ -190,8 +190,8 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
                     Timber.d("finished getting url: %s", url)
 
                     // Set var thumb url to the new image thumbnail URL
-                    thumbUrl = thumbnailUrl.asString
-                    Timber.d("finished getting thumbnail url: %s", thumbUrl)
+//                    thumbUrl = thumbnailUrl.asString
+//                    Timber.d("finished getting thumbnail url: %s", thumbUrl)
 
                     //  hide progress bar
                     progressBar.visibility = View.GONE

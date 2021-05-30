@@ -8,10 +8,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
+import java.lang.reflect.Modifier
+
 
 /**
  * Load random image and start countdown timer if loaded successfully.
@@ -96,9 +100,16 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         submitButton.setOnClickListener {
             // stop timer
             countDownTimer.cancel()
+
+            // Create new WritingItem with all text and URL
+            val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), thumbUrl = imageUrl)
+
+            Timber.d("Passing: %s", item.toString())
+
             val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
                 isSubmittedChallenge = true,
-                isCompletedOnTime = true
+                isCompletedOnTime = true,
+                writingItem = item
             )
             findNavController().navigate(action)
         }
@@ -118,9 +129,15 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
             }
 
             override fun onFinish() {
+                // Create new WritingItem with all text and URL
+                val item = WritingItem("Practice", prompt = args.prompt, time = args.minutes.toString(), thumbUrl = imageUrl)
+
+                Timber.d("Passing: %s", item.toString())
+
                 val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
                     isSubmittedChallenge = true,
-                    isCompletedOnTime = false)
+                    isCompletedOnTime = false,
+                    writingItem = item)
                 findNavController().navigate(action)
             }
         }.start()

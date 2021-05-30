@@ -72,5 +72,9 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
+        <argument
+            android:name="writingItem"
+            app:argType="com.michaelhsieh.writingimprov.WritingItem"
+            app:nullable="true" />
     </fragment>
 </navigation>

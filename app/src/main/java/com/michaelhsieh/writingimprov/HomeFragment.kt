@@ -25,7 +25,8 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         myWritingButton.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToMyWritingFragment(
                 isSubmittedChallenge = false,
-                isCompletedOnTime = false
+                isCompletedOnTime = false,
+                writingItem = null
             )
             findNavController().navigate(action)
         }

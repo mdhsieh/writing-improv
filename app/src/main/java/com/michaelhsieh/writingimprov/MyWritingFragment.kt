@@ -150,14 +150,6 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
 
             // Add to user's writing collection
             collection.add(item)
-
-            // Reload RecyclerView
-            // adapter.notifyDataSetChanged()
-
-            // Show or hide no writing text
-            // setEmptyTextVisibility(writingItems.size, emptyWritingText)
-            // Hide progress bar
-            // progressBar.visibility = View.GONE
         }
     }
 

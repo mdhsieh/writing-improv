@@ -19,6 +19,7 @@
     <string name="desc_time">Time</string>
     <string name="desc_check">Check</string>
     <string name="desc_cross">Cross</string>
+    <string name="desc_thumb_image">Thumbnail Image</string>
     <!--    error-->
     <string name="error_minutes">Please enter a time!</string>
     <string name="error_loading_image">Please check your Internet connection. Error loading image.</string>

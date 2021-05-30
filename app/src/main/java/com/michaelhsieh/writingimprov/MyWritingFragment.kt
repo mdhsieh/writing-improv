@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -77,11 +79,12 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             }
 
         // data to populate the RecyclerView with
-        val writingNames: ArrayList<String> = ArrayList()
-        writingNames.add("Challenge by mhdev")
-        writingNames.add("Challenge by mh2blue")
-        writingNames.add("Practice")
-        writingNames.add("Practice")
+        val writingNames: ArrayList<WritingItem> = ArrayList()
+        val url = "https://images.unsplash.com/photo-1621693850399-303a72c867a8?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixlib=rb-1.2.1&q=80&w=800"
+        writingNames.add(WritingItem("Challenge by mhdev", "All about ducks", "5:00", url))
+        writingNames.add(WritingItem("Challenge by mh2blue", "Topic is cheese", "5:00", url))
+        writingNames.add(WritingItem("Practice", "Mystery", "3:00", url))
+        writingNames.add(WritingItem("Practice", "Action", "1:00", url))
 
         val emptyWritingText = view.findViewById<TextView>(R.id.tv_my_writing_empty)
         if (writingNames.size > 0) {
@@ -108,7 +111,7 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
     override fun onItemClick(view: View?, position: Int) {
         Toast.makeText(
             this.requireContext(),
-            "You clicked " + adapter.getItem(position) + " on row number " + position,
+            "You clicked " + adapter.getItem(position).name + " on row number " + position,
             Toast.LENGTH_SHORT
         ).show()
     }

@@ -57,6 +57,9 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/writingFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="thumbUrl"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/myWritingFragment"

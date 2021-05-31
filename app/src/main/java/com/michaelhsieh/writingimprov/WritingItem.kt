@@ -22,6 +22,8 @@ data class WritingItem(
 
     val time: String = "",
 
+    val thumbUrl: String = "",
+
     val url: String = "",
 
     val writing:String = ""
@@ -30,6 +32,6 @@ data class WritingItem(
 
     // To debug
     override fun toString(): String {
-        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, writing: $writing"
+        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, writing: $writing"
     }
 }

@@ -40,7 +40,7 @@ class MyWritingAdapter internal constructor(
         holder.nameText.text = writing.name
         holder.promptText.text = writing.prompt
         holder.timeText.text = writing.time + " minutes"
-        loadThumbnailImage(writing.url, holder.thumbImage)
+        loadThumbnailImage(writing.thumbUrl, holder.thumbImage)
     }
 
     // total number of rows
@@ -90,7 +90,7 @@ class MyWritingAdapter internal constructor(
     }
 
     /**
-     * Display an image from a thumbnail URL, meaning small item image in row.
+     * Display an image from a thumbnail URL.
      * Otherwise, show placeholder error icon.
      * @param url The url of the image
      * @param imageView The ImageView which displays the image

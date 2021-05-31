@@ -25,6 +25,7 @@ const val KEY_MINUTES = "minutes"
 const val KEY_PROMPT = "prompt"
 
 const val KEY_URL = "url"
+const val KEY_THUMB_URL = "thumb"
 
 class PromptFragment:Fragment(R.layout.fragment_prompt) {
 
@@ -37,6 +38,9 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     private val BASE_URL:String = "https://api.unsplash.com/"
     // image URL
     private var url:String = ""
+
+    // image thumbnail URL
+    private var thumbUrl:String = ""
 
     // Show progress bar while getting image URL
     private lateinit var progressBar: ProgressBar
@@ -53,6 +57,8 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
 
             url = savedInstanceState.getString(KEY_URL)!!
             Timber.d("After config change, url: %s", url)
+            thumbUrl = savedInstanceState.getString(KEY_THUMB_URL)!!
+            Timber.d("After config change, thumbnail url: %s", thumbUrl)
         } else {
             prompt = getRandomPrompt()
             minutes = getRandomTime(MIN_MINUTES, MAX_MINUTES).toString()
@@ -94,7 +100,7 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
 
         goButton.setOnClickListener {
 
-            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url)
+            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl)
             findNavController().navigate(action)
 
         }
@@ -107,6 +113,7 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
         outState.putString(KEY_MINUTES, minutes)
 
         outState.putString(KEY_URL, url)
+        outState.putString(KEY_THUMB_URL, thumbUrl)
     }
 
     /** Generates a random prompt using String resources. */
@@ -181,10 +188,15 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
                 if (image != null) {
 
                     val regularUrl = image.urls.asJsonObject.get("regular")
+                    val thumbnailUrl = image.urls.asJsonObject.get("thumb")
 
                     // Set var url to the new image URL
                     url = regularUrl.asString
                     Timber.d("finished getting url: %s", url)
+
+                    // Set var thumb url to the new image thumbnail URL
+                    thumbUrl = thumbnailUrl.asString
+                    Timber.d("finished getting thumbnail url: %s", thumbUrl)
 
                     //  hide progress bar
                     progressBar.visibility = View.GONE

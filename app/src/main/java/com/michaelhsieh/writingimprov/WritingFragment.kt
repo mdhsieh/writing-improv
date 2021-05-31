@@ -44,6 +44,9 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
     private lateinit var imageView:ImageView
     private lateinit var progressBar:ProgressBar
 
+    // Smaller image URL which is used later by MyWritingFragment RecyclerView
+    private var thumbnailImageUrl:String = ""
+
     // Show error if image URL can't load
     private lateinit var errorText:TextView
 
@@ -89,10 +92,13 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
                 imageUrl = savedUrl
             }
         } else {
-            // Set the URL from previous fragment
+            // Set the URL from previous Fragment
             imageUrl = args.url
         }
         loadImage(imageUrl)
+
+        // Set thumbnail URL from previous Fragment
+        thumbnailImageUrl = args.thumbUrl
 
         // If savedInstanceState is set,
         // set time left to saved milliseconds
@@ -228,7 +234,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
      */
     private fun submitWriting(isOnTime:Boolean) {
         // Create new WritingItem with all text and URL
-        val item = WritingItem(UUID.randomUUID().toString(), "Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, writing = writeEditText.text.toString())
+        val item = WritingItem(UUID.randomUUID().toString(), "Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
 
         Timber.d("Passing: %s", item.toString())
 

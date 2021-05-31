@@ -97,10 +97,10 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             .document(DOC_ID)
             .set(user)
             .addOnSuccessListener {
-                Timber.d("Document added")
+                Timber.d("user added")
             }
             .addOnFailureListener { e ->
-                Timber.w(e, "Error adding document")
+                Timber.w(e, "Error adding user")
             }
 
         // Get existing writings by user from Firestore
@@ -125,9 +125,27 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
                     writingItems.addAll(items)
                     Timber.d("onSuccess: %s", writingItems)
 
-                    // Reload RecyclerView
-                    adapter.notifyDataSetChanged()
                 }
+
+
+                // Add submitted writing from previous Fragment
+                val item = args.writingItem
+                if (item != null) {
+                    Timber.d("Receiving: %s", item.toString())
+
+                    Timber.d("list: %s", writingItems)
+                    // Don't add item if it already exists in list.
+                    // add() methods are called again after device rotated
+                    if (!isItemIdSame(item, writingItems)) {
+                        Timber.d("%s id is different: %s", item.prompt, item.id)
+                        writingItems.add(item)
+
+                        // Add to user's writing collection
+                        collection.add(item)
+                    }
+                }
+                // Reload RecyclerView
+                adapter.notifyDataSetChanged()
 
                 // Show or hide no writing text
                 setEmptyTextVisibility(writingItems.size, emptyWritingText)
@@ -141,16 +159,6 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
                 // Hide progress bar
                 progressBar.visibility = View.GONE
             }
-
-        // Add submitted writing from previous Fragment
-        val item = args.writingItem
-        if (item != null) {
-            Timber.d("Receiving: %s", item.toString())
-            writingItems.add(item)
-
-            // Add to user's writing collection
-            collection.add(item)
-        }
     }
 
     override fun onItemClick(view: View?, position: Int) {
@@ -172,5 +180,20 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         } else {
             textView.visibility = View.VISIBLE
         }
+    }
+
+    /**
+     * Whether an item has the same ID as any item in a list.
+     * @param item The item
+     * @param itemList The list to compare with
+     * @return true if any IDs match, false otherwise
+     */
+    private fun isItemIdSame(item: WritingItem, itemList:List<WritingItem>):Boolean {
+        for (i in itemList) {
+            if (i.id == item.id) {
+                return true
+            }
+        }
+        return false
     }
 }

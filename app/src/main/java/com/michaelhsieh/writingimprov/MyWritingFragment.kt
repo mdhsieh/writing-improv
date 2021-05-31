@@ -133,11 +133,9 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
                 if (item != null) {
                     Timber.d("Receiving: %s", item.toString())
 
-                    Timber.d("list: %s", writingItems)
                     // Don't add item if it already exists in list.
                     // add() methods are called again after device rotated
                     if (!isItemIdSame(item, writingItems)) {
-                        Timber.d("%s id is different: %s", item.prompt, item.id)
                         writingItems.add(item)
 
                         // Add to user's writing collection

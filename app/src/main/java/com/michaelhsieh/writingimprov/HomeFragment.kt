@@ -21,6 +21,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             findNavController().navigate(action)
         }
 
+        // WritingItem is null since user is not submitting any writing
         val myWritingButton = view.findViewById<Button>(R.id.btn_my_writing)
         myWritingButton.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToMyWritingFragment(

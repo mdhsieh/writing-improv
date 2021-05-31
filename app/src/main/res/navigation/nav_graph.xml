@@ -78,5 +78,17 @@
             android:name="writingItem"
             app:argType="com.michaelhsieh.writingimprov.WritingItem"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_myWritingFragment_to_myWritingDetailsFragment"
+            app:destination="@id/myWritingDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myWritingDetailsFragment"
+        android:name="com.michaelhsieh.writingimprov.MyWritingDetailsFragment"
+        android:label="My Writing Details"
+        tools:layout="@layout/fragment_my_writing_details">
+        <argument
+            android:name="writingItem"
+            app:argType="com.michaelhsieh.writingimprov.WritingItem" />
     </fragment>
 </navigation>

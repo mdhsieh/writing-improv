@@ -128,7 +128,8 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
                 }
 
 
-                // Add submitted writing from previous Fragment
+                // Add submitted writing from previous Fragment.
+                // Will be null if previous was HomeFragment.
                 val item = args.writingItem
                 if (item != null) {
                     Timber.d("Receiving: %s", item.toString())
@@ -160,11 +161,9 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toast.makeText(
-            this.requireContext(),
-            "You clicked " + adapter.getItem(position).name + " on row number " + position,
-            Toast.LENGTH_SHORT
-        ).show()
+        val item = adapter.getItem(position)
+        val action = MyWritingFragmentDirections.actionMyWritingFragmentToMyWritingDetailsFragment(item)
+        findNavController().navigate(action)
     }
 
     /**

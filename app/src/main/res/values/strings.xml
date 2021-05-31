@@ -13,6 +13,7 @@
     <!-- hints-->
     <string name="hint_time">Minutes</string>
     <string name="hint_writing">Write here!</string>
+    <string name="hint_my_writing_details">Your submitted writing</string>
     <!--    content descriptions-->
     <string name="desc_menu_icon">Menu Icon</string>
     <string name="desc_image">Image</string>

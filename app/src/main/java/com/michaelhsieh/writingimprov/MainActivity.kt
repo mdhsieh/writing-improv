@@ -1,7 +1,9 @@
 package com.michaelhsieh.writingimprov
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -16,6 +18,11 @@ import com.google.android.gms.security.ProviderInstaller
 import timber.log.Timber
 import javax.net.ssl.SSLContext
 
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.auth.FirebaseAuth
+import es.dmoral.toasty.Toasty
+
 /**
  * Fragment host.
  *
@@ -26,6 +33,11 @@ import javax.net.ssl.SSLContext
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+
+    // Sign in response code
+    companion object {
+        private const val RC_SIGN_IN = 123
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +57,48 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         updateAndroidSecurityProvider(this)
+
+        // Choose authentication providers
+        val providers = arrayListOf(
+                AuthUI.IdpConfig.EmailBuilder().build()
+            )
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build(),
+            RC_SIGN_IN)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user != null) {
+                    Timber.d("user display name: %s", user.displayName)
+                    Timber.d("user email: %s", user.email)
+                    Toasty.normal(this, getString(R.string.user_logged_in, user.displayName), Toast.LENGTH_LONG).show()
+                }
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                // response.getError().getErrorCode() and handle the error.
+                if (response != null) {
+                    Timber.e(response.error?.errorCode.toString())
+                }
+            }
+        }
     }
 
     /**

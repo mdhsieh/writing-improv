@@ -3,8 +3,12 @@ package com.michaelhsieh.writingimprov
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.firebase.ui.auth.AuthUI
+import es.dmoral.toasty.Toasty
+import timber.log.Timber
 
 /**
  * Home menu.
@@ -30,6 +34,20 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
                 writingItem = null
             )
             findNavController().navigate(action)
+        }
+
+        // Logout when user presses button
+        val logoutButton = view.findViewById<Button>(R.id.btn_logout)
+        logoutButton.setOnClickListener {
+            AuthUI.getInstance()
+                .signOut(this@HomeFragment.requireContext())
+                .addOnCompleteListener {
+                    Toasty.normal(this@HomeFragment.requireContext(), R.string.user_logged_out, Toast.LENGTH_LONG).show()
+                    Timber.d("logged out")
+                }
+                .addOnFailureListener() {
+                    Timber.e(it)
+                }
         }
     }
 }

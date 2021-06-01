@@ -85,6 +85,8 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     // Declare the dependency for the Cloud Firestore library
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    // FirebaseUI authentication
+    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
 
     // Enabling Multidex support on older devices, example API 17 tablet
     implementation 'androidx.multidex:multidex:2.0.1'

@@ -166,10 +166,10 @@ class WritingFragmentTest {
     }
 
     /**
-     * Go to MyWritingFragment, then go back to WritingFragment
+     * Go to MyWritingFragment, then go back to PromptFragment
      */
     @Test
-    fun test_backPress_toWritingFragment() {
+    fun test_backPress_toPromptFragment() {
         navWritingFragment()
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_submit))
@@ -181,7 +181,7 @@ class WritingFragmentTest {
 
         Espresso.pressBack()
 
-        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_writing))
+        Espresso.onView(ViewMatchers.withId(R.id.scroll_view_prompt))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
     }

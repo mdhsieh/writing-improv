@@ -9,6 +9,7 @@ Clone this repository, open the cloned folder in Android Studio, and run the app
 ## Features
 
 ## Libraries
+- [FirebaseUI Authentication](https://firebase.google.com/docs/auth/android/firebaseui)
 - [Cloud Firestore](https://firebase.google.com/docs/firestore)
 - [Retrofit](https://square.github.io/retrofit)
 - [Unsplash API](https://unsplash.com/developers)

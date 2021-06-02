@@ -6,7 +6,8 @@
     <string name="go">Go</string>
     <string name="submit">Submit</string>
     <string name="menu">Menu</string>
-    <string name="logout">Log Out</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
     <!-- labels -->
     <string name="label_time">Time (in minutes):</string>
     <string name="label_prompt">Prompt:</string>
@@ -34,6 +35,9 @@
     <string name="prompt_action">Action</string>
     <string name="prompt_thriller">Thriller</string>
     <string name="prompt_comedy">Comedy</string>
+    <!-- sign in and out toasts-->
+    <string name="user_sign_out">Signed out!</string>
+    <string name="user_sign_in">Welcome, %1$s!</string>
     <!-- time left toast -->
     <string name="time_left_secs">%1$d seconds left!</string>
     <!-- submitted writing toast-->
@@ -43,6 +47,4 @@
     <string name="my_writing_empty">You have no writing submitted yet!</string>
     <!--    other-->
     <string name="timer_default">00:00</string>
-    <string name="user_logged_out">Logged out!</string>
-    <string name="user_logged_in">Welcome, %1$s!</string>
 </resources>

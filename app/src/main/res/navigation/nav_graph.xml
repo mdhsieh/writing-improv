@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_homeFragment_to_myWritingFragment"
             app:destination="@id/myWritingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/promptFragment"
@@ -93,5 +96,14 @@
         <argument
             android:name="writingItem"
             app:argType="com.michaelhsieh.writingimprov.WritingItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.michaelhsieh.writingimprov.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

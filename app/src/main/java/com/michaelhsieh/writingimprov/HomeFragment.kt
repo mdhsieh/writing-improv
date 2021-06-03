@@ -8,9 +8,13 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.SignInFragment.Companion.EMAIL
+import com.michaelhsieh.writingimprov.SignInFragment.Companion.USERNAME
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -20,6 +24,14 @@ import timber.log.Timber
  * Has sign in functionality.
  */
 class HomeFragment:Fragment(R.layout.fragment_home) {
+
+    var db = FirebaseFirestore.getInstance()
+
+    companion object {
+        val MAP_USERNAME = "username"
+        val COLLECTION_USERS = "users"
+        val COLLECTION_WRITING = "writing"
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +46,6 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         val myWritingButton = view.findViewById<Button>(R.id.btn_my_writing)
         myWritingButton.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToMyWritingFragment(
-                isSubmittedChallenge = false,
                 isCompletedOnTime = false,
                 writingItem = null
             )
@@ -46,6 +57,23 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         logoutButton.setOnClickListener {
             signOut()
         }
+
+        // Add user to Firestore
+        // Create a new user with ID and username
+        val user = hashMapOf(
+            MAP_USERNAME to USERNAME
+        )
+        // User document ID is same as email
+        // Add a new document with a generated ID
+        db.collection(COLLECTION_USERS)
+            .document(EMAIL)
+            .set(user)
+            .addOnSuccessListener {
+                Timber.d("user added: %s", user.get(MAP_USERNAME))
+            }
+            .addOnFailureListener { e ->
+                Timber.w(e, "Error adding user")
+            }
     }
 
     private fun signOut() {
@@ -61,6 +89,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             }
             .addOnFailureListener() {
                 Timber.e(it)
+                Toasty.error(this@HomeFragment.requireContext(), R.string.error_sign_out, Toast.LENGTH_LONG).show()
             }
     }
 }

@@ -23,6 +23,11 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
     // Sign in response code
     companion object {
         private const val RC_SIGN_IN = 123
+        // These are public variables since
+        // needed by HomeFragment and MyWritingFragment.
+        // Passing these across Fragments was difficult to maintain.
+        lateinit var USERNAME : String
+        lateinit var EMAIL : String
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,8 +66,10 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
                 // Successfully signed in
                 val user = FirebaseAuth.getInstance().currentUser
                 if (user != null) {
-                    Timber.d("user display name: %s", user.displayName)
-                    Timber.d("user email: %s", user.email)
+                    USERNAME = user.displayName.toString()
+                    EMAIL = user.email.toString()
+                    Timber.d("user display name: %s", USERNAME)
+                    Timber.d("user email: %s", EMAIL)
                     Toasty.normal(this@SignInFragment.requireContext(), getString(R.string.user_sign_in, user.displayName), Toast.LENGTH_LONG).show()
 
                     // Navigate to home
@@ -75,6 +82,7 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
                 // response.getError().getErrorCode() and handle the error.
                 if (response != null) {
                     Timber.e(response.error?.errorCode.toString())
+                    Toasty.error(this@SignInFragment.requireContext(), R.string.error_sign_in, Toast.LENGTH_LONG).show()
                 }
             }
         }

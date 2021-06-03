@@ -239,7 +239,6 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         Timber.d("Passing: %s", item.toString())
 
         val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
-            isSubmittedChallenge = true,
             isCompletedOnTime = isOnTime,
             writingItem = item
         )

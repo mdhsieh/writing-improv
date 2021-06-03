@@ -72,9 +72,6 @@
         android:label="My Writing"
         tools:layout="@layout/fragment_my_writing" >
         <argument
-            android:name="isSubmittedChallenge"
-            app:argType="boolean" />
-        <argument
             android:name="isCompletedOnTime"
             app:argType="boolean" />
         <action

@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_USERS
+import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
+import com.michaelhsieh.writingimprov.SignInFragment.Companion.EMAIL
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -28,12 +31,6 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
     private val args: MyWritingFragmentArgs by navArgs()
 
     var db = FirebaseFirestore.getInstance()
-    private val DOC_ID = "my-first-user"
-    private val MAP_USERNAME = "username"
-    private val MAP_FIRST = "first"
-    private val MAP_LAST = "last"
-
-    private val COLLECTION_WRITING = "writing"
 
     private lateinit var adapter: MyWritingAdapter
 
@@ -47,18 +44,12 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         // Show Toast only if writing was submitted from a challenge.
         // If user completed by time limit, show success Toast
         // Otherwise, show fail Toast
-        if (args.isSubmittedChallenge) {
+        if (args.writingItem != null) {
             if (args.isCompletedOnTime) {
                 Toasty.normal(this.requireContext(), getString(R.string.on_time), Toast.LENGTH_LONG, successIcon).show()
             } else {
                 Toasty.normal(this.requireContext(), getString(R.string.out_of_time), Toast.LENGTH_LONG, failIcon).show()
             }
-        }
-
-        val menuButton = view.findViewById<Button>(R.id.btn_menu)
-        menuButton.setOnClickListener {
-            val action = MyWritingFragmentDirections.actionMyWritingFragmentToHomeFragment()
-            findNavController().navigate(action)
         }
 
         // data to populate the RecyclerView with
@@ -85,27 +76,9 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         val emptyWritingText = view.findViewById<TextView>(R.id.tv_my_writing_empty)
         emptyWritingText.visibility = View.GONE
 
-        // Add user to check Firestore works
-        // Create a new user with a first and last name
-        val user = hashMapOf(
-            MAP_USERNAME to "mdhsieh",
-            MAP_FIRST to "Michael",
-            MAP_LAST to "Hsieh"
-        )
-        // Add a new document with a generated ID
-        db.collection("users")
-            .document(DOC_ID)
-            .set(user)
-            .addOnSuccessListener {
-                Timber.d("user added")
-            }
-            .addOnFailureListener { e ->
-                Timber.w(e, "Error adding user")
-            }
-
         // Get existing writings by user from Firestore
-        val collection = db.collection("users")
-            .document(DOC_ID)
+        val collection = db.collection(COLLECTION_USERS)
+            .document(EMAIL)
             .collection(COLLECTION_WRITING)
 
         collection

@@ -21,9 +21,9 @@ Clone this repository, open the cloned folder in Android Studio, and run the app
 - Espresso UI Testing
 
 ## Screenshots
-![Sign In](Screenshot_1.png)
-![Home](Screenshot_2.png)
-![Prompt](Screenshot_3.png)
-![Writing](Screenshot_4.png)
-![My Writing](Screenshot_5.png)
-![My Writing Details](Screenshot_6.png)
+![Sign In](Screenshot_1.PNG)
+![Home](Screenshot_2.PNG)
+![Prompt](Screenshot_3.PNG)
+![Writing](Screenshot_4.PNG)
+![My Writing](Screenshot_5.PNG)
+![My Writing Details](Screenshot_6.PNG)

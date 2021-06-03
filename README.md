@@ -2,7 +2,23 @@
 Improve your creative writing skills.
 
 ## Installation
-Clone this repository, open the cloned folder in Android Studio, and run the app.
+Clone this repository:
+`git clone https://github.com/mdhsieh/writing-improv.git`
+and open the cloned folder in Android Studio.
+
+This app uses the Unsplash API,
+so you need to [register as a developer](https://unsplash.com/join).
+Login to Unsplash, create a new application, and copy the access key.
+Then, create a new file `app/src/main/res/values/secrets.xml` with the access key.
+For example:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="access_key">YOUR_ACCESS_KEY</string>
+</resources>
+```
+
+Run the app.
 
 ## Download
 

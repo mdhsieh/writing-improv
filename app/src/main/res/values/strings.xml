@@ -16,6 +16,7 @@
     <string name="hint_time">Minutes</string>
     <string name="hint_writing">Write here!</string>
     <string name="hint_my_writing_details">Your submitted writing</string>
+    <string name="hint_username">Username</string>
     <!--    content descriptions-->
     <string name="desc_menu_icon">Menu Icon</string>
     <string name="desc_image">Image</string>
@@ -47,6 +48,11 @@
     <string name="on_time">Nice job, you did it!</string>
     <!-- no writing -->
     <string name="my_writing_empty">You have no writing submitted yet!</string>
+    <!--settings options menu-->
+    <string name="settings">Settings</string>
+    <!--settings text-->
+    <string name="change_username">Change Username</string>
+    <string name="save_username">Save</string>
     <!--    other-->
     <string name="timer_default">00:00</string>
 </resources>

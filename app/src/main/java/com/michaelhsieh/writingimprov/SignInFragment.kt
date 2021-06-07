@@ -60,8 +60,14 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
         signInButton.setOnClickListener {
             signIn()
         }
+
+        // If user already signed in, go to HomeFragment
+        navToHomeIfSignedIn()
     }
 
+    /**
+     * Launch sign in Activity.
+     */
     private fun signIn() {
         // Choose authentication providers
         val providers = arrayListOf(
@@ -78,6 +84,9 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
         )
     }
 
+    /**
+     * Go to next Fragment when sign in successful.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -86,18 +95,7 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                if (user != null) {
-                    USERNAME = user.displayName.toString()
-                    EMAIL = user.email.toString()
-                    Timber.d("user display name: %s", USERNAME)
-                    Timber.d("user email: %s", EMAIL)
-                    Toasty.normal(this@SignInFragment.requireContext(), getString(R.string.user_sign_in, user.displayName), Toast.LENGTH_LONG).show()
-
-                    // Navigate to home
-                    val action = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
-                    findNavController().navigate(action)
-                }
+                navToHomeIfSignedIn()
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
@@ -107,6 +105,21 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
                     Toasty.error(this@SignInFragment.requireContext(), R.string.error_sign_in, Toast.LENGTH_LONG).show()
                 }
             }
+        }
+    }
+
+    private fun navToHomeIfSignedIn() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            USERNAME = user.displayName.toString()
+            EMAIL = user.email.toString()
+            Timber.d("user display name: %s", USERNAME)
+            Timber.d("user email: %s", EMAIL)
+            Toasty.normal(this@SignInFragment.requireContext(), getString(R.string.user_sign_in, user.displayName), Toast.LENGTH_LONG).show()
+
+            // Navigate to home
+            val action = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
+            findNavController().navigate(action)
         }
     }
 }

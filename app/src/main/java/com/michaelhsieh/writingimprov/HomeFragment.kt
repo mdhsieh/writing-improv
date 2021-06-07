@@ -13,8 +13,6 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.michaelhsieh.writingimprov.SignInFragment.Companion.EMAIL
-import com.michaelhsieh.writingimprov.SignInFragment.Companion.USERNAME
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -58,22 +56,33 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             signOut()
         }
 
-        // Add user to Firestore
-        // Create a new user with ID and username
-        val user = hashMapOf(
-            MAP_USERNAME to USERNAME
-        )
-        // User document ID is same as email
-        // Add a new document with a generated ID
-        db.collection(COLLECTION_USERS)
-            .document(EMAIL)
-            .set(user)
-            .addOnSuccessListener {
-                Timber.d("user added: %s", user.get(MAP_USERNAME))
-            }
-            .addOnFailureListener { e ->
-                Timber.w(e, "Error adding user")
-            }
+        // Get email and username
+        val email = getEmail()
+        // Username is same as FirebaseUI display name
+        val username = getUsername()
+
+        if (email != null && username != null) {
+            // Add user to Firestore
+            // Create a new user with ID and username
+            val user = hashMapOf(
+                MAP_USERNAME to username
+            )
+            // User document ID is same as email
+            // Add a new document with a generated ID
+            db.collection(COLLECTION_USERS)
+                .document(email)
+                .set(user)
+                .addOnSuccessListener {
+                    Timber.d("user added: %s", user.get(MAP_USERNAME))
+                }
+                .addOnFailureListener { e ->
+                    Timber.w(e, "Error adding user")
+                }
+        } else {
+            Timber.d("display name: %s", username)
+            Timber.d("email: %s", email)
+            Toasty.error(this@HomeFragment.requireContext(), R.string.error_user_info, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun signOut() {
@@ -91,5 +100,27 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
                 Timber.e(it)
                 Toasty.error(this@HomeFragment.requireContext(), R.string.error_sign_out, Toast.LENGTH_LONG).show()
             }
+    }
+
+    /** Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
+    }
+
+    /** Return the user's display name if signed in.
+     * Otherwise, return null.
+     */
+    private fun getUsername():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.displayName
+        }
+        return null
     }
 }

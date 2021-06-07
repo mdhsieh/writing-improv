@@ -14,10 +14,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_USERS
 import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
-import com.michaelhsieh.writingimprov.SignInFragment.Companion.EMAIL
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -76,61 +76,68 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         val emptyWritingText = view.findViewById<TextView>(R.id.tv_my_writing_empty)
         emptyWritingText.visibility = View.GONE
 
-        // Get existing writings by user from Firestore
-        val collection = db.collection(COLLECTION_USERS)
-            .document(EMAIL)
-            .collection(COLLECTION_WRITING)
+        val email = getEmail()
 
-        collection
-            .get()
-            .addOnSuccessListener {
+        if (email != null) {
+            // Get existing writings by user from Firestore
+            val collection = db.collection(COLLECTION_USERS)
+                .document(email)
+                .collection(COLLECTION_WRITING)
 
-                if (it.isEmpty) {
-                    Timber.d("Empty list")
-                } else {
-                    // Convert the whole Query Snapshot to a list
-                    // of objects directly
-                    val items: List<WritingItem> =
-                        it.toObjects(WritingItem::class.java)
+            collection
+                .get()
+                .addOnSuccessListener {
 
-                    // Set to list
-                    writingItems.clear()
-                    writingItems.addAll(items)
-                    Timber.d("onSuccess: %s", writingItems)
+                    if (it.isEmpty) {
+                        Timber.d("Empty list")
+                    } else {
+                        // Convert the whole Query Snapshot to a list
+                        // of objects directly
+                        val items: List<WritingItem> =
+                            it.toObjects(WritingItem::class.java)
 
-                }
+                        // Set to list
+                        writingItems.clear()
+                        writingItems.addAll(items)
+                        Timber.d("onSuccess: %s", writingItems)
 
-
-                // Add submitted writing from previous Fragment.
-                // Will be null if previous was HomeFragment.
-                val item = args.writingItem
-                if (item != null) {
-                    Timber.d("Receiving: %s", item.toString())
-
-                    // Don't add item if it already exists in list.
-                    // add() methods are called again after device rotated
-                    if (!isItemIdSame(item, writingItems)) {
-                        writingItems.add(item)
-
-                        // Add to user's writing collection
-                        collection.add(item)
                     }
+
+
+                    // Add submitted writing from previous Fragment.
+                    // Will be null if previous was HomeFragment.
+                    val item = args.writingItem
+                    if (item != null) {
+                        Timber.d("Receiving: %s", item.toString())
+
+                        // Don't add item if it already exists in list.
+                        // add() methods are called again after device rotated
+                        if (!isItemIdSame(item, writingItems)) {
+                            writingItems.add(item)
+
+                            // Add to user's writing collection
+                            collection.add(item)
+                        }
+                    }
+                    // Reload RecyclerView
+                    adapter.notifyDataSetChanged()
+
+                    // Show or hide no writing text
+                    setEmptyTextVisibility(writingItems.size, emptyWritingText)
+                    // Hide progress bar
+                    progressBar.visibility = View.GONE
                 }
-                // Reload RecyclerView
-                adapter.notifyDataSetChanged()
+                .addOnFailureListener {
+                    Timber.e(it)
+                    Toasty.error(this.requireContext(), R.string.error_loading_my_writing, Toast.LENGTH_LONG).show()
 
-                // Show or hide no writing text
-                setEmptyTextVisibility(writingItems.size, emptyWritingText)
-                // Hide progress bar
-                progressBar.visibility = View.GONE
-            }
-            .addOnFailureListener {
-                Timber.e(it)
-                Toasty.error(this.requireContext(), R.string.error_loading_my_writing, Toast.LENGTH_LONG).show()
-
-                // Hide progress bar
-                progressBar.visibility = View.GONE
-            }
+                    // Hide progress bar
+                    progressBar.visibility = View.GONE
+                }
+        } else {
+            Timber.d("email: %s", email)
+            Toasty.error(this@MyWritingFragment.requireContext(), R.string.error_user_info, Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onItemClick(view: View?, position: Int) {
@@ -165,5 +172,16 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             }
         }
         return false
+    }
+
+    /** Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
     }
 }

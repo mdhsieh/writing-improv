@@ -26,11 +26,6 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
     // Sign in response code
     companion object {
         private const val RC_SIGN_IN = 123
-        // These are public variables since
-        // needed by HomeFragment and MyWritingFragment.
-        // Passing these across Fragments was difficult to maintain.
-        lateinit var USERNAME : String
-        lateinit var EMAIL : String
     }
 
     /**
@@ -111,10 +106,8 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
     private fun navToHomeIfSignedIn() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
-            USERNAME = user.displayName.toString()
-            EMAIL = user.email.toString()
-            Timber.d("user display name: %s", USERNAME)
-            Timber.d("user email: %s", EMAIL)
+            Timber.d("user display name: %s", user.displayName.toString())
+            Timber.d("user email: %s", user.email.toString())
             Toasty.normal(this@SignInFragment.requireContext(), getString(R.string.user_sign_in, user.displayName), Toast.LENGTH_LONG).show()
 
             // Navigate to home

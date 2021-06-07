@@ -31,6 +31,7 @@
     <string name="error_loading_my_writing">Please check your Internet connection. Error getting writing.</string>
     <string name="error_sign_in">Please check your Internet connection. Error signing in.</string>
     <string name="error_sign_out">Please check your Internet connection. Error signing out.</string>
+    <string name="error_user_info">Please check your Internet connection. Error getting user info.</string>
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
     <string name="prompt_story">What is the story behind this?</string>

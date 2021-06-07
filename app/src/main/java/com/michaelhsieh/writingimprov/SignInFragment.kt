@@ -3,6 +3,8 @@ package com.michaelhsieh.writingimprov
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -13,6 +15,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
+
 
 /**
  * First screen shown to user.
@@ -28,6 +31,25 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
         // Passing these across Fragments was difficult to maintain.
         lateinit var USERNAME : String
         lateinit var EMAIL : String
+    }
+
+    /**
+     * Display this Fragment's own separate options menu,
+     * since need to hide options if user not signed in.
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    /**
+     * Hide settings option when user not signed in.
+     */
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+
+        val item:MenuItem = menu.findItem(R.id.settingsFragment)
+        item.isVisible = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -54,6 +54,7 @@
     <!--settings text-->
     <string name="change_username">Change Username</string>
     <string name="save_username">Save</string>
+    <string name="updated_username">Username saved</string>
     <!--    other-->
     <string name="timer_default">00:00</string>
 </resources>

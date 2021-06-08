@@ -174,7 +174,8 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         return false
     }
 
-    /** Return the user's email if signed in.
+    /**
+     * Return the user's email if signed in.
      * Otherwise, return null.
      */
     private fun getEmail():String? {

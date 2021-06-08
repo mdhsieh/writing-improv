@@ -44,6 +44,7 @@
             android:inputType="textPersonName"
             android:hint="@string/hint_username"
             android:textColorHint="@color/white"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/btn_change_username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

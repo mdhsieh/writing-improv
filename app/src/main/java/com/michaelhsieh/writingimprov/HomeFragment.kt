@@ -102,7 +102,8 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             }
     }
 
-    /** Return the user's email if signed in.
+    /**
+     * Return the user's email if signed in.
      * Otherwise, return null.
      */
     private fun getEmail():String? {
@@ -113,7 +114,8 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         return null
     }
 
-    /** Return the user's display name if signed in.
+    /**
+     * Return the user's display name if signed in.
      * Otherwise, return null.
      */
     private fun getUsername():String? {

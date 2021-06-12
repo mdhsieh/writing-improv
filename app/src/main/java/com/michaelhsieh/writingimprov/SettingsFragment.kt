@@ -1,5 +1,7 @@
 package com.michaelhsieh.writingimprov
 
+import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -14,11 +16,17 @@ import timber.log.Timber
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
+    companion object {
+        const val KEY_PREFS = "prefs"
+        const val KEY_MIN_MINUTES = "min-minutes"
+        const val KEY_MAX_MINUTES = "max-minutes"
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val usernameEditText = view.findViewById<EditText>(R.id.et_username)
-        val saveButton = view.findViewById<Button>(R.id.btn_change_username)
+        val saveUsernameButton = view.findViewById<Button>(R.id.btn_change_username)
 
         // Username is same as FirebaseUI display name
         val username = getUsername()
@@ -29,9 +37,32 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             Toasty.error(this@SettingsFragment.requireContext(), R.string.error_user_info, Toast.LENGTH_LONG).show()
         }
 
-        saveButton.setOnClickListener {
+        saveUsernameButton.setOnClickListener {
             val changedUsername = usernameEditText.text.toString()
             updateUsername(changedUsername)
+        }
+
+        val minTimeEditText:EditText = view.findViewById(R.id.et_min_time)
+        val maxTimeEditText:EditText = view.findViewById(R.id.et_max_time)
+        val saveTimesButton:Button = view.findViewById(R.id.btn_change_practice_times)
+
+        // Check if saved times already exist
+        val sp: SharedPreferences = requireActivity().getSharedPreferences(KEY_PREFS, Activity.MODE_PRIVATE)
+        val savedMin = sp.getInt(KEY_MIN_MINUTES, -1)
+        val savedMax = sp.getInt(KEY_MAX_MINUTES, -1)
+
+        // Default 1 and 3
+        if (savedMin == -1) {
+            minTimeEditText.setText("1")
+        }
+        if (savedMax == -1) {
+            maxTimeEditText.setText("3")
+        }
+
+        saveTimesButton.setOnClickListener {
+            val minTime:Int = minTimeEditText.text.toString().toInt()
+            val maxTime:Int = maxTimeEditText.text.toString().toInt()
+            savePracticeTimes(minTime, maxTime)
         }
     }
 
@@ -65,5 +96,34 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     Toasty.normal(this@SettingsFragment.requireContext(), R.string.updated_username, Toast.LENGTH_LONG).show()
                 }
             }
+    }
+
+    /**
+     * Save min and max practice times user entered in EditTexts
+     * @param min The minimum time
+     * @param max The maximum time
+     */
+    private fun savePracticeTimes(min:Int, max:Int) {
+
+        if (min > 0 && max > 0 && min <= max) {
+            val sp: SharedPreferences =
+                requireActivity().getSharedPreferences(KEY_PREFS, Activity.MODE_PRIVATE)
+            val editor = sp.edit()
+            editor.putInt(KEY_MIN_MINUTES, min)
+            editor.putInt(KEY_MAX_MINUTES, max)
+            editor.apply()
+
+            Toasty.normal(
+                this@SettingsFragment.requireContext(),
+                R.string.updated_practice_times,
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            Toasty.error(
+                this@SettingsFragment.requireContext(),
+                R.string.error_practice_times,
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }

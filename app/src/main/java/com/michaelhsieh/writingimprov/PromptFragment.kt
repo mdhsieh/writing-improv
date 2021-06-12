@@ -1,5 +1,7 @@
 package com.michaelhsieh.writingimprov
 
+import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -32,9 +34,6 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     private lateinit var prompt: String
     private lateinit var minutes: String
 
-    private val MIN_MINUTES:Int = 1
-    private val MAX_MINUTES:Int = 3
-
     private val BASE_URL:String = "https://api.unsplash.com/"
     // image URL
     private var url:String = ""
@@ -51,6 +50,19 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Check if saved times already exist
+        val sp: SharedPreferences = requireActivity().getSharedPreferences(SettingsFragment.KEY_PREFS, Activity.MODE_PRIVATE)
+        var savedMin = sp.getInt(SettingsFragment.KEY_MIN_MINUTES, -1)
+        var savedMax = sp.getInt(SettingsFragment.KEY_MAX_MINUTES, -1)
+
+        // Default 1 and 3
+        if (savedMin == -1) {
+            savedMin = 1
+        }
+        if (savedMax == -1) {
+            savedMax = 3
+        }
+
         if (savedInstanceState != null) {
             prompt = savedInstanceState.getString(KEY_PROMPT)!!
             minutes = savedInstanceState.getString(KEY_MINUTES)!!
@@ -61,7 +73,7 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
             Timber.d("After config change, thumbnail url: %s", thumbUrl)
         } else {
             prompt = getRandomPrompt()
-            minutes = getRandomTime(MIN_MINUTES, MAX_MINUTES).toString()
+            minutes = getRandomTime(savedMin, savedMax).toString()
         }
     }
 

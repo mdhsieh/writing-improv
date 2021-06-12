@@ -55,6 +55,10 @@
     <string name="change_username">Change Username</string>
     <string name="save_username">Save</string>
     <string name="updated_username">Username saved</string>
+    <string name="practice_times">Practice Times</string>
+    <string name="label_min_time">Minimum Time (in minutes):</string>
+    <string name="label_max_time">Maximum Time (in minutes):</string>
+    <string name="save_practice_times">Save</string>
     <!--    other-->
     <string name="timer_default">00:00</string>
 </resources>

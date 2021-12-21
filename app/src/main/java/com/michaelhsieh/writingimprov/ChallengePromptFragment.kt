@@ -52,6 +52,7 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
     private lateinit var errorText:TextView
     private lateinit var sendChallengeButton:Button
     private lateinit var imageView:ImageView
+    private lateinit var randomImageButton:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +83,7 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         // Create progress bar, error text, go button
         progressBar = view.findViewById(R.id.pb_loading_url)
         errorText = view.findViewById(R.id.tv_error_url)
+        randomImageButton = view.findViewById(R.id.btn_random_image)
         sendChallengeButton = view.findViewById(R.id.btn_send_challenge)
 
         imageView = view.findViewById(R.id.iv_image)
@@ -109,11 +111,16 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
             getRandomImageUrl()
         }
 
-        sendChallengeButton.setOnClickListener {
+        randomImageButton.setOnClickListener {
+            getRandomImageUrl()
+        }
 
+        sendChallengeButton.setOnClickListener {
 //            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl)
 //            findNavController().navigate(action)
-
+            // Show error Toasty
+            val authorName = item?.name
+            Toasty.info(this@ChallengePromptFragment.requireContext(), "Sending your challenge to " + authorName, Toast.LENGTH_LONG,true).show()
         }
     }
 

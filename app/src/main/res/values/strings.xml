@@ -20,7 +20,7 @@
     <string name="hint_my_writing_details">Your submitted writing</string>
     <string name="hint_username">Username</string>
     <string name="hint_challenge_prompt">Write the prompt you want to send here!</string>
-    <string name="hint_challenge_time">Enter the time limit to answer the prompt!</string>
+    <string name="hint_challenge_time">Time limit</string>
     <!--    content descriptions-->
     <string name="desc_menu_icon">Menu Icon</string>
     <string name="desc_image">Image</string>

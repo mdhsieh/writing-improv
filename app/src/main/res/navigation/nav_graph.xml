@@ -116,8 +116,8 @@
     <fragment
         android:id="@+id/authorsFragment"
         android:name="com.michaelhsieh.writingimprov.AuthorsFragment"
-        android:label="fragment_authors"
-        tools:layout="@layout/fragment_authors" >
+        android:label="Authors"
+        tools:layout="@layout/fragment_authors">
         <action
             android:id="@+id/action_authorsFragment_to_challengePromptFragment"
             app:destination="@id/challengePromptFragment" />
@@ -125,8 +125,8 @@
     <fragment
         android:id="@+id/challengePromptFragment"
         android:name="com.michaelhsieh.writingimprov.ChallengePromptFragment"
-        android:label="fragment_challenge_prompt"
-        tools:layout="@layout/fragment_challenge_prompt" >
+        android:label="Create Challenge"
+        tools:layout="@layout/fragment_challenge_prompt">
         <argument
             android:name="authorToChallenge"
             app:argType="com.michaelhsieh.writingimprov.AuthorItem"

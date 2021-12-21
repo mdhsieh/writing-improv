@@ -50,6 +50,12 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             findNavController().navigate(action)
         }
 
+        val sendChallengeButton = view.findViewById<Button>(R.id.btn_send_challenge)
+        sendChallengeButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToAuthorsFragment()
+            findNavController().navigate(action)
+        }
+
         // Logout when user presses button
         val logoutButton = view.findViewById<Button>(R.id.btn_logout)
         logoutButton.setOnClickListener {

@@ -8,6 +8,7 @@
     <string name="menu">Menu</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
+    <string name="send_challenge">Send Challenge</string>
     <!-- labels -->
     <string name="label_time">Time (in minutes):</string>
     <string name="label_prompt">Prompt:</string>
@@ -50,6 +51,9 @@
     <string name="on_time">Nice job, you did it!</string>
     <!-- no writing -->
     <string name="my_writing_empty">You have no writing submitted yet!</string>
+    <!-- no authors -->
+    <string name="authors_empty">There are no other authors to challenge yet!</string>
+    <string name="label_author">Author:</string>
     <!--settings options menu-->
     <string name="settings">Settings</string>
     <!--settings text-->

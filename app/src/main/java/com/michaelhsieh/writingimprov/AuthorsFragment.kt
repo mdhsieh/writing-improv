@@ -2,6 +2,7 @@ package com.michaelhsieh.writingimprov
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
@@ -27,14 +29,16 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
 
     private lateinit var adapter: AuthorsAdapter
 
+    var db = FirebaseFirestore.getInstance()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // data to populate the RecyclerView with
         val authorItems: ArrayList<AuthorItem> = ArrayList()
 
-        authorItems.add(AuthorItem("mdhsieh8@gmail.com", "mhdev"))
-        authorItems.add(AuthorItem("michaelhsieh1997@gmail.com", "mh2blue"))
+        //authorItems.add(AuthorItem("mdhsieh8@gmail.com", "mhdev"))
+        //authorItems.add(AuthorItem("michaelhsieh1997@gmail.com", "mh2blue"))
 
         val context = this.requireContext()
         // set up the RecyclerView
@@ -51,12 +55,56 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
         recyclerView.addItemDecoration(dividerItemDecoration)
 
         val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_authors)
-        // Hide progress bar
-        progressBar.visibility = View.GONE
         // Get reference to TextView
         val emptyAuthorsText = view.findViewById<TextView>(R.id.tv_authors_empty)
-        // Show or hide no writing text
-        setEmptyTextVisibility(authorItems.size, emptyAuthorsText)
+
+        // Get existing users from Firestore
+        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+
+        collection
+            .get()
+            .addOnSuccessListener {
+                if (it.isEmpty) {
+                    Timber.d("Empty list")
+                    Toasty.info(this@AuthorsFragment.requireContext(), "empty list", Toast.LENGTH_LONG).show()
+                } else {
+
+                    //Toasty.info(this@AuthorsFragment.requireContext(), "got a list of docs", Toast.LENGTH_LONG).show()
+                    // Timber.d("AuthorFragment : %s", it.documents)
+                    for (doc in it.documents) {
+                        //Toasty.info(this@AuthorsFragment.requireContext(), doc.id, Toast.LENGTH_LONG).show()
+
+                        authorItems.add(AuthorItem(doc.id, doc.data?.get("username") as String))
+
+                    }
+                    // Reload RecyclerView
+                    adapter.notifyDataSetChanged()
+
+
+                    // Hide progress bar
+                    progressBar.visibility = View.GONE
+                    // Show or hide no writing text
+                    setEmptyTextVisibility(authorItems.size, emptyAuthorsText)
+
+//                    // Convert the whole Query Snapshot to a list
+//                    // of objects directly
+//                    val items: List<WritingItem> =
+//                        it.toObjects(WritingItem::class.java)
+//
+//                    // Set to list
+//                    writingItems.clear()
+//                    writingItems.addAll(items)
+//                    Timber.d("onSuccess: %s", writingItems)
+
+                }
+            }
+            .addOnFailureListener {
+                Timber.e(it)
+                Toasty.error(this.requireContext(), R.string.error_loading_authors, Toast.LENGTH_LONG).show()
+
+                // Hide progress bar
+                progressBar.visibility = View.GONE
+            }
     }
 
     /**
@@ -73,6 +121,6 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toasty.info(this@AuthorsFragment.requireContext(), "hello clicked", Toast.LENGTH_LONG).show()
+        Toasty.info(this@AuthorsFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
     }
 }

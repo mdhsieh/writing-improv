@@ -30,6 +30,7 @@
     <string name="error_loading_image">Please check your Internet connection. Error loading image.</string>
     <string name="error_loading_url">Please check your Internet connection. Error getting URL.</string>
     <string name="error_loading_my_writing">Please check your Internet connection. Error getting writing.</string>
+    <string name="error_loading_authors">Please check your Internet connection. Error getting authors.</string>
     <string name="error_sign_in">Please check your Internet connection. Error signing in.</string>
     <string name="error_sign_out">Please check your Internet connection. Error signing out.</string>
     <string name="error_user_info">Please check your Internet connection. Error getting user info.</string>

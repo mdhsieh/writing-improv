@@ -1,10 +1,12 @@
 package com.michaelhsieh.writingimprov
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -237,6 +239,16 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         val item = WritingItem(UUID.randomUUID().toString(), "Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
 
         Timber.d("Passing: %s", item.toString())
+
+        // If user completed by time limit, show success Toast
+        // Otherwise, show fail Toast
+        val successIcon: Drawable? = ResourcesCompat.getDrawable(requireActivity().resources, R.drawable.ic_check_circle_outline_72, null)
+        val failIcon: Drawable? = ResourcesCompat.getDrawable(requireActivity().resources, R.drawable.ic_highlight_off_72, null)
+        if (isOnTime) {
+            Toasty.normal(this.requireContext(), getString(R.string.on_time), Toast.LENGTH_LONG, successIcon).show()
+        } else {
+            Toasty.normal(this.requireContext(), getString(R.string.out_of_time), Toast.LENGTH_LONG, failIcon).show()
+        }
 
         val action = WritingFragmentDirections.actionWritingFragmentToMyWritingFragment(
             isCompletedOnTime = isOnTime,

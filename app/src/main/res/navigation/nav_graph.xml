@@ -27,7 +27,11 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeFragment_to_authorsFragment"
-            app:destination="@id/authorsFragment" />
+            app:destination="@id/authorsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/promptFragment"
@@ -120,7 +124,11 @@
         tools:layout="@layout/fragment_authors">
         <action
             android:id="@+id/action_authorsFragment_to_challengePromptFragment"
-            app:destination="@id/challengePromptFragment" />
+            app:destination="@id/challengePromptFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/challengePromptFragment"

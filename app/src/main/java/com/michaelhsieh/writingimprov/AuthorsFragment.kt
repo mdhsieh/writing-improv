@@ -37,9 +37,6 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
         // data to populate the RecyclerView with
         val authorItems: ArrayList<AuthorItem> = ArrayList()
 
-        //authorItems.add(AuthorItem("mdhsieh8@gmail.com", "mhdev"))
-        //authorItems.add(AuthorItem("michaelhsieh1997@gmail.com", "mh2blue"))
-
         val context = this.requireContext()
         // set up the RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_authors)
@@ -66,37 +63,22 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
             .addOnSuccessListener {
                 if (it.isEmpty) {
                     Timber.d("Empty list")
-                    Toasty.info(this@AuthorsFragment.requireContext(), "empty list", Toast.LENGTH_LONG).show()
+                    //Toasty.info(this@AuthorsFragment.requireContext(), "empty list", Toast.LENGTH_LONG).show()
                 } else {
 
-                    //Toasty.info(this@AuthorsFragment.requireContext(), "got a list of docs", Toast.LENGTH_LONG).show()
-                    // Timber.d("AuthorFragment : %s", it.documents)
+                    // Add item with user name and email
                     for (doc in it.documents) {
-                        //Toasty.info(this@AuthorsFragment.requireContext(), doc.id, Toast.LENGTH_LONG).show()
-
                         authorItems.add(AuthorItem(doc.id, doc.data?.get("username") as String))
-
                     }
                     // Reload RecyclerView
                     adapter.notifyDataSetChanged()
 
-
-                    // Hide progress bar
-                    progressBar.visibility = View.GONE
-                    // Show or hide no writing text
-                    setEmptyTextVisibility(authorItems.size, emptyAuthorsText)
-
-//                    // Convert the whole Query Snapshot to a list
-//                    // of objects directly
-//                    val items: List<WritingItem> =
-//                        it.toObjects(WritingItem::class.java)
-//
-//                    // Set to list
-//                    writingItems.clear()
-//                    writingItems.addAll(items)
-//                    Timber.d("onSuccess: %s", writingItems)
-
                 }
+                // Hide progress bar
+                progressBar.visibility = View.GONE
+                // Show or hide no writing text
+                setEmptyTextVisibility(authorItems.size, emptyAuthorsText)
+
             }
             .addOnFailureListener {
                 Timber.e(it)

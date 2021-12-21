@@ -3,8 +3,8 @@ package com.michaelhsieh.writingimprov
 import java.io.Serializable
 
 /**
- * One piece of user-submitted writing represented in
- * My Writing RecyclerView row.
+ * One author the user can challenge with a prompt represented in
+ * AuthorsFragment RecyclerView row.
  */
 data class AuthorItem(
     // Need to initialize fields to get objects from Firestore

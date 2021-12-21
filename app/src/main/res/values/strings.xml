@@ -9,6 +9,7 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
     <string name="send_challenge">Send Challenge</string>
+    <string name="random_image">Random Image</string>
     <!-- labels -->
     <string name="label_time">Time (in minutes):</string>
     <string name="label_prompt">Prompt:</string>
@@ -18,6 +19,8 @@
     <string name="hint_writing">Write here!</string>
     <string name="hint_my_writing_details">Your submitted writing</string>
     <string name="hint_username">Username</string>
+    <string name="hint_challenge_prompt">Write the prompt you want to send here!</string>
+    <string name="hint_challenge_time">Enter the time limit to answer the prompt!</string>
     <!--    content descriptions-->
     <string name="desc_menu_icon">Menu Icon</string>
     <string name="desc_image">Image</string>
@@ -55,6 +58,8 @@
     <!-- no authors -->
     <string name="authors_empty">There are no other authors to challenge yet!</string>
     <string name="label_author">Author:</string>
+    <!--    send challenge to username-->
+    <string name="send_challenge_to_user">Send challenge to %1$s!</string>
     <!--settings options menu-->
     <string name="settings">Settings</string>
     <!--settings text-->

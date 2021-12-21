@@ -103,6 +103,9 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toasty.info(this@AuthorsFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
+        // Toasty.info(this@AuthorsFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
+        val item = adapter.getItem(position)
+        val action = AuthorsFragmentDirections.actionAuthorsFragmentToChallengePromptFragment(item)
+        findNavController().navigate(action)
     }
 }

@@ -63,7 +63,6 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState != null) {
-
             url = savedInstanceState.getString(KEY_URL)!!
             Timber.d("After config change, url: %s", url)
             thumbUrl = savedInstanceState.getString(KEY_THUMB_URL)!!
@@ -96,6 +95,9 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         if (savedInstanceState != null && url.isNotEmpty()) {
             progressBar.visibility = View.GONE
             sendChallengeButton.visibility = View.VISIBLE
+
+            // Load image from before config change, example after rotation
+            loadImage(url)
         } else {
             // Show progress bar so user knows getting url
             progressBar.visibility = View.VISIBLE

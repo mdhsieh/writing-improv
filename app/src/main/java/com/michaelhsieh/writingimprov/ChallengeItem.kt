@@ -3,7 +3,7 @@ package com.michaelhsieh.writingimprov
 import java.io.Serializable
 
 /**
- * One challenge to an author.
+ * One challenge to an author. Text prompt with image
  */
 data class ChallengeItem(
     // Need to initialize fields to get objects from Firestore

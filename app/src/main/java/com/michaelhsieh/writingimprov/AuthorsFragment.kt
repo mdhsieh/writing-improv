@@ -1,17 +1,15 @@
 package com.michaelhsieh.writingimprov
 
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -66,9 +64,17 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
                     //Toasty.info(this@AuthorsFragment.requireContext(), "empty list", Toast.LENGTH_LONG).show()
                 } else {
 
+                    // get current user ID to exclude from adding to RecyclerView
+                    // Username is same as FirebaseUI display name
+                    val email = getEmail()
+
                     // Add item with user name and email
                     for (doc in it.documents) {
-                        authorItems.add(AuthorItem(doc.id, doc.data?.get("username") as String))
+                        if (doc.id != email) {
+                            authorItems.add(
+                                AuthorItem(doc.id, doc.data?.get("username") as String)
+                            )
+                        }
                     }
                     // Reload RecyclerView
                     adapter.notifyDataSetChanged()
@@ -107,5 +113,17 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
         val item = adapter.getItem(position)
         val action = AuthorsFragmentDirections.actionAuthorsFragmentToChallengePromptFragment(item)
         findNavController().navigate(action)
+    }
+
+    /**
+     * Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
     }
 }

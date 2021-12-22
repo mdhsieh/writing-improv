@@ -13,12 +13,12 @@ import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
-class MyWritingAdapter internal constructor(
+class ChallengesAdapter internal constructor(
     context: Context?,
-    data: List<WritingItem>
+    data: List<ChallengeItem>
 ) :
-    RecyclerView.Adapter<MyWritingAdapter.ViewHolder>() {
-    private val mData: List<WritingItem>
+    RecyclerView.Adapter<ChallengesAdapter.ViewHolder>() {
+    private val mData: List<ChallengeItem>
     private val mInflater: LayoutInflater
     private var mClickListener: ItemClickListener? = null
 
@@ -27,7 +27,7 @@ class MyWritingAdapter internal constructor(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val view: View = mInflater.inflate(R.layout.my_writing_row, parent, false)
+        val view: View = mInflater.inflate(R.layout.challenges_row, parent, false)
         return ViewHolder(view)
     }
 
@@ -60,16 +60,16 @@ class MyWritingAdapter internal constructor(
         }
 
         init {
-            nameText = itemView.findViewById(R.id.tv_writing_name)
-            promptText = itemView.findViewById(R.id.tv_prompt)
-            timeText = itemView.findViewById(R.id.tv_time)
+            nameText = itemView.findViewById(R.id.tv_challenge_name)
+            promptText = itemView.findViewById(R.id.tv_challenge_prompt)
+            timeText = itemView.findViewById(R.id.tv_challenge_time)
             thumbImage = itemView.findViewById(R.id.iv_thumb)
             itemView.setOnClickListener(this)
         }
     }
 
     // convenience method for getting data at click position
-    fun getItem(id: Int): WritingItem {
+    fun getItem(id: Int): ChallengeItem {
         return mData[id]
     }
 

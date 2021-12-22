@@ -29,6 +29,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         val MAP_USERNAME = "username"
         val COLLECTION_USERS = "users"
         val COLLECTION_WRITING = "writing"
+        val COLLECTION_CHALLENGES = "challenges"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,6 +54,13 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         val sendChallengeButton = view.findViewById<Button>(R.id.btn_send_challenge)
         sendChallengeButton.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAuthorsFragment()
+            findNavController().navigate(action)
+        }
+
+        // user view challenges sent to him or herself
+        val challengesButton = view.findViewById<Button>(R.id.btn_challenges)
+        challengesButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToChallengesFragment()
             findNavController().navigate(action)
         }
 

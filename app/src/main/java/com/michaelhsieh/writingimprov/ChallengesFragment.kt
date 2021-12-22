@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_CHALLENGES
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
@@ -19,13 +20,13 @@ import java.util.*
 
 
 /**
- * Display clickable list of authors which user can challenge.
+ * Display clickable list of challenges displaying who challenge is from and completion status.
  *
  */
 
-class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemClickListener {
+class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapter.ItemClickListener {
 
-    private lateinit var adapter: AuthorsAdapter
+    private lateinit var adapter: ChallengesAdapter
 
     var db = FirebaseFirestore.getInstance()
 
@@ -33,13 +34,13 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
         super.onViewCreated(view, savedInstanceState)
 
         // data to populate the RecyclerView with
-        val authorItems: ArrayList<AuthorItem> = ArrayList()
+        val challengeItems: ArrayList<ChallengeItem> = ArrayList()
 
         val context = this.requireContext()
         // set up the RecyclerView
-        val recyclerView: RecyclerView = view.findViewById(R.id.rv_authors)
+        val recyclerView: RecyclerView = view.findViewById(R.id.rv_challenges)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AuthorsAdapter(context, authorItems)
+        adapter = ChallengesAdapter(context, challengeItems)
         adapter.setClickListener(this)
         recyclerView.adapter = adapter
 
@@ -49,54 +50,59 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
         )
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_authors)
+        val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_challenges)
         // Get reference to TextView
-        val emptyAuthorsText = view.findViewById<TextView>(R.id.tv_authors_empty)
+        val emptyChallengesText = view.findViewById<TextView>(R.id.tv_challenges_empty)
 
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
 
-        collection
-            .get()
-            .addOnSuccessListener {
-                if (it.isEmpty) {
-                    Timber.d("Empty list")
-                    //Toasty.info(this@AuthorsFragment.requireContext(), "empty list", Toast.LENGTH_LONG).show()
-                } else {
+        // get current user ID to get challenges collection
+        // Username is same as FirebaseUI display name
+        val email = getEmail()
+        if (email != null) {
+            collection
+                .document(email)
+                .collection(COLLECTION_CHALLENGES)
+                .get()
+                .addOnSuccessListener {
+                    if (it.isEmpty) {
+                        Timber.d("Empty list")
+                        //Toasty.info(this@AuthorsFragment.requireContext(), "empty list", Toast.LENGTH_LONG).show()
+                    } else {
+                        // Convert the whole Query Snapshot to a list
+                        // of objects directly
+                        val items: List<ChallengeItem> =
+                            it.toObjects(ChallengeItem::class.java)
 
-                    // get current user ID to exclude from adding to RecyclerView
-                    // Username is same as FirebaseUI display name
-                    val email = getEmail()
+                        // Set to list
+                        challengeItems.clear()
+                        challengeItems.addAll(items)
+                        Timber.d("onSuccess: %s", challengeItems)
 
-                    // Add item with user name and email
-                    for (doc in it.documents) {
-                        if (doc.id != email) {
-                            authorItems.add(
-                                AuthorItem(doc.id, doc.data?.get("username") as String)
-                            )
-                        }
+                        // Reload RecyclerView
+                        adapter.notifyDataSetChanged()
+
                     }
-                    // Reload RecyclerView
-                    adapter.notifyDataSetChanged()
+                    // Hide progress bar
+                    progressBar.visibility = View.GONE
+                    // Show or hide no writing text
+                    setEmptyTextVisibility(challengeItems.size, emptyChallengesText)
 
                 }
-                // Hide progress bar
-                progressBar.visibility = View.GONE
-                // Show or hide no writing text
-                setEmptyTextVisibility(authorItems.size, emptyAuthorsText)
+                .addOnFailureListener {
+                    Timber.e(it)
+                    Toasty.error(this.requireContext(), R.string.error_loading_challenges, Toast.LENGTH_LONG).show()
 
-            }
-            .addOnFailureListener {
-                Timber.e(it)
-                Toasty.error(this.requireContext(), R.string.error_loading_authors, Toast.LENGTH_LONG).show()
+                    // Hide progress bar
+                    progressBar.visibility = View.GONE
+                }
+        }
 
-                // Hide progress bar
-                progressBar.visibility = View.GONE
-            }
     }
 
     /**
-     * Show text to inform user if no writing available
+     * Show text to inform user if no challenges available
      * @param numItems Number of items in list
      * @param textView The TextView displayed to user
      */
@@ -109,10 +115,10 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        // Toasty.info(this@AuthorsFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
+        Toasty.info(this@ChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
         val item = adapter.getItem(position)
-        val action = AuthorsFragmentDirections.actionAuthorsFragmentToChallengePromptFragment(item)
-        findNavController().navigate(action)
+//        val action = AuthorsFragmentDirections.actionAuthorsFragmentToChallengePromptFragment(item)
+//        findNavController().navigate(action)
     }
 
     /**

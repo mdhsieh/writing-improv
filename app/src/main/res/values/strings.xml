@@ -2,18 +2,20 @@
     <string name="app_name">Writing Improv</string>
     <!-- buttons -->
     <string name="my_writing">My Writing</string>
+    <string name="send_challenge">Send Challenge</string>
+    <string name="challenges">Challenges</string>
     <string name="practice">Practice</string>
     <string name="go">Go</string>
     <string name="submit">Submit</string>
     <string name="menu">Menu</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
-    <string name="send_challenge">Send Challenge</string>
     <string name="random_image">Random Image</string>
     <!-- labels -->
     <string name="label_time">Time (in minutes):</string>
     <string name="label_prompt">Prompt:</string>
     <string name="label_instructions">Use the image and the prompt below!</string>
+    <string name="label_author">Author:</string>
     <!-- hints-->
     <string name="hint_time">Minutes</string>
     <string name="hint_writing">Write here!</string>
@@ -34,6 +36,7 @@
     <string name="error_loading_url">Please check your Internet connection. Error getting URL.</string>
     <string name="error_loading_my_writing">Please check your Internet connection. Error getting writing.</string>
     <string name="error_loading_authors">Please check your Internet connection. Error getting authors.</string>
+    <string name="error_loading_challenges">Please check your Internet connection. Error getting challenges.</string>
     <string name="error_sign_in">Please check your Internet connection. Error signing in.</string>
     <string name="error_sign_out">Please check your Internet connection. Error signing out.</string>
     <string name="error_user_info">Please check your Internet connection. Error getting user info.</string>
@@ -60,7 +63,8 @@
     <string name="my_writing_empty">You have no writing submitted yet!</string>
     <!-- no authors -->
     <string name="authors_empty">There are no other authors to challenge yet!</string>
-    <string name="label_author">Author:</string>
+    <!-- no challenges -->
+    <string name="challenges_empty">You have not received any challenges yet!</string>
     <!--    send challenge to username-->
     <string name="send_challenge_to_user">Send challenge to %1$s!</string>
     <!--settings options menu-->

@@ -62,15 +62,26 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <Button
-            android:id="@+id/btn_send_challenge"
+            android:id="@+id/btn_challenges"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/ColoredButton"
             android:layout_marginTop="24dp"
-            android:text="@string/send_challenge"
+            android:text="@string/challenges"
             app:layout_constraintTop_toBottomOf="@+id/btn_my_writing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+        android:id="@+id/btn_send_challenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ColoredButton"
+        android:layout_marginTop="24dp"
+        android:text="@string/send_challenge"
+        app:layout_constraintTop_toBottomOf="@+id/btn_challenges"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
         <Button
             android:id="@+id/btn_logout"

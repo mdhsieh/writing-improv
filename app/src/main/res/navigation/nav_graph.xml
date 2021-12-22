@@ -85,6 +85,9 @@
         <argument
             android:name="writingName"
             app:argType="string" />
+        <argument
+            android:name="challengeId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/myWritingFragment"

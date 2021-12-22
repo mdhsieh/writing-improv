@@ -58,7 +58,7 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
 
         // get current user ID to get challenges collection
-        // Username is same as FirebaseUI display name
+        // ID is same as FirebaseUI email
         val email = getEmail()
         if (email != null) {
             collection
@@ -115,9 +115,9 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toasty.info(this@ChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
+        // Toasty.info(this@ChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
         val item = adapter.getItem(position)
-        val action = ChallengesFragmentDirections.actionChallengesFragmentToWritingFragment(item.time.toInt(), item.prompt, item.url, item.thumbUrl, true, item.name)
+        val action = ChallengesFragmentDirections.actionChallengesFragmentToWritingFragment(item.time.toInt(), item.prompt, item.url, item.thumbUrl, true, item.name, item.id)
         findNavController().navigate(action)
     }
 

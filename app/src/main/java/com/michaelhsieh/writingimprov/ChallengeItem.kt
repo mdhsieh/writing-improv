@@ -25,6 +25,7 @@ data class ChallengeItem(
 
     val url: String = "",
 
+    @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
     val isCompleted:Boolean = false
 ):Serializable {
     // Serializable to pass object between Fragments

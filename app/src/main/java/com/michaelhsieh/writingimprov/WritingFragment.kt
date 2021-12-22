@@ -3,6 +3,7 @@ package com.michaelhsieh.writingimprov
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
@@ -10,6 +11,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
@@ -29,7 +32,11 @@ import java.util.*
 private const val KEY_MILLIS_LEFT:String = "millisLeft"
 private const val KEY_IMAGE_URL:String = "imageUrl"
 
+private const val TAG = "WritingFragment"
+
 class WritingFragment:Fragment(R.layout.fragment_writing) {
+
+    var db = FirebaseFirestore.getInstance()
 
     // countdown start time
     private var startTimeInMillis:Long = 0
@@ -236,9 +243,13 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
      */
     private fun submitWriting(isOnTime:Boolean) {
         // Create new WritingItem with all text and URL
-        val item = WritingItem(UUID.randomUUID().toString(), args.writingName, prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
+        // val item = WritingItem(UUID.randomUUID().toString(), args.writingName, prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
+        val item = WritingItem(UUID.randomUUID().toString(), args.writingName, prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString(), challengeId = args.challengeId)
 
         Timber.d("Passing: %s", item.toString())
+
+        // Set challenge in Firestore to completed
+        updateChallengeCompletion(args.challengeId)
 
         // If user completed by time limit, show success Toast
         // Otherwise, show fail Toast
@@ -256,4 +267,60 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         )
         findNavController().navigate(action)
     }
+
+    /**
+     * Update the completion status of the associated challenge to completed
+     * @param challengeId: String Id of the challenge submitted writing was from
+     */
+    private fun updateChallengeCompletion(challengeId:String) {
+        // Get existing users from Firestore
+        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+        // get current user ID to get challenges collection
+        // ID is same as FirebaseUI email
+        val email = getEmail()
+        if (email != null) {
+            collection
+                .document(email)
+                .collection(HomeFragment.COLLECTION_CHALLENGES)
+                .whereEqualTo("id", challengeId)
+                .get()
+                .addOnSuccessListener { documents ->
+                    // Should only have 1 challenge with the ID
+                    for (document in documents) {
+                        // Log.d(TAG, "${document.id} => ${document.data}")
+                        // Find auto-generated Firestore ID to do update
+                        val docFirestoreId = document.id
+                        //Log.d(TAG, "THE ID is " + docFirestoreId)
+                        // Now update the challenge document with this Firestore ID
+                        collection
+                            .document(email)
+                            .collection(HomeFragment.COLLECTION_CHALLENGES)
+                            .document(docFirestoreId)
+                            .update("completed", true)
+                            .addOnSuccessListener {
+                                //Log.d(TAG, "DocumentSnapshot successfully updated!")
+                                //Toasty.info(this.requireContext(), "Updated challenge completion", Toast.LENGTH_LONG).show()
+                                Log.d(TAG, "Updated challenge completion")
+                            }
+                            .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents: ", exception)
+                }
+        }
+    }
+
+    /**
+     * Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
+    }
+
 }

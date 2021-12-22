@@ -112,7 +112,9 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
 
         // Pass values to WritingFragment
         goButton.setOnClickListener {
-            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl, false, "Practice")
+//            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl, false, "Practice")
+            // empty string challenge id because it's practice
+            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl, false, "Practice", "")
             findNavController().navigate(action)
         }
     }

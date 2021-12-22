@@ -40,6 +40,11 @@ class ChallengesAdapter internal constructor(
         holder.nameText.text = writing.name
         holder.promptText.text = writing.prompt
         holder.timeText.text = writing.time + " minutes"
+        if (writing.completed) {
+            holder.completedText.text = "Completed"
+        } else {
+            holder.completedText.text = "Incomplete"
+        }
         loadThumbnailImage(writing.thumbUrl, holder.thumbImage)
     }
 
@@ -55,6 +60,7 @@ class ChallengesAdapter internal constructor(
         var promptText: TextView
         var timeText: TextView
         var thumbImage:ImageView
+        var completedText: TextView
         override fun onClick(view: View?) {
             if (mClickListener != null) mClickListener!!.onItemClick(view, adapterPosition)
         }
@@ -64,6 +70,7 @@ class ChallengesAdapter internal constructor(
             promptText = itemView.findViewById(R.id.tv_challenge_prompt)
             timeText = itemView.findViewById(R.id.tv_challenge_time)
             thumbImage = itemView.findViewById(R.id.iv_thumb)
+            completedText = itemView.findViewById(R.id.tv_challenge_is_completed)
             itemView.setOnClickListener(this)
         }
     }

@@ -25,13 +25,14 @@ data class ChallengeItem(
 
     val url: String = "",
 
-    @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
-    val isCompleted:Boolean = false
+//    @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
+//    val isCompleted:Boolean = false
+    val completed:Boolean = false
 ):Serializable {
     // Serializable to pass object between Fragments
 
     // To debug
     override fun toString(): String {
-        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, is completed: $isCompleted"
+        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, is completed: $completed"
     }
 }

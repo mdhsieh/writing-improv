@@ -140,7 +140,7 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                     time = minutes,
                     url = url,
                     thumbUrl = thumbUrl,
-                    isCompleted = false
+                    completed = false
                 )
                 db.collection("users").document(id).collection("challenges").add(challengeItem)
                     // Show success or error Toasty

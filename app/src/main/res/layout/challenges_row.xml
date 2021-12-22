@@ -45,6 +45,19 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_challenge_prompt"
         tools:text="3 minutes" />
 
+    <TextView
+        android:id="@+id/tv_challenge_is_completed"
+        style="@style/WhiteText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_thumb"
+        app:layout_constraintTop_toBottomOf="@+id/tv_challenge_time"
+        tools:text="Completed" />
+
     <!-- don't show a preview thumb image -->
 <!--    android:visibility="gone"-->
     <ImageView

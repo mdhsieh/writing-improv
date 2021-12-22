@@ -120,7 +120,7 @@
     <fragment
         android:id="@+id/authorsFragment"
         android:name="com.michaelhsieh.writingimprov.AuthorsFragment"
-        android:label="Authors"
+        android:label="Authors to Challenge"
         tools:layout="@layout/fragment_authors">
         <action
             android:id="@+id/action_authorsFragment_to_challengePromptFragment"

@@ -52,7 +52,6 @@ class AuthorsFragment:Fragment(R.layout.fragment_authors), AuthorsAdapter.ItemCl
         val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_authors)
         // Get reference to TextView
         val emptyAuthorsText = view.findViewById<TextView>(R.id.tv_authors_empty)
-        setEmptyTextVisibility(authorItems.size, emptyAuthorsText)
 
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)

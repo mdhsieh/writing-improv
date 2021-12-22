@@ -8,6 +8,8 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
 import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.squareup.picasso.Callback
@@ -18,6 +20,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.util.*
 
 /**
  * Displays newly created challenge's
@@ -32,6 +35,8 @@ import timber.log.Timber
 //const val KEY_THUMB_URL = "thumb"
 
 class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
+
+    var db = FirebaseFirestore.getInstance()
 
     // get the author to challenge info like username to display
     private val args: ChallengePromptFragmentArgs by navArgs()
@@ -64,10 +69,6 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
             thumbUrl = savedInstanceState.getString(KEY_THUMB_URL)!!
             Timber.d("After config change, thumbnail url: %s", thumbUrl)
         }
-//        else {
-//
-//        }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,10 +77,6 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         val promptEditText: EditText = view.findViewById(R.id.et_prompt)
         val minutesEditText: TextView = view.findViewById(R.id.et_time)
 
-//        promptText.text = prompt
-//        minutesText.text = minutes
-
-
         // Create progress bar, error text, go button
         progressBar = view.findViewById(R.id.pb_loading_url)
         errorText = view.findViewById(R.id.tv_error_url)
@@ -87,6 +84,7 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         sendChallengeButton = view.findViewById(R.id.btn_send_challenge)
 
         imageView = view.findViewById(R.id.iv_image)
+        // Item is info of the user to send a challenge to
         val item = args.authorToChallenge
         if (item != null) {
             sendChallengeButton.text = getString(R.string.send_challenge_to_user, item.name)
@@ -116,11 +114,63 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         }
 
         sendChallengeButton.setOnClickListener {
-//            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl)
-//            findNavController().navigate(action)
-            // Show error Toasty
-            val authorName = item?.name
-            Toasty.info(this@ChallengePromptFragment.requireContext(), "Sending your challenge to " + authorName, Toast.LENGTH_LONG,true).show()
+            if (item != null) {
+                // Get author ID and name to add challenge prompt to his or her collection
+                // and display success or error Toasty
+                val id = item.id
+                val authorName = item.name
+
+                // Get username of whoever is sending the challenge
+                val user = FirebaseAuth.getInstance().currentUser
+                val myUsername = user?.displayName.toString()
+                // Title of writing to inform author is challenge from current user
+                val writingName = "Challenge from " + myUsername
+
+                // Get prompt, time from EditText
+                prompt = promptEditText.text.toString()
+                minutes = minutesEditText.text.toString()
+
+                // Create new challenge and add to Firestore
+                val challengeItem = ChallengeItem(
+                    UUID.randomUUID().toString(),
+                    writingName,
+                    prompt = prompt,
+                    time = minutes,
+                    url = url,
+                    thumbUrl = thumbUrl,
+                    isCompleted = false
+                )
+                db.collection("users").document(id).collection("challenges").add(challengeItem)
+                    // Show success or error Toasty
+                    .addOnSuccessListener {
+                        Toasty.info(
+                            this@ChallengePromptFragment.requireContext(),
+                            getString(R.string.sent_challenge_success, authorName),
+                            Toast.LENGTH_LONG,
+                            true
+                        ).show()
+
+                        // Go back to author list
+                        findNavController().popBackStack()
+                    }
+                    .addOnFailureListener() {
+                        Toasty.error(
+                            this@ChallengePromptFragment.requireContext(),
+                            getString(R.string.sent_challenge_error, authorName),
+                            Toast.LENGTH_LONG,
+                            true
+                        ).show()
+                    }
+            } else {
+                Timber.e("Author info is null")
+
+                Toasty.error(
+                    this@ChallengePromptFragment.requireContext(),
+                    getString(R.string.sent_challenge_error, "Unknown"),
+                    Toast.LENGTH_LONG,
+                    true
+                ).show()
+            }
         }
     }
 

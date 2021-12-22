@@ -53,6 +53,9 @@
     <!-- submitted writing toast-->
     <string name="out_of_time">Sorry, you ran out of time!</string>
     <string name="on_time">Nice job, you did it!</string>
+    <!-- sent challenge to author toasts -->
+    <string name="sent_challenge_success">Successfully sent challenge to %1$s!</string>
+    <string name="sent_challenge_error">Error sending challenge to %1$s. Please check your Internet connection.</string>
     <!-- no writing -->
     <string name="my_writing_empty">You have no writing submitted yet!</string>
     <!-- no authors -->

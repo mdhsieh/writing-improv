@@ -24,7 +24,7 @@ import timber.log.Timber
 
 /**
  * Displays all writing user has submitted.
- * Displays a Toast if user has submitted writing from previous Fragment.
+ * 
  */
 class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapter.ItemClickListener {
 

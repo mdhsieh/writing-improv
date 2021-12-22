@@ -236,7 +236,7 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
      */
     private fun submitWriting(isOnTime:Boolean) {
         // Create new WritingItem with all text and URL
-        val item = WritingItem(UUID.randomUUID().toString(), "Practice", prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
+        val item = WritingItem(UUID.randomUUID().toString(), args.writingName, prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
 
         Timber.d("Passing: %s", item.toString())
 

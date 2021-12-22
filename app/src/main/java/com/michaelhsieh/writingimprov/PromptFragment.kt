@@ -110,11 +110,10 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
             getRandomImageUrl()
         }
 
+        // Pass values to WritingFragment
         goButton.setOnClickListener {
-
-            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl)
+            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl, false, "Practice")
             findNavController().navigate(action)
-
         }
     }
 

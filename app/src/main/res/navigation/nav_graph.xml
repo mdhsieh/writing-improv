@@ -79,6 +79,12 @@
         <argument
             android:name="thumbUrl"
             app:argType="string" />
+        <argument
+            android:name="isChallenge"
+            app:argType="boolean" />
+        <argument
+            android:name="writingName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/myWritingFragment"
@@ -151,5 +157,9 @@
         android:id="@+id/challengesFragment"
         android:name="com.michaelhsieh.writingimprov.ChallengesFragment"
         android:label="Challenges"
-        tools:layout="@layout/fragment_challenges" />
+        tools:layout="@layout/fragment_challenges" >
+        <action
+            android:id="@+id/action_challengesFragment_to_writingFragment"
+            app:destination="@id/writingFragment" />
+    </fragment>
 </navigation>

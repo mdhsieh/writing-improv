@@ -3,6 +3,7 @@ package com.michaelhsieh.writingimprov
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -24,6 +25,7 @@ import javax.net.ssl.SSLContext
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import es.dmoral.toasty.Toasty
 
 /**
@@ -36,6 +38,9 @@ import es.dmoral.toasty.Toasty
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+
+//    var db = FirebaseFirestore.getInstance()
+//    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +60,6 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         updateAndroidSecurityProvider(this)
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

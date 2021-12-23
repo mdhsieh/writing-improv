@@ -1,7 +1,10 @@
 package com.michaelhsieh.writingimprov
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,7 +13,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
@@ -43,6 +49,9 @@ class MainActivity : AppCompatActivity() {
     var db = FirebaseFirestore.getInstance()
     private val TAG = "MainActivity"
 
+    // notification channel ID
+    private val CHANNEL_ID = "writing_improv_channel"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -61,6 +70,9 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         updateAndroidSecurityProvider(this)
+
+        // create notification channel
+        createNotificationChannel()
 
         // notify user if received a challenge
         val email = getEmail()
@@ -126,6 +138,12 @@ class MainActivity : AppCompatActivity() {
 //                             dc.document.data["name"]
                             if (dc.document.data.get("completed") == false) {
                                 Toasty.normal(this, "You received " + dc.document.data.get("name") + " with prompt: " + dc.document.data.get("prompt"), Toast.LENGTH_LONG).show()
+
+                                // notify user about new challenge
+                                displayNotification(
+                                    dc.document.data.get("name") as String,
+                                    dc.document.data.get("prompt") as String
+                                )
                             }
                         }
                         DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified challenge: ${dc.document.data}")
@@ -145,5 +163,52 @@ class MainActivity : AppCompatActivity() {
             return user.email
         }
         return null
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    /**
+     * Display notification to let user know
+     * he or she has received a challenge
+     * title: Challenge name
+     * text: Challenge prompt
+     */
+    private fun displayNotification(name:String, prompt:String) {
+        // navigate to challenges fragment
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.challengesFragment)
+            .createPendingIntent()
+
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("You received " + name)
+            .setContentText("Prompt: " + prompt)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            // Set the intent that will fire when the user taps the notification
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        val notificationId = 0
+        // show notification
+        with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(notificationId, builder.build())
+        }
     }
 }

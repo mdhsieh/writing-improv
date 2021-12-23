@@ -67,6 +67,9 @@
     <string name="challenges_empty">You have not received any challenges yet!</string>
     <!--    send challenge to username-->
     <string name="send_challenge_to_user">Send challenge to %1$s!</string>
+    <!--notification channel-->
+    <string name="channel_name">Challenges</string>
+    <string name="channel_description">Notify when receiving challenges from other users</string>
     <!--settings options menu-->
     <string name="settings">Settings</string>
     <!--settings text-->

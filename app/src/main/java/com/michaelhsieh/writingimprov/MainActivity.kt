@@ -25,6 +25,7 @@ import javax.net.ssl.SSLContext
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import es.dmoral.toasty.Toasty
 
@@ -39,8 +40,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
-//    var db = FirebaseFirestore.getInstance()
-//    private val TAG = "MainActivity"
+    var db = FirebaseFirestore.getInstance()
+    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +61,12 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         updateAndroidSecurityProvider(this)
+
+        // notify user if received a challenge
+        val email = getEmail()
+        if (email != null) {
+            listenForChallengesChange(email)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -98,5 +105,45 @@ class MainActivity : AppCompatActivity() {
         } catch (e: GooglePlayServicesNotAvailableException) {
             Timber.e("Google Play Services not available.")
         }
+    }
+
+    // notify user whenever he or she receives a new challenge,
+    // that is when his or her Firestore challenges collection has a document added
+    private fun listenForChallengesChange(userId:String) {
+        db.collection(HomeFragment.COLLECTION_USERS)
+            .document(userId)
+            .collection(HomeFragment.COLLECTION_CHALLENGES)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e)
+                    return@addSnapshotListener
+                }
+
+                for (dc in snapshots!!.documentChanges) {
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> {
+                            Log.d(TAG, "New challenge: ${dc.document.data}")
+//                             dc.document.data["name"]
+                            if (dc.document.data.get("completed") == false) {
+                                Toasty.normal(this, "You received " + dc.document.data.get("name") + " with prompt: " + dc.document.data.get("prompt"), Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified challenge: ${dc.document.data}")
+                        DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed challenge: ${dc.document.data}")
+                    }
+                }
+            }
+    }
+
+    /**
+     * Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
     }
 }

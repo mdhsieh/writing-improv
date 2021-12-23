@@ -27,8 +27,6 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
 
     var db = FirebaseFirestore.getInstance()
 
-    private val TAG = "HomeFragment"
-
     companion object {
         val MAP_USERNAME = "username"
         val COLLECTION_USERS = "users"
@@ -101,11 +99,6 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             Timber.d("email: %s", email)
             Toasty.error(this@HomeFragment.requireContext(), R.string.error_user_info, Toast.LENGTH_LONG).show()
         }
-
-        // notify user if received a challenge
-        if (email != null) {
-            listenForChallengesChange(email)
-        }
     }
 
     private fun signOut() {
@@ -147,53 +140,5 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             return user.displayName
         }
         return null
-    }
-
-    // notify user whenever he or she receives a new challenge,
-    // that is when his or her Firestore challenges collection has a document added
-    private fun listenForChallengesChange(userId:String) {
-
-        db.collection(HomeFragment.COLLECTION_USERS)
-            .document(userId)
-            .collection(HomeFragment.COLLECTION_CHALLENGES)
-            .addSnapshotListener { snapshots, e ->
-                if (e != null) {
-                    Log.w(TAG, "listen:error", e)
-                    return@addSnapshotListener
-                }
-
-                for (dc in snapshots!!.documentChanges) {
-                    when (dc.type) {
-                        DocumentChange.Type.ADDED -> {
-                            Log.d(TAG, "New challenge: ${dc.document.data}")
-//                             dc.document.data["name"]
-                            if (dc.document.data.get("completed") == false) {
-                                Toasty.normal(this@HomeFragment.requireContext(), "You received " + dc.document.data.get("name") + " with prompt: " + dc.document.data.get("prompt"), Toast.LENGTH_LONG).show()
-                            }
-                        }
-                        DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified challenge: ${dc.document.data}")
-                        DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed challenge: ${dc.document.data}")
-                    }
-                }
-            }
-
-//        db.collection(HomeFragment.COLLECTION_USERS)
-//            .document(userId)
-//            .collection(HomeFragment.COLLECTION_CHALLENGES)
-//            .addSnapshotListener { value, e ->
-//                if (e != null) {
-//                    Log.e(TAG, "Listen failed.", e)
-//                    return@addSnapshotListener
-//                }
-//
-//                val challengeNames = ArrayList<String>()
-//                for (doc in value!!) {
-//                    doc.getString("name")?.let {
-//                        challengeNames.add(it)
-//                        Toasty.normal(this@HomeFragment.requireContext(), "Challenges changed", Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//                Log.d(TAG, "Current challenges: $challengeNames")
-//            }
     }
 }

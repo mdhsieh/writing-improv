@@ -117,7 +117,7 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
 
         sendChallengeButton.setOnClickListener {
             if (item != null) {
-                // Get author ID and name to add challenge prompt to his or her collection
+                // Get author ID, which is email, and username to add challenge to his or her collection
                 // and display success or error Toasty
                 val id = item.id
                 val authorName = item.name
@@ -125,6 +125,7 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                 // Get username of whoever is sending the challenge
                 val user = FirebaseAuth.getInstance().currentUser
                 val myUsername = user?.displayName.toString()
+                val myEmail = user?.email.toString()
                 // Title of writing to inform author is challenge from current user
                 val writingName = "Challenge from " + myUsername
 
@@ -140,7 +141,9 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                     time = minutes,
                     url = url,
                     thumbUrl = thumbUrl,
-                    completed = false
+                    completed = false,
+                    senderId = myEmail,
+                    receiverId = item.id
                 )
                 db.collection("users").document(id).collection("challenges").add(challengeItem)
                     // Show success or error Toasty

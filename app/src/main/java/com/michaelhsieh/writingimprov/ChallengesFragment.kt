@@ -78,7 +78,7 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
                         // Set to list
                         challengeItems.clear()
                         challengeItems.addAll(items)
-                        Timber.d("onSuccess: %s", challengeItems)
+                        // Timber.d("onSuccess: %s", challengeItems)
 
                         // Reload RecyclerView
                         adapter.notifyDataSetChanged()

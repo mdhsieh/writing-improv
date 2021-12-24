@@ -158,18 +158,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
                     // if reached last collection items list, then done
                     // getting all challenges
                     if (i == otherIds.size - 1) {
-
                         appendAllWritingWithChallengeID(otherIds, challenges, writings, pBar, emptyTextView)
-
-                        /*
-                        // Set progress bar and text visibility
-                        // Reload RecyclerView
-                        adapter.notifyDataSetChanged()
-                        // Hide progress bar
-                        progressBar.visibility = View.GONE
-                        // Show or hide no writing text
-                        setEmptyTextVisibility(challengeItems.size, emptyChallengesText)
-                         */
                     }
 
 
@@ -193,8 +182,11 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
      * @param otherUserIds: Emails of all users excluding the current user
      * @param challengeItems: Challenges the current user has sent to other users
      * @param writingItems: ArrayList to append to
+     * @param progressBar: ProgressBar being displayed to user
+     * @param emptySentChallengesText: Text to tell user no sent challenge writings were found
      */
-    private fun appendAllWritingWithChallengeID(otherUserIds: ArrayList<String>, challengeItems:ArrayList<ChallengeItem>, writingItems:ArrayList<WritingItem>, progressBar: ProgressBar, emptySentChallengesText:TextView) {
+    private fun appendAllWritingWithChallengeID(otherUserIds: ArrayList<String>, challengeItems:ArrayList<ChallengeItem>, writingItems:ArrayList<WritingItem>,
+                                                progressBar: ProgressBar, emptySentChallengesText:TextView) {
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
 
@@ -213,6 +205,11 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
                         val items: List<WritingItem> =
                             it.toObjects(WritingItem::class.java)
 
+                        // Change name from [Challenge from senderUsername] to [Challenge sent to receiverUsername]
+                        for (item in items) {
+                            item.name = "Challenge sent to " + challenge.receiverUsername
+                        }
+
                         writingItems.addAll(items)
 
                         // if there is at least one writing collection with some writings of this challenge,
@@ -230,7 +227,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
                             Toasty.info(this.requireContext(), "incomplete challenge: " + challenge.id, Toast.LENGTH_SHORT).show()
                             writingItems.add(
                                 WritingItem(UUID.randomUUID().toString(),
-                                    name = "Challenge sent to " + challenge.receiverId,
+                                    name = "Challenge sent to " + challenge.receiverUsername,
                                     prompt = challenge.prompt,
                                     time = challenge.time,
                                     url = challenge.url,
@@ -241,13 +238,10 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
                             )
                         }
 
-                        // if reached last challenge ID and last writing list of that ID, then done
+                        // If reached last challenge ID and last writing list of that ID, then done
                         // getting all sent challenge writings to review.
-                        // If there are no challenges or writings with those challenge IDs, then
-                        // also done
-                        if (challengeItems.size == 0 || writingItems.size == 0 ||
-                            k == challengeItems.size - 1 && m == otherUserIds.size - 1) {
-                            // Toasty.info(this.requireContext(), "found writings: " + writingItems.size, Toast.LENGTH_LONG).show()
+                        if (k == challengeItems.size - 1 && m == otherUserIds.size - 1) {
+                            // Toasty.info(this.requireContext(), "found final writings: " + writingItems.size, Toast.LENGTH_LONG).show()
 
                             // Set progress bar and text visibility
                             // Reload RecyclerView
@@ -263,9 +257,23 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
                         Timber.e(it)
                         Toasty.error(this.requireContext(), R.string.error_loading_my_writing, Toast.LENGTH_LONG).show()
                         // Hide progress bar
-                        // progressBar.visibility = View.GONE
+                        progressBar.visibility = View.GONE
                     }
             }
+        }
+
+        // If there are no challenges or writings with those challenge IDs, then
+        // also done
+        if (challengeItems.size == 0 || writingItems.size == 0) {
+            // Toasty.info(this.requireContext(), "found final writings: " + writingItems.size, Toast.LENGTH_LONG).show()
+
+            // Set progress bar and text visibility
+            // Reload RecyclerView
+            adapter.notifyDataSetChanged()
+            // Hide progress bar
+            progressBar.visibility = View.GONE
+            // Show or hide no writing text
+            setEmptyTextVisibility(writingItems.size, emptySentChallengesText)
         }
     }
 }

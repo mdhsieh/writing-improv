@@ -15,8 +15,9 @@ data class WritingItem(
 
     // A unique ID, generated when writing was submitted
     val id:String = "",
-    // The title of the piece of writing
-    val name: String = "",
+    // The title of the piece of writing,
+    // either [Challenge from currentUsername] or [Challenge sent to receiverUsername]
+    var name: String = "",
 
     val prompt: String = "",
 

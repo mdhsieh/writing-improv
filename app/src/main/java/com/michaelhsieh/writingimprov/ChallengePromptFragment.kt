@@ -143,7 +143,8 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                     thumbUrl = thumbUrl,
                     completed = false,
                     senderId = myEmail,
-                    receiverId = item.id
+                    receiverId = item.id,
+                    receiverUsername = item.name
                 )
                 db.collection("users").document(id).collection("challenges").add(challengeItem)
                     // Show success or error Toasty

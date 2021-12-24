@@ -33,7 +33,10 @@ data class ChallengeItem(
     val senderId:String="",
 
     // email of whoever is receiving the challenge
-    val receiverId:String=""
+    val receiverId:String="",
+
+    // username of whoever is receiving the challenge
+    val receiverUsername:String=""
 ):Serializable {
     // Serializable to pass object between Fragments
 

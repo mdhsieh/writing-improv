@@ -3,13 +3,12 @@ package com.michaelhsieh.writingimprov
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -25,15 +24,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
-import timber.log.Timber
-import javax.net.ssl.SSLContext
-
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import es.dmoral.toasty.Toasty
+import timber.log.Timber
+import javax.net.ssl.SSLContext
+
 
 /**
  * Fragment host.
@@ -119,9 +115,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // notify user whenever he or she receives a new challenge,
-    // that is when his or her Firestore challenges collection has a document added
-    private fun listenForChallengesChange(userId:String) {
+    /**
+     * Notify user whenever he or she receives a new challenge,
+     * that is when his or her Firestore challenges collection has a document added
+     * @param userId The current user's ID, which is his or her email
+     */
+    private fun listenForChallengesChange(userId: String) {
         db.collection(HomeFragment.COLLECTION_USERS)
             .document(userId)
             .collection(HomeFragment.COLLECTION_CHALLENGES)
@@ -186,7 +185,7 @@ class MainActivity : AppCompatActivity() {
      * title: Challenge name
      * text: Challenge prompt
      */
-    private fun displayNotification(name:String, prompt:String) {
+    private fun displayNotification(name: String, prompt: String) {
         // navigate to challenges fragment
         val pendingIntent = NavDeepLinkBuilder(this)
             .setGraph(R.navigation.nav_graph)
@@ -201,10 +200,12 @@ class MainActivity : AppCompatActivity() {
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            // set defaults in order to play sound
+            // set defaults in order to play notification sound
             .setDefaults(NotificationCompat.DEFAULT_ALL);
 
-        val notificationId = 0
+        // Want each notification to be unique in order to show them all in status bar
+        // Create a one time ID by using current time
+        val notificationId = SystemClock.uptimeMillis().toInt()
         // show notification
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define

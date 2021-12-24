@@ -70,6 +70,9 @@
     <!--notification channel-->
     <string name="channel_name">Challenges</string>
     <string name="channel_description">Notify when receiving challenges from other users</string>
+    <!--notification text-->
+    <string name="notification_title">You received %1$s</string>
+    <string name="notification_text">Prompt: %1$s</string>
     <!--settings options menu-->
     <string name="settings">Settings</string>
     <!--settings text-->

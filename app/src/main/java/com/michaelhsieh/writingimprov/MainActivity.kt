@@ -134,13 +134,13 @@ class MainActivity : AppCompatActivity() {
                 for (dc in snapshots!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            if (dc.document.data.get("completed") == false) {
+                            if (dc.document.data["completed"] == false) {
                                 // Toasty.normal(this, "You received " + dc.document.data.get("name") + " with prompt: " + dc.document.data.get("prompt"), Toast.LENGTH_LONG).show()
 
                                 // notify user about new challenge
                                 displayNotification(
-                                    dc.document.data.get("name") as String,
-                                    dc.document.data.get("prompt") as String
+                                    dc.document.data["name"] as String,
+                                    dc.document.data["prompt"] as String
                                 )
                             }
                         }
@@ -195,12 +195,14 @@ class MainActivity : AppCompatActivity() {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification_icon)
-            .setContentTitle("You received " + name)
-            .setContentText("Prompt: " + prompt)
+            .setContentTitle(getString(R.string.notification_title, name))
+            .setContentText(getString(R.string.notification_text, prompt))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+            // set defaults in order to play sound
+            .setDefaults(NotificationCompat.DEFAULT_ALL);
 
         val notificationId = 0
         // show notification

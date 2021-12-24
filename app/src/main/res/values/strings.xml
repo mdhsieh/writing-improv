@@ -3,6 +3,7 @@
     <!-- buttons -->
     <string name="my_writing">My Writing</string>
     <string name="send_challenge">Send Challenge</string>
+    <string name="review_challenges">Review Sent Challenges</string>
     <string name="challenges">Challenges</string>
     <string name="practice">Practice</string>
     <string name="go">Go</string>
@@ -65,6 +66,7 @@
     <string name="authors_empty">There are no other authors to challenge yet!</string>
     <!-- no challenges -->
     <string name="challenges_empty">You have not received any challenges yet!</string>
+    <string name="sent_challenges_empty">You have not sent any challenges to other users yet!</string>
     <!--    send challenge to username-->
     <string name="send_challenge_to_user">Send challenge to %1$s!</string>
     <!--notification channel-->

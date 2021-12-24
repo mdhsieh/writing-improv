@@ -66,6 +66,13 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             findNavController().navigate(action)
         }
 
+        // user review writings from  challenges he or she has sent to other users
+        val reviewSentChallengesButton = view.findViewById<Button>(R.id.btn_review_sent_challenges)
+        reviewSentChallengesButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToSentChallengesFragment()
+            findNavController().navigate(action)
+        }
+
         // Logout when user presses button
         val logoutButton = view.findViewById<Button>(R.id.btn_logout)
         logoutButton.setOnClickListener {

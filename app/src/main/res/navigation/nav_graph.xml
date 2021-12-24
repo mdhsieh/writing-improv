@@ -39,6 +39,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_sentChallengesFragment"
+            app:destination="@id/sentChallengesFragment" />
     </fragment>
     <fragment
         android:id="@+id/promptFragment"
@@ -165,4 +168,9 @@
             android:id="@+id/action_challengesFragment_to_writingFragment"
             app:destination="@id/writingFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/sentChallengesFragment"
+        android:name="com.michaelhsieh.writingimprov.SentChallengesFragment"
+        android:label="Review Sent Challenges"
+        tools:layout="@layout/fragment_sent_challenges" />
 </navigation>

@@ -27,9 +27,9 @@ import kotlin.collections.ArrayList
  *
  */
 
-class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWritingAdapter.ItemClickListener {
+class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentChallengesAdapter.ItemClickListener {
 
-    private lateinit var adapter: MyWritingAdapter
+    private lateinit var adapter: SentChallengesAdapter
 
     var db = FirebaseFirestore.getInstance()
 
@@ -43,7 +43,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
         // set up the RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_sent_challenges)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = MyWritingAdapter(context, writingItems)
+        adapter = SentChallengesAdapter(context, writingItems)
         adapter.setClickListener(this)
         recyclerView.adapter = adapter
 
@@ -153,7 +153,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
 
                     // Set to list
                     challenges.addAll(items)
-                    Toasty.info(this.requireContext(), "found challenges: " + items.size.toShort(), Toast.LENGTH_SHORT).show()
+                    // Toasty.info(this.requireContext(), "found challenges: " + items.size.toShort(), Toast.LENGTH_SHORT).show()
 
                     // if reached last collection items list, then done
                     // getting all challenges
@@ -218,13 +218,15 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), MyWrit
                             isWritingFound = true
                         }
 
-                        Toasty.info(this.requireContext(), "found writings: " + writingItems.size + " with challenge ID " + challenge.id, Toast.LENGTH_SHORT).show()
+                        // debug
+                        // Toasty.info(this.requireContext(), "found writings: " + writingItems.size + " with challenge ID " + challenge.id, Toast.LENGTH_SHORT).show()
 
                         // If reached last writing list and still no writings were found from this challenge,
                         // then append a WritingItem with an empty prompt to display to user and
                         // indicate this challenge has not been completed yet
                         if (m == otherUserIds.size - 1 && !isWritingFound) {
-                            Toasty.info(this.requireContext(), "incomplete challenge: " + challenge.id, Toast.LENGTH_SHORT).show()
+                            // debug
+                            // Toasty.info(this.requireContext(), "incomplete challenge: " + challenge.id, Toast.LENGTH_SHORT).show()
                             writingItems.add(
                                 WritingItem(UUID.randomUUID().toString(),
                                     name = "Challenge sent to " + challenge.receiverUsername,

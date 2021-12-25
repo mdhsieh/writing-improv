@@ -12,11 +12,13 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
     <string name="random_image">Random Image</string>
+    <string name="submit_review">Submit Review</string>
     <!-- labels -->
     <string name="label_time">Time (in minutes):</string>
     <string name="label_prompt">Prompt:</string>
     <string name="label_instructions">Use the image and the prompt below!</string>
     <string name="label_author">Author:</string>
+    <string name="label_status">Status:</string>
     <!-- hints-->
     <string name="hint_time">Minutes</string>
     <string name="hint_writing">Write here!</string>
@@ -24,6 +26,7 @@
     <string name="hint_username">Username</string>
     <string name="hint_challenge_prompt">Write the prompt you want to send here!</string>
     <string name="hint_challenge_time">Time limit</string>
+    <string name="hint_sent_challenge_details_review">Review this author\'s submitted writing</string>
     <!--    content descriptions-->
     <string name="desc_menu_icon">Menu Icon</string>
     <string name="desc_image">Image</string>

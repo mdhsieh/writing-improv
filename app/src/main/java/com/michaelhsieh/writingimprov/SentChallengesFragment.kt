@@ -105,10 +105,10 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
     }
 
     override fun onItemClick(view: View?, position: Int) {
-        Toasty.info(this@SentChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
-        // val item = adapter.getItem(position)
-        // val action = ChallengesFragmentDirections.actionChallengesFragmentToWritingFragment(item.time.toInt(), item.prompt, item.url, item.thumbUrl, true, item.name, item.id)
-        // findNavController().navigate(action)
+        // Toasty.info(this@SentChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
+        val item = adapter.getItem(position)
+        val action = SentChallengesFragmentDirections.actionSentChallengesFragmentToSentChallengeDetailsFragment(item)
+         findNavController().navigate(action)
     }
 
     /**

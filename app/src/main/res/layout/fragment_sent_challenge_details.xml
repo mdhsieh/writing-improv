@@ -100,19 +100,43 @@
             app:layout_constraintStart_toEndOf="@+id/tv_label_prompt" />
 
         <TextView
+            android:id="@+id/tv_label_writing"
+            style="@style/WhiteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/label_writing"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_writing_prompt" />
+
+        <TextView
             android:id="@+id/tv_writing"
             style="@style/WhiteText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_writing_prompt"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_writing"
             tools:text="Other author submitted writing"/>
+
+        <TextView
+            android:id="@+id/tv_label_review"
+            style="@style/WhiteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/label_review"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_writing" />
 
         <EditText
             android:id="@+id/et_review"
@@ -121,12 +145,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_writing"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_review"
             android:autofillHints=""
             android:hint="@string/hint_sent_challenge_details_review"
             android:inputType="textMultiLine"

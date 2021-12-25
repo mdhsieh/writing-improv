@@ -34,6 +34,8 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
         val statusText = view.findViewById<TextView>(R.id.tv_status)
         val reviewEditText = view.findViewById<EditText>(R.id.et_review)
         val submitReviewButton = view.findViewById<Button>(R.id.btn_submit_review)
+        val writingLabelText = view.findViewById<TextView>(R.id.tv_label_writing)
+        val reviewLabelText = view.findViewById<TextView>(R.id.tv_label_review)
 
         val item = args.writingItem
         timeText.text = item.time
@@ -50,10 +52,16 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
             statusText.text = getText(R.string.sent_challenge_not_submitted_short)
             reviewEditText.visibility = View.GONE
             submitReviewButton.visibility = View.GONE
+
+            writingLabelText.visibility = View.GONE
+            reviewLabelText.visibility = View.GONE
         } else {
             statusText.text = getText(R.string.sent_challenge_submitted_short)
             reviewEditText.visibility = View.VISIBLE
             submitReviewButton.visibility = View.VISIBLE
+
+            writingLabelText.visibility = View.VISIBLE
+            reviewLabelText.visibility = View.VISIBLE
 
             // Set the review text to the last updated review from Firestore.
             // Default review text is empty if no review has been submitted yet
@@ -117,7 +125,7 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
      * reviewText: Current user's review
      */
     private fun updateReview(email:String?, item:WritingItem, reviewText:String) {
-        Toasty.info(this.requireContext(), "clicked button and id is: " + item.id, Toast.LENGTH_SHORT).show()
+        // Toasty.info(this.requireContext(), "clicked button and id is: " + item.id, Toast.LENGTH_SHORT).show()
 
         if (email != null) {
 
@@ -216,7 +224,7 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
                                     // Update review field to EditText text
                                     for (doc in it.documents) {
                                         editText.setText(doc.data?.get("review").toString())
-                                        Toasty.info(this.requireContext(), "found initial review: " + editText.text.toString(), Toast.LENGTH_SHORT).show()
+                                        // Toasty.info(this.requireContext(), "found initial review: " + editText.text.toString(), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                                 .addOnFailureListener {

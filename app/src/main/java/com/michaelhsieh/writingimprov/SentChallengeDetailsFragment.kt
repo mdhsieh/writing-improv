@@ -49,14 +49,14 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
         // If text is blank, then set status and hide review EditText and button
         // to indicate this challenge has not been submitted by the other user yet
         if (item.writing.isEmpty()) {
-            statusText.text = getText(R.string.sent_challenge_not_submitted_short)
+            statusText.text = getText(R.string.sent_challenge_not_submitted)
             reviewEditText.visibility = View.GONE
             submitReviewButton.visibility = View.GONE
 
             writingLabelText.visibility = View.GONE
             reviewLabelText.visibility = View.GONE
         } else {
-            statusText.text = getText(R.string.sent_challenge_submitted_short)
+            statusText.text = getText(R.string.sent_challenge_submitted)
             reviewEditText.visibility = View.VISIBLE
             submitReviewButton.visibility = View.VISIBLE
 

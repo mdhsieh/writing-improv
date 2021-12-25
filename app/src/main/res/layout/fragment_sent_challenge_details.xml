@@ -49,9 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            tools:text="Incomplete"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_label_status"
-            app:layout_constraintStart_toEndOf="@+id/tv_label_status" />
+            app:layout_constraintStart_toEndOf="@+id/tv_label_status"
+            tools:text="Incomplete" />
 
         <TextView
             android:id="@+id/tv_label_time"

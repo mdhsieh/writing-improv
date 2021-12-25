@@ -80,6 +80,8 @@
     <!--review sent challenge submitted or not status-->
     <string name="sent_challenge_not_submitted_short">Pending</string>
     <string name="sent_challenge_submitted_short">Submitted</string>
+    <string name="sent_challenge_not_submitted">No writing submitted.</string>
+    <string name="sent_challenge_submitted">Writing submitted.</string>
     <!--inform user his or her review has been submitted-->
     <string name="review_submitted">Your review has been submitted!</string>
     <!--challenge and writing lists' time in minutes for each item-->

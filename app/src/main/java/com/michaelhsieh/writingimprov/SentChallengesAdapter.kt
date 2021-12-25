@@ -43,13 +43,14 @@ class SentChallengesAdapter internal constructor(
         val writing = mData[position]
         holder.nameText.text = writing.name
         holder.promptText.text = writing.prompt
-        holder.timeText.text = writing.time + " minutes"
+        // holder.timeText.text = writing.time + " minutes"
+        holder.timeText.text = holder.itemView.context.getString(R.string.time_minutes, writing.time)
         // If writing is empty, the writing is considered not submitted
         // because default WritingItem prompt text is empty
         if (writing.writing.isEmpty()) {
-            holder.statusText.text = "Incomplete"
+            holder.statusText.text = holder.itemView.context.getText(R.string.sent_challenge_not_submitted_short)
         } else {
-            holder.statusText.text = "Complete"
+            holder.statusText.text = holder.itemView.context.getText(R.string.sent_challenge_submitted_short)
         }
         loadThumbnailImage(writing.thumbUrl, holder.thumbImage)
     }

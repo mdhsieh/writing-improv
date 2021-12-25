@@ -37,21 +37,6 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val successIcon:Drawable? = ResourcesCompat.getDrawable(requireActivity().resources, R.drawable.ic_check_circle_outline_72, null)
-//        val failIcon:Drawable? = ResourcesCompat.getDrawable(requireActivity().resources, R.drawable.ic_highlight_off_72, null)
-
-        // Get booleans from previous Fragment.
-        // Show Toast only if writing was submitted from a challenge.
-        // If user completed by time limit, show success Toast
-        // Otherwise, show fail Toast
-//        if (args.writingItem != null) {
-//            if (args.isCompletedOnTime) {
-//                Toasty.normal(this.requireContext(), getString(R.string.on_time), Toast.LENGTH_LONG, successIcon).show()
-//            } else {
-//                Toasty.normal(this.requireContext(), getString(R.string.out_of_time), Toast.LENGTH_LONG, failIcon).show()
-//            }
-//        }
-
         // data to populate the RecyclerView with
         val writingItems: ArrayList<WritingItem> = ArrayList()
 

@@ -46,6 +46,7 @@
     <string name="error_user_info">Please check your Internet connection. Error getting user info.</string>
     <string name="error_practice_times">Please enter a valid time range!</string>
     <string name="error_writing">Please write some text!</string>
+    <string name="error_submitting_review">Please check your Internet connection. Error submitting review.</string>
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
     <string name="prompt_story">What is the story behind this?</string>
@@ -73,6 +74,13 @@
     <string name="sent_challenges_empty">You have not sent any challenges to other users yet!</string>
     <!--    send challenge to username-->
     <string name="send_challenge_to_user">Send challenge to %1$s!</string>
+    <!--review sent challenge submitted or not status-->
+    <string name="sent_challenge_not_submitted_short">Pending</string>
+    <string name="sent_challenge_submitted_short">Submitted</string>
+    <!--inform user his or her review has been submitted-->
+    <string name="review_submitted">Your review has been submitted!</string>
+    <!--challenge and writing lists' time in minutes for each item-->
+    <string name="time_minutes">%1$s minutes</string>
     <!--notification channel-->
     <string name="channel_name">Challenges</string>
     <string name="channel_description">Notify when receiving challenges from other users</string>
@@ -85,9 +93,9 @@
     <string name="change_username">Change Username</string>
     <string name="save_username">Save</string>
     <string name="updated_username">Username saved</string>
-    <string name="practice_times">Practice Times</string>
-    <string name="label_min_time">Minimum Time (in minutes):</string>
-    <string name="label_max_time">Maximum Time (in minutes):</string>
+    <string name="practice_times">Practice Random Time</string>
+    <string name="label_min_time">Min. Time (in minutes):</string>
+    <string name="label_max_time">Max. Time (in minutes):</string>
     <string name="save_practice_times">Save</string>
     <string name="updated_practice_times">Practice times saved</string>
     <!--    other-->

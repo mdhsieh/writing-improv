@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
 /**
@@ -15,6 +19,8 @@ import timber.log.Timber
 class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_details) {
 
     private val args: SentChallengeDetailsFragmentArgs by navArgs()
+
+    var db = FirebaseFirestore.getInstance()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,16 +44,27 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
         errorText.visibility = View.GONE
         loadImage(item.url, imageView, progressBar, errorText)
 
-        // If text is blank, then set status to incomplete and hide review EditText
+        // If text is blank, then set status and hide review EditText and button
         // to indicate this challenge has not been submitted by the other user yet
         if (item.writing.isEmpty()) {
-            statusText.text = "Incomplete"
+            statusText.text = getText(R.string.sent_challenge_not_submitted_short)
             reviewEditText.visibility = View.GONE
             submitReviewButton.visibility = View.GONE
         } else {
-            statusText.text = "Completed"
+            statusText.text = getText(R.string.sent_challenge_submitted_short)
             reviewEditText.visibility = View.VISIBLE
             submitReviewButton.visibility = View.VISIBLE
+
+            // Set the review text to the last updated review from Firestore.
+            // Default review text is empty if no review has been submitted yet
+            getReviewText(getEmail(), item, reviewEditText)
+        }
+
+        // Submit review to other user, show confirmation Toast, and go back to previous screen
+        submitReviewButton.setOnClickListener {
+            val email = getEmail()
+            val reviewText = reviewEditText.text.toString()
+            updateReview(email, item, reviewText)
         }
     }
 
@@ -79,5 +96,87 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
                 }
 
             })
+    }
+
+    /**
+     * Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
+    }
+
+    /** Update review text of writing with ID in Firestore.
+     * Assumes the review field already exists.
+     */
+    private fun updateReview(email:String?, item:WritingItem, reviewText:String) {
+        // Find the writing submitted for this challenge
+        if (email != null) {
+            db.collection(HomeFragment.COLLECTION_USERS)
+                .document(email)
+                .collection(HomeFragment.COLLECTION_WRITING)
+                .whereEqualTo("id", item.id)
+                .get()
+                .addOnSuccessListener {
+
+                    // Should only be 1 writing with the ID
+                    // Update review field to EditText text
+                    for (doc in it.documents) {
+                        // Find auto-generated Firestore ID to do update
+                        // Need to get Firestore ID to get the document itself
+                        val docFirestoreId = doc.id
+
+                        // Now update the writing review field
+                        // Now update the challenge document with this Firestore ID
+                        db.collection(HomeFragment.COLLECTION_USERS)
+                            .document(email)
+                            .collection(HomeFragment.COLLECTION_WRITING)
+                            .document(docFirestoreId)
+                            .update("review", reviewText)
+                            .addOnSuccessListener {
+                                Toasty.info(this.requireContext(), R.string.review_submitted, Toast.LENGTH_LONG)
+
+                                findNavController().popBackStack()
+                            }
+                            .addOnFailureListener {
+                                Timber.e(it)
+                                Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                            }
+                    }
+
+                }
+                .addOnFailureListener {
+                    Timber.e(it)
+                    Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                }
+        }
+    }
+
+    private fun getReviewText(email:String?, item:WritingItem, editText:EditText) {
+        // Find the writing submitted for this challenge
+        if (email != null) {
+            db.collection(HomeFragment.COLLECTION_USERS)
+                .document(email)
+                .collection(HomeFragment.COLLECTION_WRITING)
+                .whereEqualTo("id", item.id)
+                .get()
+                .addOnSuccessListener {
+
+                    // Should only be 1 writing with the ID
+                    // Update review field to EditText text
+                    for (doc in it.documents) {
+                        editText.setText(doc.data?.get("review").toString())
+                    }
+
+                }
+                .addOnFailureListener {
+                    Timber.e(it)
+                    Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                }
+        }
     }
 }

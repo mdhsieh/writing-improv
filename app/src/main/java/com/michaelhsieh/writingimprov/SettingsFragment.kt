@@ -10,11 +10,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
+
+    var db = FirebaseFirestore.getInstance()
 
     companion object {
         const val KEY_PREFS = "prefs"
@@ -96,6 +99,20 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     Toasty.normal(this@SettingsFragment.requireContext(), R.string.updated_username, Toast.LENGTH_LONG).show()
                 }
             }
+
+        // Also update the username in Firestore
+        val email = getEmail()
+        if (email != null) {
+            db.collection(HomeFragment.COLLECTION_USERS)
+                .document(email)
+                .update("username", name)
+                .addOnSuccessListener {
+                    Timber.d("username updated in Firestore: %s", user)
+                }
+                .addOnFailureListener { e ->
+                    Timber.w(e, "Error updating username in Firestore")
+                }
+        }
     }
 
     /**
@@ -125,5 +142,17 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    /**
+     * Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
     }
 }

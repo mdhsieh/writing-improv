@@ -31,12 +31,15 @@ data class WritingItem(
 
     // String ID of the challenge this writing came from,
     // or empty String if writing is practice instead
-    val challengeId:String = ""
+    val challengeId:String = "",
+
+    // Review from the challenger if not practice writing
+    var review:String=""
 ):Serializable {
     // Serializable to pass object between Fragments
 
     // To debug
     override fun toString(): String {
-        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, writing: $writing, challenge id: $challengeId"
+        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, writing: $writing, challenge id: $challengeId, review: $review"
     }
 }

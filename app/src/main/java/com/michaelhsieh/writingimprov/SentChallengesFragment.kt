@@ -222,7 +222,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
                         // Toasty.info(this.requireContext(), "found writings: " + writingItems.size + " with challenge ID " + challenge.id, Toast.LENGTH_SHORT).show()
 
                         // If reached last writing list and still no writings were found from this challenge,
-                        // then append a WritingItem with an empty prompt to display to user and
+                        // then append a WritingItem with random ID and an empty prompt to display to user and
                         // indicate this challenge has not been completed yet
                         if (m == otherUserIds.size - 1 && !isWritingFound) {
                             // debug

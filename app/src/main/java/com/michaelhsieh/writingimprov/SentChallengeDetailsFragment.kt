@@ -110,72 +110,126 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
         return null
     }
 
-    /** Update review text of writing with ID in Firestore.
+    /** Update review text of writing with writing ID in Firestore.
      * Assumes the review field already exists.
+     * email: Current user email
+     * item: WritingItem containing the text to review
+     * reviewText: Current user's review
      */
     private fun updateReview(email:String?, item:WritingItem, reviewText:String) {
-        // Find the writing submitted for this challenge
+        Toasty.info(this.requireContext(), "clicked button and id is: " + item.id, Toast.LENGTH_SHORT).show()
+
         if (email != null) {
-            db.collection(HomeFragment.COLLECTION_USERS)
-                .document(email)
-                .collection(HomeFragment.COLLECTION_WRITING)
-                .whereEqualTo("id", item.id)
+
+            // Find the email of whoever received the challenge
+            val collection = db.collection(HomeFragment.COLLECTION_USERS)
+                collection
                 .get()
                 .addOnSuccessListener {
+                    // Should only be 1 item with the challenge ID
+                    for (userDocument in it.documents) {
+                        val receiverEmail = userDocument.id
+                        //Toasty.info(this.requireContext(), receiverEmail, Toast.LENGTH_SHORT).show()
+                        // exclude email of current user who cannot receive their own challenge
+                        if (email != receiverEmail) {
+                            // Find the writing submitted for this challenge
+                            db.collection(HomeFragment.COLLECTION_USERS)
+                                .document(receiverEmail)
+                                .collection(HomeFragment.COLLECTION_WRITING)
+                                .whereEqualTo("id", item.id)
+                                .get()
+                                .addOnSuccessListener {
 
-                    // Should only be 1 writing with the ID
-                    // Update review field to EditText text
-                    for (doc in it.documents) {
-                        // Find auto-generated Firestore ID to do update
-                        // Need to get Firestore ID to get the document itself
-                        val docFirestoreId = doc.id
+                                    // Should only be 1 writing with the ID
+                                    // Update review field to EditText text
+                                    for (doc in it.documents) {
+                                        // Find auto-generated Firestore ID to do update
+                                        // Need to get Firestore ID to get the document itself
+                                        val docFirestoreId = doc.id
 
-                        // Now update the writing review field
-                        // Now update the challenge document with this Firestore ID
-                        db.collection(HomeFragment.COLLECTION_USERS)
-                            .document(email)
-                            .collection(HomeFragment.COLLECTION_WRITING)
-                            .document(docFirestoreId)
-                            .update("review", reviewText)
-                            .addOnSuccessListener {
-                                Toasty.info(this.requireContext(), R.string.review_submitted, Toast.LENGTH_LONG)
+                                        Toasty.info(this.requireContext(), "found writing with id: " + item.id, Toast.LENGTH_SHORT).show()
 
-                                findNavController().popBackStack()
-                            }
-                            .addOnFailureListener {
-                                Timber.e(it)
-                                Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
-                            }
+                                        // Now update the other user's writing review field
+                                        db.collection(HomeFragment.COLLECTION_USERS)
+                                            .document(receiverEmail)
+                                            .collection(HomeFragment.COLLECTION_WRITING)
+                                            .document(docFirestoreId)
+                                            .update("review", reviewText)
+                                            .addOnSuccessListener {
+                                                Toasty.info(this.requireContext(), R.string.review_submitted, Toast.LENGTH_LONG)
+
+                                                findNavController().popBackStack()
+                                            }
+                                            .addOnFailureListener {
+                                                Timber.e(it)
+                                                Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                                            }
+                                    }
+
+                                }
+                                .addOnFailureListener {
+                                    Timber.e(it)
+                                    Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                                }
+                        }
                     }
-
                 }
                 .addOnFailureListener {
                     Timber.e(it)
                     Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
                 }
+
         }
     }
 
+    /**
+     * email: Current user email
+     * item: WritingItem containing writing text to be reviewed
+     * editText: Review EditText
+     */
     private fun getReviewText(email:String?, item:WritingItem, editText:EditText) {
-        // Find the writing submitted for this challenge
         if (email != null) {
-            db.collection(HomeFragment.COLLECTION_USERS)
-                .document(email)
-                .collection(HomeFragment.COLLECTION_WRITING)
-                .whereEqualTo("id", item.id)
+//            Toasty.info(this.requireContext(), "email: " + email, Toast.LENGTH_SHORT).show()
+
+            // Find the email of whoever received the challenge
+            val collection = db.collection(HomeFragment.COLLECTION_USERS)
+            collection
                 .get()
                 .addOnSuccessListener {
+//                    Toasty.info(this.requireContext(), "hello", Toast.LENGTH_SHORT).show()
+//                    Toasty.info(this.requireContext(), "num docs: " + it.documents.size, Toast.LENGTH_SHORT).show()
 
-                    // Should only be 1 writing with the ID
-                    // Update review field to EditText text
-                    for (doc in it.documents) {
-                        editText.setText(doc.data?.get("review").toString())
+                    // Toasty.info(this.requireContext(), it.documents.toString(), Toast.LENGTH_SHORT).show()
+                    // Should only be 1 email with the writing ID
+                    for (userDoc in it.documents) {
+                        val receiverEmail = userDoc.id
+//                        Toasty.info(this.requireContext(), receiverEmail, Toast.LENGTH_SHORT).show()
+                        if (email != receiverEmail) {
+                            // Find the writing submitted for this challenge
+                            db.collection(HomeFragment.COLLECTION_USERS)
+                                .document(receiverEmail)
+                                .collection(HomeFragment.COLLECTION_WRITING)
+                                .whereEqualTo("id", item.id)
+                                .get()
+                                .addOnSuccessListener {
+                                    // Should only be 1 writing with the ID
+                                    // Update review field to EditText text
+                                    for (doc in it.documents) {
+                                        editText.setText(doc.data?.get("review").toString())
+                                        Toasty.info(this.requireContext(), "found initial review: " + editText.text.toString(), Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                .addOnFailureListener {
+                                    Timber.e(it)
+                                    Toasty.error(this.requireContext(), R.string.error_loading_review, Toast.LENGTH_LONG).show()
+                                }
+                        }
+
                     }
-
                 }
                 .addOnFailureListener {
                     Timber.e(it)
-                    Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                    Toasty.error(this.requireContext(), R.string.error_loading_review, Toast.LENGTH_LONG).show()
                 }
         }
     }

@@ -27,12 +27,12 @@ class MyWritingDetailsFragment:Fragment(R.layout.fragment_my_writing_details) {
         val errorText = view.findViewById<TextView>(R.id.tv_error)
         val timeText = view.findViewById<TextView>(R.id.tv_time)
         val promptText = view.findViewById<TextView>(R.id.tv_writing_prompt)
-        val writingEditText = view.findViewById<EditText>(R.id.et_writing)
+        val writingText = view.findViewById<TextView>(R.id.tv_writing)
 
         val item = args.writingItem
         timeText.text = item.time
         promptText.text = item.prompt
-        writingEditText.setText(item.writing)
+        writingText.text = item.writing
 
         // Hide error message
         errorText.visibility = View.GONE

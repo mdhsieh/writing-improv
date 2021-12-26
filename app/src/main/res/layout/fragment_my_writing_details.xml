@@ -76,9 +76,27 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_label_prompt"
             app:layout_constraintStart_toEndOf="@+id/tv_label_prompt" />
 
-        <EditText
-            android:id="@+id/et_writing"
-            style="@style/EditWhiteText"
+<!--        <EditText-->
+<!--            android:id="@+id/et_writing"-->
+<!--            style="@style/EditWhiteText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginLeft="16dp"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:layout_marginRight="16dp"-->
+<!--            android:autofillHints=""-->
+<!--            android:hint="@string/hint_my_writing_details"-->
+<!--            android:inputType="textMultiLine"-->
+<!--            android:singleLine="false"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/tv_writing_prompt" />-->
+
+        <TextView
+            android:id="@+id/tv_writing"
+            style="@style/WhiteText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -86,13 +104,10 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:autofillHints=""
-            android:hint="@string/hint_my_writing_details"
-            android:inputType="textMultiLine"
-            android:singleLine="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_writing_prompt" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_writing_prompt"
+            tools:text="@string/hint_my_writing_details"/>
 
         <ProgressBar
             android:id="@+id/pb_loading_image"

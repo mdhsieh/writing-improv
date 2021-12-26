@@ -226,6 +226,9 @@ class MainActivity : AppCompatActivity() {
                                     // )
                                 }
                                 // Log.d(TAG, "Modified challenge: ${dc.document.data}")
+
+                                isListeningForChallenges = true
+
                             }
                             //DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed writing: ${dc.document.data}")
                         }

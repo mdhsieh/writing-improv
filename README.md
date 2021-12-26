@@ -46,9 +46,11 @@ Coming soon
 - Espresso UI Testing
 
 ## Screenshots
-![Sign In](Screenshot_1.png)
-![Home](Screenshot_2.png)
-![Prompt](Screenshot_3.png)
-![Writing](Screenshot_4.png)
-![My Writing](Screenshot_5.PNG)
-![My Writing Details](Screenshot_6.PNG)
+![Sign In](Capture.PNG)
+![Home](Capture1.PNG)
+![Send Challenge](Capture3.PNG)
+![Writing top view](Capture5.PNG)
+![Writing bottom view](Capture6.PNG)
+![Review sent challenges](Capture7.PNG)
+![Submit a review](Capture9.PNG)
+![My Writing Details](Capture12.PNG)

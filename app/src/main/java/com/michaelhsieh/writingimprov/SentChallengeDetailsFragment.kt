@@ -155,7 +155,7 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
                                         // Need to get Firestore ID to get the document itself
                                         val docFirestoreId = doc.id
 
-                                        Toasty.info(this.requireContext(), "found writing with id: " + item.id, Toast.LENGTH_SHORT).show()
+                                        // Toasty.info(this.requireContext(), "found writing with id: " + item.id, Toast.LENGTH_SHORT).show()
 
                                         // Now update the other user's writing review field
                                         db.collection(HomeFragment.COLLECTION_USERS)

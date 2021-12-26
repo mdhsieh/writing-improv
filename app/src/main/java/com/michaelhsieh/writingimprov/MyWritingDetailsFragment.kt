@@ -29,6 +29,9 @@ class MyWritingDetailsFragment:Fragment(R.layout.fragment_my_writing_details) {
         val promptText = view.findViewById<TextView>(R.id.tv_writing_prompt)
         val writingText = view.findViewById<TextView>(R.id.tv_writing)
 
+        val reviewLabelText = view.findViewById<TextView>(R.id.tv_label_review)
+        val reviewText = view.findViewById<TextView>(R.id.tv_review)
+
         val item = args.writingItem
         timeText.text = item.time
         promptText.text = item.prompt
@@ -37,6 +40,17 @@ class MyWritingDetailsFragment:Fragment(R.layout.fragment_my_writing_details) {
         // Hide error message
         errorText.visibility = View.GONE
         loadImage(item.url, imageView, progressBar, errorText)
+
+        // If no review, hide review label and text
+        // Otherwise, show them
+        if (item.review.isEmpty()) {
+            reviewLabelText.visibility = View.GONE
+            reviewText.visibility = View.GONE
+        } else {
+            reviewText.text = item.review
+            reviewLabelText.visibility = View.VISIBLE
+            reviewText.visibility = View.VISIBLE
+        }
     }
 
     /**

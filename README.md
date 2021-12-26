@@ -1,8 +1,8 @@
 # Writing Improv
 Have fun with friends and improve your creative writing skills! It's simple:
-1. Pick an image and a writing prompt to send to someone
+1. Pick an image and a writing prompt to send to someone.
 2. They have to write about the prompt with the image before time runs out. But, they don't see the image until they start writing!
-3. You review their writing to see how they did
+3. You review their writing to see how they did for your challenge.
 
 ## Installation
 Clone this repository:

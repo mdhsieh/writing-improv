@@ -1,5 +1,8 @@
 # Writing Improv
-Improve your creative writing skills.
+Have fun with friends and improve your creative writing skills! It's simple:
+1. Pick an image and a writing prompt to send to someone
+2. They have to write about the prompt with the image before time runs out. But, they don't see the image until they start writing!
+3. You review their writing to see how they did
 
 ## Installation
 Clone this repository:
@@ -21,8 +24,14 @@ For example:
 Run the app.
 
 ## Download
+Coming soon
 
 ## Features
+- Automatically save your writing, challenges you receive, and challenges you send to other users in the cloud
+- Send challenges to anyone else with the app
+- Get notified when you receive a new challenge or others submit writing on one of your own challenges
+- Review other users' writing to help them improve
+- Practice on your own with random images, prompts, and a custom time limit
 
 ## Libraries
 - [FirebaseUI Authentication](https://firebase.google.com/docs/auth/android/firebaseui)

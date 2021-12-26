@@ -9,6 +9,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -27,6 +28,9 @@ import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_CHALLENGES
+import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
+import es.dmoral.toasty.Toasty
 import timber.log.Timber
 import javax.net.ssl.SSLContext
 
@@ -124,12 +128,15 @@ class MainActivity : AppCompatActivity() {
     /**
      * Notify user whenever he or she receives a new challenge,
      * that is when his or her Firestore challenges collection has a document added
+     *
+     * Notify user whenever another user completes his or her
+     * sent challenge
      * @param userId The current user's ID, which is his or her email
      */
      fun listenForChallengesChange(userId: String) {
         // If already listening for challenges, e.g. opened app then tapped notification
         // which re-opens app and goes to challenges screen,
-        // don't display again
+        // don't display notifications again
         if (isListeningForChallenges) {
             return
         }
@@ -149,10 +156,13 @@ class MainActivity : AppCompatActivity() {
                                 // Toasty.normal(this, "You received " + dc.document.data.get("name") + " with prompt: " + dc.document.data.get("prompt"), Toast.LENGTH_LONG).show()
 
                                 // notify user about new challenge
-                                displayNotification(
-                                    dc.document.data["name"] as String,
-                                    dc.document.data["prompt"] as String
-                                )
+                                val notificationTitle = getString(R.string.notification_title, dc.document.data["name"] as String)
+                                val notificationText = getString(R.string.notification_text, dc.document.data["prompt"] as String)
+                                displayNotification(notificationTitle, notificationText, R.id.challengesFragment)
+                                //displayNotification(
+                                //    dc.document.data["name"] as String,
+                                //    dc.document.data["prompt"] as String
+                                //)
 
                                 isListeningForChallenges = true
                             }
@@ -162,6 +172,67 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+        // Listen for challenges current user has sent which have been completed
+        // These challenges should be in other users' collections and
+        // have current user email as senderId and completed set to true
+        val otherUserIds = arrayListOf<String>()
+        db.collection(HomeFragment.COLLECTION_USERS)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it.documents) {
+                    if (doc.id != userId) {
+                        otherUserIds.add(doc.id)
+                    }
+                }
+
+                listenForCompletedChallenges(userId, otherUserIds)
+            }
+    }
+
+    /**
+     * Display notification when writing submitted by other
+     * user about one of current user's sent challenges
+     * userEmail: Current user email
+     * otherEmails: All other user's emails
+     */
+    private fun listenForCompletedChallenges(userEmail:String, otherEmails:ArrayList<String>) {
+        for (otherEmail in otherEmails) {
+            db.collection(HomeFragment.COLLECTION_USERS)
+                .document(otherEmail)
+                .collection(COLLECTION_CHALLENGES)
+                .whereEqualTo("senderId", userEmail)
+                .addSnapshotListener { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e)
+                        return@addSnapshotListener
+                    }
+
+                    for (dc in snapshots!!.documentChanges) {
+                        when (dc.type) {
+                            //DocumentChange.Type.ADDED -> { Log.d(TAG, "Added challenge: ${dc.document.data}")}
+                            DocumentChange.Type.MODIFIED -> {
+                                if (dc.document.data["completed"] == true) {
+                                    // Toasty.normal(this, "Your challenge was completed by " + dc.document.data["receiverUsername"] + " with prompt: " + dc.document.data["prompt"], Toast.LENGTH_LONG).show()
+
+                                    // notify user about submitted challenge
+                                    val notificationTitle = getString(R.string.notification_title_submitted_challenge, dc.document.data["receiverUsername"] as String)
+                                    val notificationText = getString(R.string.notification_text, dc.document.data["prompt"] as String)
+                                    displayNotification(notificationTitle, notificationText, R.id.sentChallengesFragment)
+
+                                    // displayNotification(
+                                        // dc.document.data["name"] as String,
+                                        // dc.document.data["prompt"] as String
+                                    // )
+                                }
+                                // Log.d(TAG, "Modified challenge: ${dc.document.data}")
+                            }
+                            //DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed writing: ${dc.document.data}")
+                        }
+                    }
+                }
+        }
+
     }
 
     /**
@@ -196,20 +267,24 @@ class MainActivity : AppCompatActivity() {
     /**
      * Display notification to let user know
      * he or she has received a challenge
-     * title: Challenge name
-     * text: Challenge prompt
+     * title: notification title, e.g. challenge title
+     * text: notification text, e.g. challenge prompt
+     * navDest: Resource ID of fragment to navigate to, e.g. ChallengesFragment or SentChallengesFragment
      */
-    private fun displayNotification(name: String, prompt: String) {
+    private fun displayNotification(title: String, text: String, navDest:Int) {
         // navigate to challenges fragment
         val pendingIntent = NavDeepLinkBuilder(this)
             .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.challengesFragment)
+            // .setDestination(R.id.challengesFragment)
+            .setDestination(navDest)
             .createPendingIntent()
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification_icon)
-            .setContentTitle(getString(R.string.notification_title, name))
-            .setContentText(getString(R.string.notification_text, prompt))
+            // .setContentTitle(getString(R.string.notification_title, name))
+            // .setContentText(getString(R.string.notification_text, prompt))
+            .setContentTitle(title)
+            .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)

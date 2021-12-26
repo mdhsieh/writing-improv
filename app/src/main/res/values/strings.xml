@@ -92,6 +92,7 @@
     <!--notification text-->
     <string name="notification_title">You received %1$s</string>
     <string name="notification_text">Prompt: %1$s</string>
+    <string name="notification_title_submitted_challenge">Your challenge sent to %1$s was completed</string>
     <!--settings options menu-->
     <string name="settings">Settings</string>
     <!--settings text-->

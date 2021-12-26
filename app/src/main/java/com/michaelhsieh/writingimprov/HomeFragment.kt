@@ -15,6 +15,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.MainActivity.Companion.isListeningForChallenges
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -105,6 +106,17 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             Timber.d("display name: %s", username)
             Timber.d("email: %s", email)
             Toasty.error(this@HomeFragment.requireContext(), R.string.error_user_info, Toast.LENGTH_LONG).show()
+        }
+
+        // When the user first signs in, listenForChallengesChange() getting email in MainActivity
+        // will fail because the first Fragment is SignInFragment which requires entering that email.
+        // If first signing in, call listenForChallengesChange() here instead. Then
+        // set global MainActivity boolean to false in order to not
+        // repeatedly call listenForChallengesChange() every time HomeFragment view is created.
+        if (email != null && !isListeningForChallenges) {
+            val activity = this.activity as MainActivity
+            activity.listenForChallengesChange(email)
+            isListeningForChallenges = true
         }
     }
 

@@ -48,6 +48,12 @@ class MainActivity : AppCompatActivity() {
     // notification channel ID
     private val CHANNEL_ID = "writing_improv_channel"
 
+    // Global boolean to prevent displaying notifications
+    // multiple times
+    companion object {
+        var isListeningForChallenges = false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -120,7 +126,13 @@ class MainActivity : AppCompatActivity() {
      * that is when his or her Firestore challenges collection has a document added
      * @param userId The current user's ID, which is his or her email
      */
-    private fun listenForChallengesChange(userId: String) {
+     fun listenForChallengesChange(userId: String) {
+        // If already listening for challenges, e.g. opened app then tapped notification
+        // which re-opens app and goes to challenges screen,
+        // don't display again
+        if (isListeningForChallenges) {
+            return
+        }
         db.collection(HomeFragment.COLLECTION_USERS)
             .document(userId)
             .collection(HomeFragment.COLLECTION_CHALLENGES)
@@ -141,6 +153,8 @@ class MainActivity : AppCompatActivity() {
                                     dc.document.data["name"] as String,
                                     dc.document.data["prompt"] as String
                                 )
+
+                                isListeningForChallenges = true
                             }
                         }
                         DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified challenge: ${dc.document.data}")

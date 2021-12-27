@@ -7,6 +7,16 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 // Enable Google services plugin to use Firebase
 apply plugin: 'com.google.gms.google-services'
 android {
+    signingConfigs {
+        release {
+            def properties = new Properties()
+            file("../keystore.properties").withInputStream { properties.load(it) }
+            keyPassword = properties.getProperty("keyPassword")
+            storePassword = properties.getProperty("storePassword")
+            keyAlias = properties.getProperty("keyAlias")
+            storeFile = file(properties.getProperty("storeFile"))
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
@@ -24,6 +34,7 @@ android {
         // Enabling Multidex support.
         // Adding Google services to use Firestore created too many methods
         multiDexEnabled true
+        signingConfig signingConfigs.release
     }
 
     buildTypes {

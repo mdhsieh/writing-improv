@@ -54,10 +54,14 @@ class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "writing_improv_channel"
 
     companion object {
-        // Global boolean to prevent displaying notifications
-        // multiple times when tap a notification and re-open app
+        // Global boolean to
+        // -- Listen for notifications in initial sign up by calling in HomeFragment instead.
+        // -- Listen for notifications after signing out, which
+        // creates snapshot error, through calling in HomeFragment.
+        // -- Prevent displaying notifications multiple times when
+        // tap a notification and re-open app.
         var isListeningForChallenges = false
-        // Global boolean to prevent listenForChallengesChange function from being called twice
+        // Global boolean to prevent listenForChallengesChange function from executing twice
         // in MainActivity, which results in the same received or completed challenge showing
         // a duplicated notification to the user.
         var isListenFunctionCalledAlready = false
@@ -66,6 +70,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Timber.d("ONCREATE called")
+        Timber.d("isListeningForChallenges? %s", isListeningForChallenges)
+        Timber.d("isListenFunctionCalledAlready? %s", isListenFunctionCalledAlready)
 
         Timber.plant(Timber.DebugTree())
 
@@ -165,6 +173,13 @@ class MainActivity : AppCompatActivity() {
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     Log.w(TAG, "listen:error", e)
+
+                    // Set to false in order to trigger HomeFragment call to this function
+                    // when use sign out
+                    isListeningForChallenges = false
+                    // Set to false to allow function be called again
+                    isListenFunctionCalledAlready = false
+
                     return@addSnapshotListener
                 }
 

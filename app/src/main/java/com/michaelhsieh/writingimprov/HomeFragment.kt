@@ -114,9 +114,14 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         // set global MainActivity boolean to false in order to not
         // repeatedly call listenForChallengesChange() every time HomeFragment view is created.
         if (email != null && !isListeningForChallenges) {
+            Timber.d("HomeFragment calling listen for changes")
             val activity = this.activity as MainActivity
             activity.listenForChallengesChange(email)
             isListeningForChallenges = true
+        } else if (email == null) {
+            Timber.d("HomeFragment email is null")
+        } else {
+            Timber.d("HomeFragment email is not null and isListeningForChallenges is %s", isListeningForChallenges)
         }
     }
 

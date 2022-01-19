@@ -32,6 +32,7 @@ import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_CHALLENG
 import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
+import java.util.zip.ZipException
 import javax.net.ssl.SSLContext
 
 
@@ -52,15 +53,21 @@ class MainActivity : AppCompatActivity() {
     // notification channel ID
     private val CHANNEL_ID = "writing_improv_channel"
 
-    // Global boolean to prevent displaying notifications
-    // multiple times
     companion object {
+        // Global boolean to prevent displaying notifications
+        // multiple times when tap a notification and re-open app
         var isListeningForChallenges = false
+        // Global boolean to prevent listenForChallengesChange function from being called twice
+        // in MainActivity, which results in the same received or completed challenge showing
+        // a duplicated notification to the user.
+        var isListenFunctionCalledAlready = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Timber.plant(Timber.DebugTree())
 
         // vector Drawables on older devices, example API 17 tablet
         // to avoid crashes
@@ -72,8 +79,6 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         setupActionBarWithNavController(navController)
-
-        Timber.plant(Timber.DebugTree())
 
         updateAndroidSecurityProvider(this)
 
@@ -122,6 +127,9 @@ class MainActivity : AppCompatActivity() {
             GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), callingActivity, 0)
         } catch (e: GooglePlayServicesNotAvailableException) {
             Timber.e("Google Play Services not available.")
+        } catch (e: ZipException) {
+            Timber.e("Zip exception was found")
+            Timber.e(e)
         }
     }
 
@@ -138,8 +146,19 @@ class MainActivity : AppCompatActivity() {
         // which re-opens app and goes to challenges screen,
         // don't display notifications again
         if (isListeningForChallenges) {
+            Timber.d("Already listening, exit")
             return
         }
+
+        if (isListenFunctionCalledAlready) {
+            Timber.d("Already called function to create a listener, exit")
+            return
+        } else {
+            isListenFunctionCalledAlready = true
+        }
+
+        Timber.d("Listening for challenges")
+
         db.collection(HomeFragment.COLLECTION_USERS)
             .document(userId)
             .collection(HomeFragment.COLLECTION_CHALLENGES)
@@ -153,16 +172,16 @@ class MainActivity : AppCompatActivity() {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
                             if (dc.document.data["completed"] == false) {
+
                                 // Toasty.normal(this, "You received " + dc.document.data.get("name") + " with prompt: " + dc.document.data.get("prompt"), Toast.LENGTH_LONG).show()
+                                // Toasty.normal(this, "wait", Toast.LENGTH_LONG).show()
+
+                                Timber.d("Received challenge notification with id " + dc.document.id)
 
                                 // notify user about new challenge
                                 val notificationTitle = getString(R.string.notification_title, dc.document.data["name"] as String)
                                 val notificationText = getString(R.string.notification_text, dc.document.data["prompt"] as String)
                                 displayNotification(notificationTitle, notificationText, R.id.challengesFragment)
-                                //displayNotification(
-                                //    dc.document.data["name"] as String,
-                                //    dc.document.data["prompt"] as String
-                                //)
 
                                 isListeningForChallenges = true
                             }
@@ -210,10 +229,13 @@ class MainActivity : AppCompatActivity() {
 
                     for (dc in snapshots!!.documentChanges) {
                         when (dc.type) {
-                            //DocumentChange.Type.ADDED -> { Log.d(TAG, "Added challenge: ${dc.document.data}")}
+                            DocumentChange.Type.ADDED -> {
+                                // Log.d(TAG, "Added challenge: ${dc.document.data}")
+                            }
                             DocumentChange.Type.MODIFIED -> {
                                 if (dc.document.data["completed"] == true) {
                                     // Toasty.normal(this, "Your challenge was completed by " + dc.document.data["receiverUsername"] + " with prompt: " + dc.document.data["prompt"], Toast.LENGTH_LONG).show()
+                                    Timber.d("Completed challenge notification")
 
                                     // notify user about submitted challenge
                                     val notificationTitle = getString(R.string.notification_title_submitted_challenge, dc.document.data["receiverUsername"] as String)
@@ -230,7 +252,9 @@ class MainActivity : AppCompatActivity() {
                                 isListeningForChallenges = true
 
                             }
-                            //DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed writing: ${dc.document.data}")
+                            DocumentChange.Type.REMOVED -> {
+                                //Log.d(TAG, "Removed writing: ${dc.document.data}")
+                            }
                         }
                     }
                 }
@@ -298,6 +322,9 @@ class MainActivity : AppCompatActivity() {
         // Want each notification to be unique in order to show them all in status bar
         // Create a one time ID by using current time
         val notificationId = SystemClock.uptimeMillis().toInt()
+
+        // Timber.d("Display notification with ID " + notificationId)
+
         // show notification
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define

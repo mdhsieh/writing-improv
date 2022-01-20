@@ -55,6 +55,13 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
         signInButton.setOnClickListener {
             signIn()
         }
+        // Do exact same sign in when create account button clicked
+        // FirebaseUI sign-in by default has create account email, name, password prompt as long as
+        // user never signed in before
+        val createAccountButton = view.findViewById<Button>(R.id.btn_create_account)
+        createAccountButton.setOnClickListener {
+            signIn()
+        }
 
         // If user already signed in, go to HomeFragment
         navToHomeIfSignedIn()

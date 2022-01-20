@@ -11,6 +11,7 @@
     <string name="menu">Menu</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
+    <string name="create_account">Create an Account</string>
     <string name="random_image">Random Image</string>
     <string name="submit_review">Submit Review</string>
     <!-- labels -->

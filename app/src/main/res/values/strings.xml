@@ -52,6 +52,7 @@
     <string name="error_submitting_review">Please check your Internet connection. Error submitting review.</string>
     <string name="error_loading_review">Please check your Internet connection. Error loading review.</string>
     <string name="error_deleted_writing">Error deleting writing for: %1$s</string>
+    <string name="error_deleted_challenge">Error deleting: %1$s</string>
     <string name="error_email_deleted_writing">Error deleting, could not get account information.</string>
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
@@ -112,6 +113,8 @@
     <string name="delete_confirmation">Are you sure you want to delete %1$s with prompt:
     %2$s ?
     </string>
+<!--    name of challenge includes the words challenge from or challenge sent to-->
+    <string name="deleted_challenge">You deleted: %1$s</string>
     <string name="yes">Confirm</string>
     <string name="no">Cancel</string>
     <!--    other-->

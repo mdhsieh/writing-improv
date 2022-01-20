@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_USERS
 import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
@@ -54,8 +55,14 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val writingToDelete = adapter.getItem(viewHolder.adapterPosition)
-                createDeleteConfirmationDialog(writingToDelete, viewHolder, writingItems)
+                val email = getEmail()
+                if (email != null) {
+                    val writingToDelete = adapter.getItem(viewHolder.adapterPosition)
+                    createDeleteConfirmationDialog(writingToDelete, viewHolder, writingItems, email)
+                } else {
+                    Timber.d("Email is null")
+                    Toasty.error(this@MyWritingFragment.requireContext(), R.string.error_email_deleted_writing).show()
+                }
             }
 
         }
@@ -164,13 +171,14 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
      * @param writingItem: Writing to delete
      * @param itemViewHolder: RecyclerView ViewHolder
      * @param items: List of writing items
+     * @param userId: Firestore document user ID which is email
      */
-    private fun createDeleteConfirmationDialog(writingItem:WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>) {
+    private fun createDeleteConfirmationDialog(writingItem:WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>, userId:String) {
         val builder = AlertDialog.Builder(this@MyWritingFragment.requireContext())
         builder.setMessage(getString(R.string.delete_confirmation, writingItem.name, writingItem.prompt))
             .setCancelable(false)
             .setPositiveButton(R.string.yes) { dialog, id ->
-                deleteWriting(writingItem, itemViewHolder, items)
+                deleteWriting(writingItem, itemViewHolder, items, userId)
             }
             .setNegativeButton(R.string.no) { dialog, id ->
                 // Dismiss the dialog
@@ -191,15 +199,58 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
      * @param writingToDelete: Writing to delete
      * @param viewHolder: RecyclerView ViewHolder
      * @param writingItems: List of writing items
+     * @param email: Firestore document user ID which is email
      */
-    private fun deleteWriting(writingToDelete:WritingItem, viewHolder:RecyclerView.ViewHolder, writingItems:ArrayList<WritingItem>) {
+    private fun deleteWriting(
+        writingToDelete:WritingItem, viewHolder:RecyclerView.ViewHolder,
+        writingItems:ArrayList<WritingItem>, email:String) {
         writingItems.removeAt(viewHolder.adapterPosition)
         adapter.notifyItemRemoved(viewHolder.adapterPosition)
-        Toasty.info(
-            this@MyWritingFragment.requireContext(),
-            getString(R.string.deleted_writing, writingToDelete.name),
-            Toast.LENGTH_SHORT
-        ).show()
+
+        // Start delete from Firestore
+        val collection = db.collection(COLLECTION_USERS)
+            .document(email)
+            .collection(COLLECTION_WRITING)
+
+        collection.whereEqualTo("id", writingToDelete.id)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it.documents) {
+                    // Get document ID which is different from writing ID field
+                    // and use that to delete document instead
+                    val docRefId = doc.id
+                    collection.document(docRefId).delete()
+                        .addOnSuccessListener {
+                            Toasty.info(
+                                this@MyWritingFragment.requireContext(),
+                                getString(R.string.deleted_writing, writingToDelete.name),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .addOnFailureListener {
+                            Timber.d(it)
+                            Toasty.info(
+                                this@MyWritingFragment.requireContext(),
+                                getString(R.string.error_deleted_writing, writingToDelete.name),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            // Make swiped out view animate back to original position
+                            adapter.notifyItemChanged(viewHolder.adapterPosition)
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Timber.d("Error getting docs where equal to")
+                Timber.d(it)
+
+                Toasty.info(
+                    this@MyWritingFragment.requireContext(),
+                    getString(R.string.error_deleted_writing, writingToDelete.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+                // Make swiped out view animate back to original position
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+            }
     }
 
     /**

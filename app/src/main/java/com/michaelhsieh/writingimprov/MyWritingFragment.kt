@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +41,31 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         // data to populate the RecyclerView with
         val writingItems: ArrayList<WritingItem> = ArrayList()
 
+        // Swipe to delete
+        val itemTouchHelperCallback =
+            object :ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // adapter.notifyItemChanged(viewHolder.adapterPosition)
+                val writingToDelete = adapter.getItem(viewHolder.adapterPosition)
+                writingItems.removeAt(viewHolder.adapterPosition);
+                adapter.notifyItemRemoved(viewHolder.adapterPosition);
+                Toasty.info(
+                    this@MyWritingFragment.requireContext(),
+                    getString(R.string.deleted_writing, writingToDelete.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+
         val context = this.requireContext()
         // set up the RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_my_writing)
@@ -53,6 +79,10 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             (recyclerView.layoutManager as LinearLayoutManager).orientation
         )
         recyclerView.addItemDecoration(dividerItemDecoration)
+
+        // swipe to delete
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         // Make visible
         val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_my_writing)

@@ -1,5 +1,6 @@
 package com.michaelhsieh.writingimprov
 
+import android.app.AlertDialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
@@ -53,15 +54,8 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // adapter.notifyItemChanged(viewHolder.adapterPosition)
                 val writingToDelete = adapter.getItem(viewHolder.adapterPosition)
-                writingItems.removeAt(viewHolder.adapterPosition);
-                adapter.notifyItemRemoved(viewHolder.adapterPosition);
-                Toasty.info(
-                    this@MyWritingFragment.requireContext(),
-                    getString(R.string.deleted_writing, writingToDelete.name),
-                    Toast.LENGTH_SHORT
-                ).show()
+                createDeleteConfirmationDialog(writingToDelete, viewHolder, writingItems)
             }
 
         }
@@ -159,6 +153,53 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
         val item = adapter.getItem(position)
         val action = MyWritingFragmentDirections.actionMyWritingFragmentToMyWritingDetailsFragment(item)
         findNavController().navigate(action)
+    }
+
+    /**
+     * Display a dialog warning user they are deleting a writing.
+     * If user selects yes, remove item from list, update RecyclerView,
+     * then remove from Firestore,
+     * then display success or failure Toast.
+     * If no, then don't remove
+     * @param writingItem: Writing to delete
+     * @param itemViewHolder: RecyclerView ViewHolder
+     * @param items: List of writing items
+     */
+    private fun createDeleteConfirmationDialog(writingItem:WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>) {
+        val builder = AlertDialog.Builder(this@MyWritingFragment.requireContext())
+        builder.setMessage(getString(R.string.delete_confirmation, writingItem.name, writingItem.prompt))
+            .setCancelable(false)
+            .setPositiveButton(R.string.yes) { dialog, id ->
+                deleteWriting(writingItem, itemViewHolder, items)
+            }
+            .setNegativeButton(R.string.no) { dialog, id ->
+                // Dismiss the dialog
+                dialog.dismiss()
+
+                // Make swiped out view animate back to original position
+                adapter.notifyItemChanged(itemViewHolder.adapterPosition)
+            }
+        val alert = builder.create()
+        alert.show()
+    }
+
+    /**
+     * Remove selected writing item from list, update RecyclerView,
+     * remove from Firestore,
+     * then display success or failure Toast.
+     *
+     * @param writingToDelete: Writing to delete
+     * @param viewHolder: RecyclerView ViewHolder
+     * @param writingItems: List of writing items
+     */
+    private fun deleteWriting(writingToDelete:WritingItem, viewHolder:RecyclerView.ViewHolder, writingItems:ArrayList<WritingItem>) {
+        writingItems.removeAt(viewHolder.adapterPosition)
+        adapter.notifyItemRemoved(viewHolder.adapterPosition)
+        Toasty.info(
+            this@MyWritingFragment.requireContext(),
+            getString(R.string.deleted_writing, writingToDelete.name),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.writingfromsentchallenges
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.R
+import com.michaelhsieh.writingimprov.WritingItem
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
@@ -124,7 +127,7 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
      * item: WritingItem containing the text to review
      * reviewText: Current user's review
      */
-    private fun updateReview(email:String?, item:WritingItem, reviewText:String) {
+    private fun updateReview(email:String?, item: WritingItem, reviewText:String) {
         // Toasty.info(this.requireContext(), "clicked button and id is: " + item.id, Toast.LENGTH_SHORT).show()
 
         if (email != null) {
@@ -164,20 +167,23 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
                                             .document(docFirestoreId)
                                             .update("review", reviewText)
                                             .addOnSuccessListener {
-                                                Toasty.info(this.requireContext(), R.string.review_submitted, Toast.LENGTH_LONG)
+                                                Toasty.info(this.requireContext(),
+                                                    R.string.review_submitted, Toast.LENGTH_LONG)
 
                                                 findNavController().popBackStack()
                                             }
                                             .addOnFailureListener {
                                                 Timber.e(it)
-                                                Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                                                Toasty.error(this.requireContext(),
+                                                    R.string.error_submitting_review, Toast.LENGTH_LONG).show()
                                             }
                                     }
 
                                 }
                                 .addOnFailureListener {
                                     Timber.e(it)
-                                    Toasty.error(this.requireContext(), R.string.error_submitting_review, Toast.LENGTH_LONG).show()
+                                    Toasty.error(this.requireContext(),
+                                        R.string.error_submitting_review, Toast.LENGTH_LONG).show()
                                 }
                         }
                     }
@@ -195,7 +201,7 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
      * item: WritingItem containing writing text to be reviewed
      * editText: Review EditText
      */
-    private fun getReviewText(email:String?, item:WritingItem, editText:EditText) {
+    private fun getReviewText(email:String?, item: WritingItem, editText:EditText) {
         if (email != null) {
 //            Toasty.info(this.requireContext(), "email: " + email, Toast.LENGTH_SHORT).show()
 
@@ -229,7 +235,8 @@ class SentChallengeDetailsFragment:Fragment(R.layout.fragment_sent_challenge_det
                                 }
                                 .addOnFailureListener {
                                     Timber.e(it)
-                                    Toasty.error(this.requireContext(), R.string.error_loading_review, Toast.LENGTH_LONG).show()
+                                    Toasty.error(this.requireContext(),
+                                        R.string.error_loading_review, Toast.LENGTH_LONG).show()
                                 }
                         }
 

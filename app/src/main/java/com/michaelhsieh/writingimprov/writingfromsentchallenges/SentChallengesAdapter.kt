@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.writingfromsentchallenges
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.michaelhsieh.writingimprov.R
+import com.michaelhsieh.writingimprov.WritingItem
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
-class MyWritingAdapter internal constructor(
+/**
+ * Same as MyWritingAdapter except use different layout
+ * to show if writing for each sent challenge is submitted or not
+ */
+class SentChallengesAdapter internal constructor(
     context: Context?,
     data: List<WritingItem>
 ) :
-    RecyclerView.Adapter<MyWritingAdapter.ViewHolder>() {
+    RecyclerView.Adapter<SentChallengesAdapter.ViewHolder>() {
     private val mData: List<WritingItem>
     private val mInflater: LayoutInflater
     private var mClickListener: ItemClickListener? = null
@@ -27,7 +31,7 @@ class MyWritingAdapter internal constructor(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val view: View = mInflater.inflate(R.layout.my_writing_row, parent, false)
+        val view: View = mInflater.inflate(R.layout.sent_challenge_row, parent, false)
         return ViewHolder(view)
     }
 
@@ -39,7 +43,15 @@ class MyWritingAdapter internal constructor(
         val writing = mData[position]
         holder.nameText.text = writing.name
         holder.promptText.text = writing.prompt
-        holder.timeText.text = writing.time + " minutes"
+        // holder.timeText.text = writing.time + " minutes"
+        holder.timeText.text = holder.itemView.context.getString(R.string.time_minutes, writing.time)
+        // If writing is empty, the writing is considered not submitted
+        // because default WritingItem prompt text is empty
+        if (writing.writing.isEmpty()) {
+            holder.statusText.text = holder.itemView.context.getText(R.string.sent_challenge_not_submitted_short)
+        } else {
+            holder.statusText.text = holder.itemView.context.getText(R.string.sent_challenge_submitted_short)
+        }
         loadThumbnailImage(writing.thumbUrl, holder.thumbImage)
     }
 
@@ -55,6 +67,7 @@ class MyWritingAdapter internal constructor(
         var promptText: TextView
         var timeText: TextView
         var thumbImage:ImageView
+        var statusText:TextView
         override fun onClick(view: View?) {
             if (mClickListener != null) mClickListener!!.onItemClick(view, adapterPosition)
         }
@@ -64,6 +77,7 @@ class MyWritingAdapter internal constructor(
             promptText = itemView.findViewById(R.id.tv_prompt)
             timeText = itemView.findViewById(R.id.tv_time)
             thumbImage = itemView.findViewById(R.id.iv_thumb)
+            statusText = itemView.findViewById(R.id.tv_is_sent_challenge_completed)
             itemView.setOnClickListener(this)
         }
     }

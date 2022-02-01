@@ -5,7 +5,7 @@
     android:id="@+id/my_writing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyWritingFragment">
+    tools:context=".mywriting.MyWritingFragment">
 
     <TextView
         android:id="@+id/tv_my_writing_empty"

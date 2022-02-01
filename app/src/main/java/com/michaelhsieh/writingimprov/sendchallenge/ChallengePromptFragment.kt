@@ -1,7 +1,5 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.sendchallenge
 
-import android.app.Activity
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -10,8 +8,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.ChallengeItem
+import com.michaelhsieh.writingimprov.R
 import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
 import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
+import com.michaelhsieh.writingimprov.practice.KEY_THUMB_URL
+import com.michaelhsieh.writingimprov.practice.KEY_URL
+import com.michaelhsieh.writingimprov.testresource.CountingIdlingResourceSingleton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import es.dmoral.toasty.Toasty
@@ -210,7 +213,8 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
         call.enqueue(object : retrofit2.Callback<UnsplashImage> {
             override fun onFailure(call: Call<UnsplashImage>, t: Throwable) {
                 Timber.e(t.message)
-                Toasty.error(this@ChallengePromptFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
+                Toasty.error(this@ChallengePromptFragment.requireContext(),
+                    R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
 
                 //  hide progress bar
                 progressBar.visibility = View.GONE
@@ -222,7 +226,8 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                 if (!response.isSuccessful) {
                     Timber.d("Code: %s", response.code())
                     // Show error Toasty
-                    Toasty.error(this@ChallengePromptFragment.requireContext(), R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
+                    Toasty.error(this@ChallengePromptFragment.requireContext(),
+                        R.string.error_loading_url, Toast.LENGTH_LONG,true).show()
 
                     //  hide progress bar
                     progressBar.visibility = View.GONE
@@ -281,7 +286,8 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
 
                 override fun onError(e: Exception?) {
                     // display error message
-                    Toasty.error(this@ChallengePromptFragment.requireContext(), R.string.error_loading_image, Toast.LENGTH_LONG,true).show()
+                    Toasty.error(this@ChallengePromptFragment.requireContext(),
+                        R.string.error_loading_image, Toast.LENGTH_LONG,true).show()
                     Timber.e(e)
                     //  hide progress bar
                     progressBar.visibility = View.GONE

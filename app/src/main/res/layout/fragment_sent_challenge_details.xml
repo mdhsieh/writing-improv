@@ -5,7 +5,7 @@
     android:id="@+id/scroll_view_sent_challenge_details"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    tools:context=".SentChallengeDetailsFragment">
+    tools:context=".writingfromsentchallenges.SentChallengeDetailsFragment">
 
     <!--put focus on parent layout so EditText doesn't
     automatically have focus and block other Views like image-->

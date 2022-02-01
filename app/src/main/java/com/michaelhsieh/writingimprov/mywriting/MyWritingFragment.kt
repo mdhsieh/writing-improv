@@ -1,14 +1,11 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.mywriting
 
 import android.app.AlertDialog
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,10 +14,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_USERS
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_USERS
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_WRITING
+import com.michaelhsieh.writingimprov.R
+import com.michaelhsieh.writingimprov.WritingItem
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -29,7 +27,8 @@ import timber.log.Timber
  * Displays all writing user has submitted.
  * 
  */
-class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapter.ItemClickListener {
+class MyWritingFragment : Fragment(R.layout.fragment_my_writing),
+    MyWritingAdapter.ItemClickListener {
 
     private val args: MyWritingFragmentArgs by navArgs()
 
@@ -61,7 +60,9 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
                     createDeleteConfirmationDialog(writingToDelete, viewHolder, writingItems, email)
                 } else {
                     Timber.d("Email is null")
-                    Toasty.error(this@MyWritingFragment.requireContext(), R.string.error_email_deleted_writing).show()
+                    Toasty.error(this@MyWritingFragment.requireContext(),
+                        R.string.error_email_deleted_writing
+                    ).show()
                 }
             }
 
@@ -158,7 +159,8 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
 
     override fun onItemClick(view: View?, position: Int) {
         val item = adapter.getItem(position)
-        val action = MyWritingFragmentDirections.actionMyWritingFragmentToMyWritingDetailsFragment(item)
+        val action =
+            MyWritingFragmentDirections.actionMyWritingFragmentToMyWritingDetailsFragment(item)
         findNavController().navigate(action)
     }
 
@@ -173,7 +175,7 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
      * @param items: List of writing items
      * @param userId: Firestore document user ID which is email
      */
-    private fun createDeleteConfirmationDialog(writingItem:WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>, userId:String) {
+    private fun createDeleteConfirmationDialog(writingItem: WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>, userId:String) {
         val builder = AlertDialog.Builder(this@MyWritingFragment.requireContext())
         builder.setMessage(getString(R.string.delete_confirmation, writingItem.name, writingItem.prompt))
             .setCancelable(false)
@@ -202,7 +204,7 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing), MyWritingAdapt
      * @param email: Firestore document user ID which is email
      */
     private fun deleteWriting(
-        writingToDelete:WritingItem, viewHolder:RecyclerView.ViewHolder,
+        writingToDelete: WritingItem, viewHolder:RecyclerView.ViewHolder,
         writingItems:ArrayList<WritingItem>, email:String) {
         writingItems.removeAt(viewHolder.adapterPosition)
         adapter.notifyItemRemoved(viewHolder.adapterPosition)

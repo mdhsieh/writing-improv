@@ -5,7 +5,7 @@
     android:id="@+id/scroll_view_prompt"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ChallengePromptFragment">
+    tools:context=".sendchallenge.ChallengePromptFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

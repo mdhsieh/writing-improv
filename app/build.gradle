@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 // Enable safe args plugin
 // to send data between Fragments in compile-safe way
-apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 // Enable Google services plugin to use Firebase
 apply plugin: 'com.google.gms.google-services'
 android {

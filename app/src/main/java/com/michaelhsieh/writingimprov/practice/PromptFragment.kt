@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.practice
 
 import android.app.Activity
 import android.content.SharedPreferences
@@ -10,8 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.michaelhsieh.writingimprov.R
 import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
 import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
+import com.michaelhsieh.writingimprov.settings.SettingsFragment
+import com.michaelhsieh.writingimprov.testresource.CountingIdlingResourceSingleton
 import es.dmoral.toasty.Toasty
 import retrofit2.Call
 import retrofit2.Response

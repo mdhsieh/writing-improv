@@ -1,18 +1,18 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.sendchallenge
 
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.michaelhsieh.writingimprov.AuthorItem
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.R
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 import java.util.*

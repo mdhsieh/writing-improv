@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.mychallenges
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.michaelhsieh.writingimprov.ChallengeItem
+import com.michaelhsieh.writingimprov.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
 class ChallengesAdapter internal constructor(

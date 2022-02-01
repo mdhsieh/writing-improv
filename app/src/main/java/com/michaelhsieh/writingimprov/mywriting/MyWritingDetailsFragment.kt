@@ -1,13 +1,13 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.mywriting
 
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import com.michaelhsieh.writingimprov.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import timber.log.Timber

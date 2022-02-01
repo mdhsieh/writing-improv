@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.testresource
 
 import androidx.test.espresso.idling.CountingIdlingResource
 

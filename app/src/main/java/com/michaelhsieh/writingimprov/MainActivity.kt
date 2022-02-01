@@ -9,7 +9,6 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -28,9 +27,8 @@ import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_CHALLENGES
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
-import es.dmoral.toasty.Toasty
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
 import timber.log.Timber
 import java.util.zip.ZipException
 import javax.net.ssl.SSLContext

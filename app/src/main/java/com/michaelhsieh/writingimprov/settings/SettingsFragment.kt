@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.settings
 
 import android.app.Activity
 import android.content.SharedPreferences
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.R
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -96,7 +98,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Timber.d("User profile updated")
-                    Toasty.normal(this@SettingsFragment.requireContext(), R.string.updated_username, Toast.LENGTH_LONG).show()
+                    Toasty.normal(this@SettingsFragment.requireContext(),
+                        R.string.updated_username, Toast.LENGTH_LONG).show()
                 }
             }
 

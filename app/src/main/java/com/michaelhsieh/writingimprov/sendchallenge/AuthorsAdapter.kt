@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.sendchallenge
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.michaelhsieh.writingimprov.AuthorItem
+import com.michaelhsieh.writingimprov.R
 
 class AuthorsAdapter internal constructor(
     context: Context?,

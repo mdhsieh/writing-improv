@@ -5,7 +5,7 @@
     android:id="@+id/authors"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AuthorsFragment">
+    tools:context=".sendchallenge.AuthorsFragment">
 
     <TextView
         android:id="@+id/tv_authors_empty"

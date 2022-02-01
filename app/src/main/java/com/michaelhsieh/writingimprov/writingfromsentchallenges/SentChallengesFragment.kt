@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.writingfromsentchallenges
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -6,17 +6,18 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_CHALLENGES
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_WRITING
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.michaelhsieh.writingimprov.*
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_WRITING
+import com.michaelhsieh.writingimprov.ChallengeItem
+import com.michaelhsieh.writingimprov.WritingItem
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 import java.util.*
@@ -31,7 +32,8 @@ import kotlin.collections.ArrayList
  * Got the challenge by challengeId field in Firestore writing document
  */
 
-class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentChallengesAdapter.ItemClickListener {
+class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
+    SentChallengesAdapter.ItemClickListener {
 
     private lateinit var adapter: SentChallengesAdapter
 
@@ -61,7 +63,9 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
                         createDeleteConfirmationDialog(writingFromChallengeToDelete, viewHolder, writingItems, email)
                     } else {
                         Timber.d("Email is null")
-                        Toasty.error(this@SentChallengesFragment.requireContext(), R.string.error_email_deleted_writing).show()
+                        Toasty.error(this@SentChallengesFragment.requireContext(),
+                            R.string.error_email_deleted_writing
+                        ).show()
                     }
                 }
 
@@ -139,7 +143,10 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
     override fun onItemClick(view: View?, position: Int) {
         // Toasty.info(this@SentChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
         val item = adapter.getItem(position)
-        val action = SentChallengesFragmentDirections.actionSentChallengesFragmentToSentChallengeDetailsFragment(item)
+        val action =
+            SentChallengesFragmentDirections.actionSentChallengesFragmentToSentChallengeDetailsFragment(
+                item
+            )
          findNavController().navigate(action)
     }
 
@@ -166,7 +173,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
      * @param items: List of writing items for each challenge sent to other users
      * @param userId: Firestore document user ID which is email
      */
-    private fun createDeleteConfirmationDialog(writingItem:WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>, userId:String) {
+    private fun createDeleteConfirmationDialog(writingItem: WritingItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<WritingItem>, userId:String) {
         val builder = AlertDialog.Builder(this@SentChallengesFragment.requireContext())
         builder.setMessage(getString(R.string.delete_confirmation, writingItem.name, writingItem.prompt))
             .setCancelable(false)
@@ -198,7 +205,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
      * The challenge is stored in their collection
      */
     private fun deleteChallengeOfWriting(
-        writingFromChallengeToDelete:WritingItem, viewHolder:RecyclerView.ViewHolder,
+        writingFromChallengeToDelete: WritingItem, viewHolder:RecyclerView.ViewHolder,
         writingItems: java.util.ArrayList<WritingItem>, otherUserEmail:String) {
 
         // Start delete from Firestore
@@ -258,7 +265,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges), SentCh
      * @param email The current user's own email
      */
     private fun getAllOtherUsersAndDeleteChallenges(email:String,
-                                                    writingFromChallengeToDelete:WritingItem, viewHolder:RecyclerView.ViewHolder, writingItems: java.util.ArrayList<WritingItem>) {
+                                                    writingFromChallengeToDelete: WritingItem, viewHolder:RecyclerView.ViewHolder, writingItems: java.util.ArrayList<WritingItem>) {
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
         collection

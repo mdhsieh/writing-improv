@@ -5,7 +5,7 @@
     android:id="@+id/challenges"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChallengesFragment">
+    tools:context=".mychallenges.ChallengesFragment">
 
     <TextView
         android:id="@+id/tv_challenges_empty"

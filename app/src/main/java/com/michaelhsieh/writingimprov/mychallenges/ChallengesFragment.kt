@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.mychallenges
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -6,16 +6,16 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.michaelhsieh.writingimprov.HomeFragment.Companion.COLLECTION_CHALLENGES
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import com.michaelhsieh.writingimprov.ChallengeItem
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
+import com.michaelhsieh.writingimprov.R
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 import java.util.*
@@ -26,7 +26,8 @@ import java.util.*
  *
  */
 
-class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapter.ItemClickListener {
+class ChallengesFragment:Fragment(R.layout.fragment_challenges),
+    ChallengesAdapter.ItemClickListener {
 
     private lateinit var adapter: ChallengesAdapter
 
@@ -56,7 +57,9 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
                         createDeleteConfirmationDialog(challengeToDelete, viewHolder, challengeItems, email)
                     } else {
                         Timber.d("Email is null")
-                        Toasty.error(this@ChallengesFragment.requireContext(), R.string.error_email_deleted_writing).show()
+                        Toasty.error(this@ChallengesFragment.requireContext(),
+                            R.string.error_email_deleted_writing
+                        ).show()
                     }
                 }
 
@@ -147,7 +150,15 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
     override fun onItemClick(view: View?, position: Int) {
         // Toasty.info(this@ChallengesFragment.requireContext(), "You clicked " + adapter.getItem(position).name, Toast.LENGTH_LONG).show()
         val item = adapter.getItem(position)
-        val action = ChallengesFragmentDirections.actionChallengesFragmentToWritingFragment(item.time.toInt(), item.prompt, item.url, item.thumbUrl, true, item.name, item.id)
+        val action = ChallengesFragmentDirections.actionChallengesFragmentToWritingFragment(
+            item.time.toInt(),
+            item.prompt,
+            item.url,
+            item.thumbUrl,
+            true,
+            item.name,
+            item.id
+        )
         findNavController().navigate(action)
     }
 
@@ -162,7 +173,7 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
      * @param items: List of challenge items
      * @param userId: Firestore document user ID which is email
      */
-    private fun createDeleteConfirmationDialog(challengeItem:ChallengeItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<ChallengeItem>, userId:String) {
+    private fun createDeleteConfirmationDialog(challengeItem: ChallengeItem, itemViewHolder: RecyclerView.ViewHolder, items: ArrayList<ChallengeItem>, userId:String) {
         val builder = AlertDialog.Builder(this@ChallengesFragment.requireContext())
         builder.setMessage(getString(R.string.delete_confirmation, challengeItem.name, challengeItem.prompt))
             .setCancelable(false)
@@ -191,7 +202,7 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges), ChallengesAdapt
      * @param email: Firestore document user ID which is email
      */
     private fun deleteChallenge(
-        challengeToDelete:ChallengeItem, viewHolder:RecyclerView.ViewHolder,
+        challengeToDelete: ChallengeItem, viewHolder:RecyclerView.ViewHolder,
         challengeItems:ArrayList<ChallengeItem>, email:String) {
         challengeItems.removeAt(viewHolder.adapterPosition)
         adapter.notifyItemRemoved(viewHolder.adapterPosition)

@@ -1,4 +1,4 @@
-package com.michaelhsieh.writingimprov
+package com.michaelhsieh.writingimprov.signin
 
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.michaelhsieh.writingimprov.R
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 

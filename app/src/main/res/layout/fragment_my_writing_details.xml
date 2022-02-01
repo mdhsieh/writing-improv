@@ -5,7 +5,7 @@
     android:id="@+id/scroll_view_my_writing_details"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    tools:context=".MyWritingDetailsFragment">
+    tools:context=".mywriting.MyWritingDetailsFragment">
 
     <!--put focus on parent layout so EditText doesn't
     automatically have focus and block other Views like image-->

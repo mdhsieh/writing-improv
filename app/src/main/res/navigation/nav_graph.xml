@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.michaelhsieh.writingimprov.HomeFragment"
+        android:name="com.michaelhsieh.writingimprov.home.HomeFragment"
         android:label="Menu"
         tools:layout="@layout/fragment_home">
         <action
@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/promptFragment"
-        android:name="com.michaelhsieh.writingimprov.PromptFragment"
+        android:name="com.michaelhsieh.writingimprov.practice.PromptFragment"
         android:label="Prompt"
         tools:layout="@layout/fragment_prompt">
         <action
@@ -58,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/writingFragment"
-        android:name="com.michaelhsieh.writingimprov.WritingFragment"
+        android:name="com.michaelhsieh.writingimprov.mychallenges.WritingFragment"
         android:label="Write"
         tools:layout="@layout/fragment_writing">
         <argument
@@ -94,7 +94,7 @@
     </fragment>
     <fragment
         android:id="@+id/myWritingFragment"
-        android:name="com.michaelhsieh.writingimprov.MyWritingFragment"
+        android:name="com.michaelhsieh.writingimprov.mywriting.MyWritingFragment"
         android:label="My Writing"
         tools:layout="@layout/fragment_my_writing" >
         <argument
@@ -115,7 +115,7 @@
     </fragment>
     <fragment
         android:id="@+id/myWritingDetailsFragment"
-        android:name="com.michaelhsieh.writingimprov.MyWritingDetailsFragment"
+        android:name="com.michaelhsieh.writingimprov.mywriting.MyWritingDetailsFragment"
         android:label="My Writing Details"
         tools:layout="@layout/fragment_my_writing_details">
         <argument
@@ -124,7 +124,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.michaelhsieh.writingimprov.SignInFragment"
+        android:name="com.michaelhsieh.writingimprov.signin.SignInFragment"
         android:label="Sign In"
         tools:layout="@layout/fragment_sign_in">
         <action
@@ -133,12 +133,12 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.michaelhsieh.writingimprov.SettingsFragment"
+        android:name="com.michaelhsieh.writingimprov.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/authorsFragment"
-        android:name="com.michaelhsieh.writingimprov.AuthorsFragment"
+        android:name="com.michaelhsieh.writingimprov.sendchallenge.AuthorsFragment"
         android:label="Authors to Challenge"
         tools:layout="@layout/fragment_authors">
         <action
@@ -151,7 +151,7 @@
     </fragment>
     <fragment
         android:id="@+id/challengePromptFragment"
-        android:name="com.michaelhsieh.writingimprov.ChallengePromptFragment"
+        android:name="com.michaelhsieh.writingimprov.sendchallenge.ChallengePromptFragment"
         android:label="Create Challenge"
         tools:layout="@layout/fragment_challenge_prompt">
         <argument
@@ -161,7 +161,7 @@
     </fragment>
     <fragment
         android:id="@+id/challengesFragment"
-        android:name="com.michaelhsieh.writingimprov.ChallengesFragment"
+        android:name="com.michaelhsieh.writingimprov.mychallenges.ChallengesFragment"
         android:label="Challenges"
         tools:layout="@layout/fragment_challenges" >
         <action
@@ -170,7 +170,7 @@
     </fragment>
     <fragment
         android:id="@+id/sentChallengesFragment"
-        android:name="com.michaelhsieh.writingimprov.SentChallengesFragment"
+        android:name="com.michaelhsieh.writingimprov.writingfromsentchallenges.SentChallengesFragment"
         android:label="Review Sent Challenges"
         tools:layout="@layout/fragment_sent_challenges" >
         <action
@@ -179,7 +179,7 @@
     </fragment>
     <fragment
         android:id="@+id/sentChallengeDetailsFragment"
-        android:name="com.michaelhsieh.writingimprov.SentChallengeDetailsFragment"
+        android:name="com.michaelhsieh.writingimprov.writingfromsentchallenges.SentChallengeDetailsFragment"
         android:label="Sent Challenge Details"
         tools:layout="@layout/fragment_sent_challenge_details">
         <argument

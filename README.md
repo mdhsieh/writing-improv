@@ -9,6 +9,10 @@ Clone this repository:
 `git clone https://github.com/mdhsieh/writing-improv.git`
 and open the cloned folder in Android Studio.
 
+This app uses Google Firebase.
+Follow [these instructions](https://firebase.google.com/docs/android/setup) to register your app with Firebase.
+Then download your config file `google-services.json` and move the file into the module (app-level) directory of your app.
+
 This app uses the Unsplash API,
 so you need to [register as a developer](https://unsplash.com/join).
 Login to Unsplash, create a new application, and copy the access key.
@@ -20,6 +24,14 @@ For example:
     <string name="access_key">YOUR_ACCESS_KEY</string>
 </resources>
 ```
+
+Finally, delete this app `build.gradle` block:
+```
+signingConfigs {
+    // signing credentials here
+{
+```
+and in Android Studio set the build variant to `debug`.
 
 Run the app.
 

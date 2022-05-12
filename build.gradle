@@ -20,10 +20,12 @@ buildscript {
     }
 }
 
+// need to add mavenCentral() to allprojects{} section to fix build error after cloning from GitHub
 allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
 
         // Required to get Toasty from GitHub
         maven { url "https://jitpack.io" }

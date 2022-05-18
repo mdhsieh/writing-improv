@@ -42,6 +42,8 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Timber.d("onViewCreated called")
+
         // data to populate the RecyclerView with
         val writingItems: ArrayList<WritingItem> = ArrayList()
 
@@ -113,6 +115,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                         }
                     }
 
+//                    Timber.d("Other users which may have been sent a challenge: " + otherUserIds.joinToString())
                     findAllChallengesWithSenderEmail(email, otherUserIds, writingItems, progressBar, emptySentChallengesText)
 
                 }
@@ -295,12 +298,13 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
      * @param writings ArrayList to append other users' writings from the challenges
      */
     private fun findAllChallengesWithSenderEmail(senderId:String, otherIds:ArrayList<String>, writings:ArrayList<WritingItem>, pBar:ProgressBar, emptyTextView: TextView) {
+        // all challenges from all other users
         val challenges = arrayListOf<ChallengeItem>()
 
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
 
-        // For each user ID, get all challenge collection items which
+        // For each user ID, get all the user's documents in challenge collection which
         // have current user email as senderId
         for ((i, otherId) in otherIds.withIndex()) {
             collection
@@ -314,14 +318,20 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                     // of objects directly
                     val items: List<ChallengeItem> =
                         it.toObjects(ChallengeItem::class.java)
+                    Timber.d("other user is " + otherId + ", challenge items found: " + items.size)
+                    for (item in items) {
+                        Timber.d(item.id)
+                    }
 
-                    // Set to list
+
+                    // Append each challenge sent to this user to the challenges list
                     challenges.addAll(items)
                     // Toasty.info(this.requireContext(), "found challenges: " + items.size.toShort(), Toast.LENGTH_SHORT).show()
 
-                    // if reached last collection items list, then done
+                    // if reached last user's challenge collection, then done
                     // getting all challenges
                     if (i == otherIds.size - 1) {
+                        Timber.d("Done getting all challenges")
                         appendAllWritingWithChallengeID(otherIds, challenges, writings, pBar, emptyTextView)
                     }
 
@@ -342,10 +352,10 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
      * Append to an ArrayList all writings which were submitted for
      * the challenge with given ID.
      *
-     * A challenge may have more than one writing.
+     * A challenge may have more than one writing submitted by the same user.
      * @param otherUserIds: Emails of all users excluding the current user
      * @param challengeItems: Challenges the current user has sent to other users
-     * @param writingItems: ArrayList to append to
+     * @param writingItems: ArrayList which will contain all writings associated with a challenge.
      * @param progressBar: ProgressBar being displayed to user
      * @param emptySentChallengesText: Text to tell user no sent challenge writings were found
      */
@@ -354,6 +364,82 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
 
+        // for all challenges, get the other user's receiverId
+        for ((k,challenge) in challengeItems.withIndex()) {
+            val receiverId = challenge.receiverId
+
+            if (challenge.completed) {
+                // get all writings associated with that challenge
+                collection
+                    .document(receiverId)
+                    .collection(COLLECTION_WRITING)
+                    .whereEqualTo("challengeId", challenge.id)
+                    .get()
+                    .addOnSuccessListener {
+                        // Convert the whole Query Snapshot to a list
+                        // of objects directly
+                        val items: List<WritingItem> =
+                            it.toObjects(WritingItem::class.java)
+
+                        // Because looking from the challenger's perspective,
+                        // Change name from [Challenge from senderUsername] to [Challenge sent to receiverUsername]
+                        for (item in items) {
+                            item.name = "Challenge sent to " + challenge.receiverUsername
+                        }
+
+                        // add the writings submitted for this challenge
+                        writingItems.addAll(items)
+                    }
+            } else {
+                // If a challenge has not been completed yet, create a placeholder empty writing item.
+                // This assumes a challenge which is set to not completed in Firestore does not have
+                // any writing items associated with it, because user has not submitted any writings.
+                Timber.d("incomplete challenge: %s", challenge.id)
+                writingItems.add(
+                    WritingItem(UUID.randomUUID().toString(),
+                        name = "Challenge sent to " + challenge.receiverUsername,
+                        prompt = challenge.prompt,
+                        time = challenge.time,
+                        url = challenge.url,
+                        thumbUrl = challenge.thumbUrl,
+                        writing = "",
+                        challengeId = challenge.id
+                    )
+                )
+
+            }
+
+            // If reached last challenge, then done
+            // getting all writings associated with challenges
+            if (k == challengeItems.size - 1) {
+                Timber.d("Done getting all writings")
+
+                // Set progress bar and text visibility
+                // Reload RecyclerView
+                adapter.notifyDataSetChanged()
+                // Hide progress bar
+                progressBar.visibility = View.GONE
+                // Show or hide no writing text
+                setEmptyTextVisibility(writingItems.size, emptySentChallengesText)
+            }
+
+        }
+
+        // If there are no writings with any challenge IDs, then
+        // also done
+        if (writingItems.size == 0 || challengeItems.size == 0) {
+            // Toasty.info(this.requireContext(), "found final writings: " + writingItems.size, Toast.LENGTH_LONG).show()
+
+            // Set progress bar and text visibility
+            // Reload RecyclerView
+            adapter.notifyDataSetChanged()
+            // Hide progress bar
+            progressBar.visibility = View.GONE
+            // Show or hide no writing text
+            setEmptyTextVisibility(writingItems.size, emptySentChallengesText)
+        }
+
+        /*
         // Need indexing to know when finished looping through all challenges and writing collections
         for ((k,challenge) in challengeItems.withIndex()) {
             var isWritingFound = false
@@ -407,7 +493,8 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                         // If reached last challenge ID and last writing list of that ID, then done
                         // getting all sent challenge writings to review.
                         if (k == challengeItems.size - 1 && m == otherUserIds.size - 1) {
-                            // Toasty.info(this.requireContext(), "found final writings: " + writingItems.size, Toast.LENGTH_LONG).show()
+//                             Toasty.info(this.requireContext(), "found final writings: " + writingItems.size, Toast.LENGTH_LONG).show()
+                            Timber.d("found final writings: " + writingItems.size)
 
                             // Set progress bar and text visibility
                             // Reload RecyclerView
@@ -441,5 +528,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
             // Show or hide no writing text
             setEmptyTextVisibility(writingItems.size, emptySentChallengesText)
         }
+
+         */
     }
 }

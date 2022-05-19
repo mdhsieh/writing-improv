@@ -331,7 +331,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                     // if reached last user's challenge collection, then done
                     // getting all challenges
                     if (i == otherIds.size - 1) {
-                        Timber.d("Done getting all challenges, found %s", challenges.size)
+//                        Timber.d("Done getting all challenges, found %s", challenges.size)
                         appendAllWritingWithChallengeID(otherIds, challenges, writings, pBar, emptyTextView)
                     }
 
@@ -381,7 +381,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                         val items: List<WritingItem> =
                             it.toObjects(WritingItem::class.java)
 
-                        Timber.d("Found writings for challenge %s: %s", challenge.id, items.joinToString())
+//                        Timber.d("Found writings for challenge %s: %s", challenge.id, items.joinToString())
                         // Because looking from the challenger's perspective,
                         // Change name from [Challenge from senderUsername] to [Challenge sent to receiverUsername]
                         for (item in items) {
@@ -415,7 +415,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
             // If reached last challenge, then done
             // getting all writings associated with challenges
             if (k == challengeItems.size - 1) {
-                Timber.d("Done getting all writings, found %s", writingItems.size)
+//                Timber.d("Done getting all writings, found %s", writingItems.size)
 
                 // Set progress bar and text visibility
                 // Reload RecyclerView

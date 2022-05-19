@@ -105,7 +105,7 @@
             android:layout_marginRight="16dp"
             android:text="@string/sign_out"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

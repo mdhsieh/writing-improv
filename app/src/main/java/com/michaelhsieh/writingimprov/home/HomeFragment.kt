@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
@@ -119,6 +120,22 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         } else {
             Timber.d("HomeFragment email is not null and isListeningForChallenges is %s", isListeningForChallenges)
         }
+
+        this.requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    Timber.d("Fragment back pressed invoked")
+                    // Do custom work here
+                    signOut()
+
+                    // if you want onBackPressed() to be called as normal afterwards
+//                    if (isEnabled) {
+//                        isEnabled = false
+//                        requireActivity().onBackPressed()
+//                    }
+                }
+            })
     }
 
     private fun signOut() {

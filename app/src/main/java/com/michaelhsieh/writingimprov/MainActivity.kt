@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -69,9 +70,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Timber.d("ONCREATE called")
-        Timber.d("isListeningForChallenges? %s", isListeningForChallenges)
-        Timber.d("isListenFunctionCalledAlready? %s", isListenFunctionCalledAlready)
+//        Timber.d("ONCREATE called")
+//        Timber.d("isListeningForChallenges? %s", isListeningForChallenges)
+//        Timber.d("isListenFunctionCalledAlready? %s", isListenFunctionCalledAlready)
 
         Timber.plant(Timber.DebugTree())
 
@@ -82,9 +83,18 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
+        // SignInFragment and HomeFragment should not have an up button.
+        // Create an app bar configuration with a specific set of top level destinations.
+        val appBarConfiguration = AppBarConfiguration
+            .Builder(
+                R.id.signInFragment,
+                R.id.homeFragment
+            )
+            .build()
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        setupActionBarWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         updateAndroidSecurityProvider(this)
 

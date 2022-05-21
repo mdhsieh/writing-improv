@@ -311,7 +311,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
             collection
                 .document(otherId)
                 .collection(COLLECTION_CHALLENGES)
-//                .orderBy("timeStamp")
+                .orderBy("timestamp")
                 .whereEqualTo("senderId", senderId)
                 .get()
                 .addOnSuccessListener {
@@ -376,7 +376,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                     .document(receiverId)
                     .collection(COLLECTION_WRITING)
                     // Get writing in order of timestamp creation
-//                    .orderBy("timeStamp")
+                    .orderBy("timestamp")
                     .whereEqualTo("challengeId", challenge.id)
                     .get()
                     .addOnSuccessListener {

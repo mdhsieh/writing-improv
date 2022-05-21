@@ -98,7 +98,7 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges),
             collection
                 .document(email)
                 .collection(COLLECTION_CHALLENGES)
-//                .orderBy("timeStamp")
+                .orderBy("timestamp")
                 .get()
                 .addOnSuccessListener {
                     if (it.isEmpty) {

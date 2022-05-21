@@ -36,12 +36,15 @@ data class ChallengeItem(
     val receiverId:String="",
 
     // username of whoever is receiving the challenge
-    val receiverUsername:String=""
+    val receiverUsername:String="",
+
+    // Timestamp when this writing was created. UNIX time in seconds
+    val timestamp:Long = 0
 ):Serializable {
     // Serializable to pass object between Fragments
 
     // To debug
     override fun toString(): String {
-        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, is completed: $completed, sender: $senderId, receiver: $receiverId"
+        return "id: $id, name: $name, prompt: $prompt, time: $time, url: $url, thumbnail url: $thumbUrl, is completed: $completed, sender: $senderId, receiver: $receiverId, timestamp: $timestamp"
     }
 }

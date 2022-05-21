@@ -147,7 +147,8 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                     completed = false,
                     senderId = myEmail,
                     receiverId = item.id,
-                    receiverUsername = item.name
+                    receiverUsername = item.name,
+                    timestamp = System.currentTimeMillis() / 1000
                 )
                 db.collection("users").document(id).collection("challenges").add(challengeItem)
                     // Show success or error Toasty

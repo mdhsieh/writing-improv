@@ -254,8 +254,17 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
         }
 
         // Create new WritingItem with all text and URL
-        // val item = WritingItem(UUID.randomUUID().toString(), args.writingName, prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString())
-        val item = WritingItem(UUID.randomUUID().toString(), args.writingName, prompt = args.prompt, time = args.minutes.toString(), url = imageUrl, thumbUrl = thumbnailImageUrl, writing = writeEditText.text.toString(), challengeId = args.challengeId)
+        val item = WritingItem(
+            UUID.randomUUID().toString(),
+            args.writingName,
+            prompt = args.prompt,
+            time = args.minutes.toString(),
+            url = imageUrl,
+            thumbUrl = thumbnailImageUrl,
+            writing = writeEditText.text.toString(),
+            challengeId = args.challengeId,
+            timestamp = System.currentTimeMillis() / 1000
+        )
 
         Timber.d("Passing: %s", item.toString())
 

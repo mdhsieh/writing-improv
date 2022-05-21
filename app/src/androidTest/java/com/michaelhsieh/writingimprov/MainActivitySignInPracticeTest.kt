@@ -186,7 +186,7 @@ class MainActivitySignInPracticeTest {
         )
         appCompatEditText.perform(
             scrollTo(),
-            replaceText("testing beep boop 123. this not a very very long text"),
+            replaceText("testing beep boop 123. this is a short piece of text"),
             closeSoftKeyboard()
         )
 

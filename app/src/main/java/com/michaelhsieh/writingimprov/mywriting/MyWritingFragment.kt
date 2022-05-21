@@ -104,7 +104,7 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing),
 
             // Order by time created
             collection
-//                .orderBy("timeStamp")
+                .orderBy("timestamp")
                 .get()
                 .addOnSuccessListener {
 

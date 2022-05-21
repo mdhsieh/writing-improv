@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_USERS
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_WRITING
 import com.michaelhsieh.writingimprov.R
@@ -101,7 +102,9 @@ class MyWritingFragment : Fragment(R.layout.fragment_my_writing),
                 .document(email)
                 .collection(COLLECTION_WRITING)
 
+            // Order by time created
             collection
+//                .orderBy("timeStamp")
                 .get()
                 .addOnSuccessListener {
 

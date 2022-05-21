@@ -78,9 +78,17 @@ class SignInFragment:Fragment(R.layout.fragment_sign_in) {
         )
 
         // Create and launch sign-in intent
+        // DISABLE smart lock because causing sign in error
+        // 2022-05-20 21:20:28.482 10865-10865/com.michaelhsieh.writingimprov E/AuthUI: A sign-in error occurred.
+        //    com.firebase.ui.auth.FirebaseUiException: Error when saving credential.
+        //        at com.firebase.ui.auth.viewmodel.smartlock.SmartLockHandler$1.onComplete(SmartLockHandler.java:99)
+        // ...
+        // Caused by: com.google.android.gms.common.api.ApiException: 16: Cannot find an eligible account.
+        // ...
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
+                .setIsSmartLockEnabled(false)
                 .setAvailableProviders(providers)
                 .build(),
             RC_SIGN_IN

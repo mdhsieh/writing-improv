@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.michaelhsieh.writingimprov.*
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
@@ -310,6 +311,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
             collection
                 .document(otherId)
                 .collection(COLLECTION_CHALLENGES)
+//                .orderBy("timeStamp")
                 .whereEqualTo("senderId", senderId)
                 .get()
                 .addOnSuccessListener {
@@ -373,6 +375,8 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                 collection
                     .document(receiverId)
                     .collection(COLLECTION_WRITING)
+                    // Get writing in order of timestamp creation
+//                    .orderBy("timeStamp")
                     .whereEqualTo("challengeId", challenge.id)
                     .get()
                     .addOnSuccessListener {

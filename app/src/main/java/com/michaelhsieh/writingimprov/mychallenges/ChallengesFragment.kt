@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.michaelhsieh.writingimprov.ChallengeItem
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
@@ -97,6 +98,7 @@ class ChallengesFragment:Fragment(R.layout.fragment_challenges),
             collection
                 .document(email)
                 .collection(COLLECTION_CHALLENGES)
+//                .orderBy("timeStamp")
                 .get()
                 .addOnSuccessListener {
                     if (it.isEmpty) {

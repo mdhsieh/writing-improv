@@ -16,6 +16,7 @@ import com.michaelhsieh.writingimprov.R
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
+
 /**
  * Home menu.
  * Displays user option buttons such as view user's writing and practice writing.
@@ -121,6 +122,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
             Timber.d("HomeFragment email is not null and isListeningForChallenges is %s", isListeningForChallenges)
         }
 
+        // When user presses back button, sign the user out
         this.requireActivity()
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {

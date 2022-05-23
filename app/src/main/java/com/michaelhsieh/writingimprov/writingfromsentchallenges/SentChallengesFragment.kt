@@ -333,7 +333,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                     // if reached last user's challenge collection, then done
                     // getting all challenges
                     if (i == otherIds.size - 1) {
-//                        Timber.d("Done getting all challenges, found %s", challenges.size)
+                        Timber.d("Done getting all challenges, found %s", challenges.size)
                         appendAllWritingWithChallengeID(otherIds, challenges, writings, pBar, emptyTextView)
                     }
 
@@ -370,13 +370,13 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
         for ((k,challenge) in challengeItems.withIndex()) {
             val receiverId = challenge.receiverId
 
+//            Timber.d( "other user is %s, challenge item found: %s", receiverId, challenge.id)
+
             if (challenge.completed) {
                 // get all writings associated with that challenge
                 collection
                     .document(receiverId)
                     .collection(COLLECTION_WRITING)
-                    // Get writing in order of timestamp creation
-                    .orderBy("timestamp")
                     .whereEqualTo("challengeId", challenge.id)
                     .get()
                     .addOnSuccessListener {
@@ -420,7 +420,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
             // If reached last challenge, then done
             // getting all writings associated with challenges
             if (k == challengeItems.size - 1) {
-//                Timber.d("Done getting all writings, found %s", writingItems.size)
+                Timber.d("Done getting all writings, found %s", writingItems.size)
 
                 // Set progress bar and text visibility
                 // Reload RecyclerView

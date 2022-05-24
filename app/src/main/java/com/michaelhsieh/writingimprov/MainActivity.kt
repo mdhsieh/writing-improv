@@ -25,9 +25,12 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
 import timber.log.Timber
@@ -51,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
     // notification channel ID
     private val CHANNEL_ID = "writing_improv_channel"
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     companion object {
         // Global boolean to
@@ -106,6 +111,9 @@ class MainActivity : AppCompatActivity() {
         if (email != null) {
             listenForChallengesChange(email)
         }
+
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onSupportNavigateUp(): Boolean {

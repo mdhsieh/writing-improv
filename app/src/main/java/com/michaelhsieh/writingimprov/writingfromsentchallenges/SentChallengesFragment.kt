@@ -95,6 +95,7 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
         val progressBar = view.findViewById<ProgressBar>(R.id.pb_loading_sent_challenges)
         // Get reference to TextView
         val emptySentChallengesText = view.findViewById<TextView>(R.id.tv_sent_challenges_empty)
+        emptySentChallengesText.visibility = View.GONE
 
         // Get existing users from Firestore
         val collection = db.collection(HomeFragment.COLLECTION_USERS)

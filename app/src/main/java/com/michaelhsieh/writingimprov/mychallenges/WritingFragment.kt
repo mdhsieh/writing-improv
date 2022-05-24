@@ -120,10 +120,17 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
 
         val submitButton = view.findViewById<Button>(R.id.btn_submit)
         submitButton.setOnClickListener {
-            // stop timer
-            countDownTimer.cancel()
 
-            submitWriting(true)
+            // If user did not write anything, show info Toast
+            // and do not submit the writing
+            if (writeEditText.text.toString().isEmpty()) {
+                Toasty.normal(this.requireContext(), getString(R.string.error_writing), Toast.LENGTH_LONG).show()
+            } else {
+                // stop timer
+                countDownTimer.cancel()
+
+                submitWriting(true)
+            }
         }
     }
 
@@ -245,13 +252,6 @@ class WritingFragment:Fragment(R.layout.fragment_writing) {
      * @param isOnTime Whether the writing was submitted on time
      */
     private fun submitWriting(isOnTime:Boolean) {
-
-        // If user did not write anything, show info Toast
-        // and do not submit the writing
-        if (writeEditText.text.toString().isEmpty()) {
-            Toasty.normal(this.requireContext(), getString(R.string.error_writing), Toast.LENGTH_LONG).show()
-            return
-        }
 
         // Create new WritingItem with all text and URL
         val item = WritingItem(

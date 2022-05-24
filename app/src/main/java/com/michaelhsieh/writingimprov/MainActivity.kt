@@ -27,6 +27,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -55,8 +56,6 @@ class MainActivity : AppCompatActivity() {
     // notification channel ID
     private val CHANNEL_ID = "writing_improv_channel"
 
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
-
     companion object {
         // Global boolean to
         // -- Listen for notifications in initial sign up by calling in HomeFragment instead.
@@ -70,6 +69,8 @@ class MainActivity : AppCompatActivity() {
         // a duplicated notification to the user.
         var isListenFunctionCalledAlready = false
     }
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,6 +127,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, "settings_1")
+            param(FirebaseAnalytics.Param.ITEM_NAME, "settings")
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "settings_button")
+        }
         return item.onNavDestinationSelected(navController)
     }
 

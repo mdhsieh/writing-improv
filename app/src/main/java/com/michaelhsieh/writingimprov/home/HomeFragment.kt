@@ -8,8 +8,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.michaelhsieh.writingimprov.MainActivity
 import com.michaelhsieh.writingimprov.MainActivity.Companion.isListeningForChallenges
 import com.michaelhsieh.writingimprov.R
@@ -33,11 +37,21 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         val COLLECTION_CHALLENGES = "challenges"
     }
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
+
         val practiceButton = view.findViewById<Button>(R.id.btn_practice)
         practiceButton.setOnClickListener {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                param(FirebaseAnalytics.Param.ITEM_ID, "home_1")
+                param(FirebaseAnalytics.Param.ITEM_NAME, "practice")
+                param(FirebaseAnalytics.Param.CONTENT_TYPE, "practice_button")
+            }
             val action = HomeFragmentDirections.actionHomeFragmentToPromptFragment()
             findNavController().navigate(action)
         }
@@ -45,6 +59,11 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         // WritingItem is null since user is not submitting any writing
         val myWritingButton = view.findViewById<Button>(R.id.btn_my_writing)
         myWritingButton.setOnClickListener {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                param(FirebaseAnalytics.Param.ITEM_ID, "home_2")
+                param(FirebaseAnalytics.Param.ITEM_NAME, "my_writing")
+                param(FirebaseAnalytics.Param.CONTENT_TYPE, "my_writing_button")
+            }
             val action = HomeFragmentDirections.actionHomeFragmentToMyWritingFragment(
                 isCompletedOnTime = false,
                 writingItem = null
@@ -54,6 +73,11 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
 
         val sendChallengeButton = view.findViewById<Button>(R.id.btn_send_challenge)
         sendChallengeButton.setOnClickListener {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                param(FirebaseAnalytics.Param.ITEM_ID, "home_3")
+                param(FirebaseAnalytics.Param.ITEM_NAME, "send_challenge")
+                param(FirebaseAnalytics.Param.CONTENT_TYPE, "send_challenge_button")
+            }
             val action = HomeFragmentDirections.actionHomeFragmentToAuthorsFragment()
             findNavController().navigate(action)
         }
@@ -61,6 +85,11 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         // user view challenges sent to him or herself
         val challengesButton = view.findViewById<Button>(R.id.btn_challenges)
         challengesButton.setOnClickListener {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                param(FirebaseAnalytics.Param.ITEM_ID, "home_4")
+                param(FirebaseAnalytics.Param.ITEM_NAME, "my_challenges")
+                param(FirebaseAnalytics.Param.CONTENT_TYPE, "my_challenges_button")
+            }
             val action = HomeFragmentDirections.actionHomeFragmentToChallengesFragment()
             findNavController().navigate(action)
         }
@@ -68,6 +97,11 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         // user review writings from  challenges he or she has sent to other users
         val reviewSentChallengesButton = view.findViewById<Button>(R.id.btn_review_sent_challenges)
         reviewSentChallengesButton.setOnClickListener {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                param(FirebaseAnalytics.Param.ITEM_ID, "home_5")
+                param(FirebaseAnalytics.Param.ITEM_NAME, "review_sent_challenges")
+                param(FirebaseAnalytics.Param.CONTENT_TYPE, "review_sent_challenges_button")
+            }
             val action = HomeFragmentDirections.actionHomeFragmentToSentChallengesFragment()
             findNavController().navigate(action)
         }

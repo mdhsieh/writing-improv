@@ -10,7 +10,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import com.michaelhsieh.writingimprov.PromptItem
 import com.michaelhsieh.writingimprov.R
+import com.michaelhsieh.writingimprov.WritingItem
+import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_PROMPTS
 import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
 import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.michaelhsieh.writingimprov.settings.SettingsFragment
@@ -21,6 +29,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.util.*
+
 
 /**
  * Displays question icon, random time limit text in minutes, random prompt text,
@@ -50,6 +60,8 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     private lateinit var errorText:TextView
     private lateinit var goButton:Button
 
+    var db = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,7 +87,9 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
             thumbUrl = savedInstanceState.getString(KEY_THUMB_URL)!!
             Timber.d("After config change, thumbnail url: %s", thumbUrl)
         } else {
+            /*
             prompt = getRandomPrompt()
+            */
             minutes = getRandomTime(savedMin, savedMax).toString()
         }
     }
@@ -86,7 +100,17 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
         val promptText: TextView = view.findViewById(R.id.tv_prompt)
         val minutesText: TextView = view.findViewById(R.id.tv_time)
 
+        // Don't get random prompt again if after configuration change
+        if (savedInstanceState == null) {
+            getUserPrompts(promptText)
+        } else {
+            // prompt was already set
+            // Make the textview match
+            promptText.text = prompt
+        }
+        /*
         promptText.text = prompt
+         */
         minutesText.text = minutes
 
 
@@ -132,8 +156,39 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
         outState.putString(KEY_THUMB_URL, thumbUrl)
     }
 
-    /** Generates a random prompt using String resources. */
-    private fun getRandomPrompt():String {
+    /** Generates a random prompt from user's custom prompts collection, or
+     * if not available, generates from a newly created set of default prompts. */
+    private fun getUserPrompts(textView: TextView) {
+        val email = getEmail()
+        if (email != null) {
+            db.collection(HomeFragment.COLLECTION_USERS)
+                .document(email)
+                .collection(COLLECTION_PROMPTS)
+                .get()
+                .addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
+                    if (task.isSuccessful) {
+                        if (task.result?.size()!! > 0) {
+                            for (document in task.result!!) {
+                                Timber.d("Prompts already exist, get from Firestore")
+                                getPromptsFromFirestore(email, textView)
+                            }
+                        } else {
+                            Timber.d("No prompts exist, create a new prompts collection")
+                            createDefaultPrompts(email, textView)
+                        }
+                    } else {
+                        Timber.d("Error getting practice prompts: %s", task.exception)
+                        Toasty.error(this.requireContext(), getString(R.string.error_loading_prompts), Toast.LENGTH_LONG).show()
+                    }
+                })
+        }
+    }
+
+    /**
+     * Creates a new collection in Firestore containing default prompts from String resources.
+     * Then generates a random prompt from this collection.
+     */
+    private fun createDefaultPrompts(userId:String, textView: TextView) {
         val promptArray = arrayOf(
             getString(R.string.prompt_feel),
             getString(R.string.prompt_story),
@@ -142,6 +197,55 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
             getString(R.string.prompt_thriller),
             getString(R.string.prompt_comedy)
         )
+
+        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+            .document(userId)
+            .collection(COLLECTION_PROMPTS)
+
+        var counter = 0
+        for (text in promptArray) {
+            val promptItem = PromptItem(
+                id = UUID.randomUUID().toString(),
+                prompt = text,
+                timestamp = System.currentTimeMillis() / 1000
+            )
+            collection.add(promptItem).addOnCompleteListener {
+                if (counter == promptArray.size) {
+                    Timber.d("Done adding default prompts")
+                    getPromptsFromFirestore(userId, textView)
+                }
+                counter += 1
+            }
+        }
+
+    }
+
+    private fun getPromptsFromFirestore(userId: String, textView: TextView) {
+        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+            .document(userId)
+            .collection(COLLECTION_PROMPTS)
+
+        collection
+            .get()
+            .addOnSuccessListener {
+                // Convert the whole Query Snapshot to a list
+                // of objects directly
+                val items: List<PromptItem> =
+                    it.toObjects(PromptItem::class.java)
+                prompt = getRandomPrompt(items)
+                textView.text = prompt
+            }.addOnFailureListener {
+                Timber.e(it)
+                Toasty.error(this.requireContext(), R.string.error_loading_prompts, Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /** Generates a random prompt from array.
+     * @param prompts The List of possible PromptItems */
+    private fun getRandomPrompt(prompts: List<PromptItem>):String {
+        val promptTextList = prompts.map { it.prompt }
+        val promptArray = promptTextList.toTypedArray()
+        Timber.d("Final prompt array to pick from: %s", promptArray.joinToString())
         // generated random number from 0 to last index included
         val randNum = (promptArray.indices).random()
         return promptArray[randNum]
@@ -225,5 +329,17 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
             }
 
         })
+    }
+
+    /**
+     * Return the user's email if signed in.
+     * Otherwise, return null.
+     */
+    private fun getEmail():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.email
+        }
+        return null
     }
 }

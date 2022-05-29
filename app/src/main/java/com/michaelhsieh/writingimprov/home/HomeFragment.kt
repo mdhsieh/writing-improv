@@ -35,6 +35,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
         val COLLECTION_USERS = "users"
         val COLLECTION_WRITING = "writing"
         val COLLECTION_CHALLENGES = "challenges"
+        val COLLECTION_PROMPTS = "prompts"
     }
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics

@@ -40,6 +40,7 @@
     <!--    error-->
     <string name="error_minutes">Please enter a time!</string>
     <string name="error_loading_image">Please check your Internet connection. Error loading image.</string>
+    <string name="error_loading_prompts">Please check your Internet connection. Error getting prompts.</string>
     <string name="error_loading_url">Please check your Internet connection. Error getting URL.</string>
     <string name="error_loading_my_writing">Please check your Internet connection. Error getting writing.</string>
     <string name="error_loading_authors">Please check your Internet connection. Error getting authors.</string>

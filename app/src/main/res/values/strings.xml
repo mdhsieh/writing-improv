@@ -104,7 +104,9 @@
     <string name="change_username">Change Username</string>
     <string name="save_username">Save</string>
     <string name="updated_username">Username saved</string>
-    <string name="practice_times">Practice Random Time</string>
+    <string name="edit_prompts">Edit Prompts</string>
+    <string name="label_practice">Practice</string>
+    <string name="practice_times">Random Time</string>
     <string name="label_min_time">Min. Time (in minutes):</string>
     <string name="label_max_time">Max. Time (in minutes):</string>
     <string name="save_practice_times">Save</string>

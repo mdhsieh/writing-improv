@@ -109,12 +109,15 @@
     <string name="label_max_time">Max. Time (in minutes):</string>
     <string name="save_practice_times">Save</string>
     <string name="updated_practice_times">Practice times saved</string>
+    <!--edit prompts-->
+    <string name="add_prompt">Add Prompt</string>
+    <string name="hint_new_prompt">Write a new prompt</string>
     <!--deleted-->
     <string name="deleted_writing">You deleted writing for: %1$s</string>
     <string name="delete_confirmation">Are you sure you want to delete %1$s with prompt:
     %2$s ?
     </string>
-<!--    name of challenge includes the words challenge from or challenge sent to-->
+    <!--    name of challenge includes the words challenge from or challenge sent to-->
     <string name="deleted_challenge">You deleted: %1$s</string>
     <string name="yes">Confirm</string>
     <string name="no">Cancel</string>

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/author_row.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_authors.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_challenges.xml" value="0.1552652994791667" />
         <entry key="app/src/main/res/layout/fragment_edit_prompts.xml" value="0.125" />
@@ -12,6 +13,7 @@
         <entry key="app/src/main/res/layout/fragment_sent_challenges.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.21052703857421873" />
         <entry key="app/src/main/res/layout/fragment_writing.xml" value="0.11041666666666666" />
+        <entry key="app/src/main/res/layout/prompt_row.xml" value="0.11041666666666666" />
       </map>
     </option>
   </component>

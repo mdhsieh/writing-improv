@@ -192,7 +192,7 @@
     </fragment>
     <fragment
         android:id="@+id/editPromptsFragment"
-        android:name="com.michaelhsieh.writingimprov.settings.EditPromptsFragment"
+        android:name="com.michaelhsieh.writingimprov.editprompts.EditPromptsFragment"
         android:label="Edit Prompts"
         tools:layout="@layout/fragment_edit_prompts" />
 </navigation>

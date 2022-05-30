@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/layout/fragment_my_writing_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_sent_challenges.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.21052703857421873" />
+        <entry key="app/src/main/res/layout/fragment_writing.xml" value="0.11041666666666666" />
       </map>
     </option>
   </component>

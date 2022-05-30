@@ -8,11 +8,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.R
+import com.michaelhsieh.writingimprov.practice.PromptFragmentDirections
 import es.dmoral.toasty.Toasty
 import timber.log.Timber
 
@@ -45,6 +47,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         saveUsernameButton.setOnClickListener {
             val changedUsername = usernameEditText.text.toString()
             updateUsername(changedUsername)
+        }
+
+        val editPromptsButton = view.findViewById<Button>(R.id.btn_edit_prompts)
+        editPromptsButton.setOnClickListener {
+            val action = SettingsFragmentDirections.actionSettingsFragmentToEditPromptsFragment()
+            findNavController().navigate(action)
         }
 
         val minTimeEditText:EditText = view.findViewById(R.id.et_min_time)

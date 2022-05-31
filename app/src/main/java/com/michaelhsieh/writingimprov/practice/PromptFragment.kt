@@ -60,6 +60,10 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
     private lateinit var errorText:TextView
     private lateinit var goButton:Button
 
+    private lateinit var shuffleButton:Button
+    private lateinit var editTimesButton:Button
+    private lateinit var editPromptsButton:Button
+
     var db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,6 +146,40 @@ class PromptFragment:Fragment(R.layout.fragment_prompt) {
 //            val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl, false, "Practice")
             // empty string challenge id because it's practice
             val action = PromptFragmentDirections.actionPromptFragmentToWritingFragment(minutes.toInt(), prompt, url, thumbUrl, false, "Practice", "")
+            findNavController().navigate(action)
+        }
+
+        // Get prompt and time again if user clicks shuffle
+        shuffleButton = view.findViewById(R.id.btn_shuffle)
+        shuffleButton.setOnClickListener {
+            // Duplicate code as before
+            // Check if saved times already exist
+            val sp: SharedPreferences = requireActivity().getSharedPreferences(SettingsFragment.KEY_PREFS, Activity.MODE_PRIVATE)
+            var savedMin = sp.getInt(SettingsFragment.KEY_MIN_MINUTES, -1)
+            var savedMax = sp.getInt(SettingsFragment.KEY_MAX_MINUTES, -1)
+
+            // Default 1 and 3
+            if (savedMin == -1) {
+                savedMin = 1
+            }
+            if (savedMax == -1) {
+                savedMax = 3
+            }
+            minutes = getRandomTime(savedMin, savedMax).toString()
+            minutesText.text = minutes
+            getUserPrompts(promptText)
+        }
+
+        // Navigate to settings screen to change random time range
+        editTimesButton = view.findViewById(R.id.btn_edit_times)
+        editTimesButton.setOnClickListener {
+            val action = PromptFragmentDirections.actionPromptFragmentToSettingsFragment()
+            findNavController().navigate(action)
+        }
+        // Navigate to edit prompts screen to add/delete custom prompts
+        editPromptsButton = view.findViewById(R.id.btn_edit_prompts)
+        editPromptsButton.setOnClickListener {
+            val action = PromptFragmentDirections.actionPromptFragmentToEditPromptsFragment()
             findNavController().navigate(action)
         }
     }

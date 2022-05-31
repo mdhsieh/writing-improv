@@ -7,6 +7,8 @@
     <string name="challenges">Challenges</string>
     <string name="practice">Practice</string>
     <string name="go">Go</string>
+    <string name="shuffle">Shuffle Prompt and Time</string>
+    <string name="edit_times">Edit Times</string>
     <string name="submit">Submit</string>
     <string name="menu">Menu</string>
     <string name="sign_in">Sign In</string>

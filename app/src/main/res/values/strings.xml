@@ -59,6 +59,8 @@
     <string name="error_email_deleted_writing">Error deleting, could not get account information.</string>
     <string name="error_create_prompt_empty">Please create a new prompt!</string>
     <string name="error_create_prompt">Error saving your new prompt! Please check your Internet connection.</string>
+    <string name="error_deleted_prompt">Error deleting prompt: %1$s</string>
+    <string name="error_delete_all_prompts">You must have at least 1 practice prompt!</string>
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
     <string name="prompt_story">What is the story behind this?</string>
@@ -118,6 +120,7 @@
     <!--edit prompts-->
     <string name="add_prompt">Add Prompt</string>
     <string name="hint_new_prompt">Write a new prompt</string>
+    <string name="deleted_prompt">You deleted prompt: %1$s</string>
     <!--deleted-->
     <string name="deleted_writing">You deleted writing for: %1$s</string>
     <string name="delete_confirmation">Are you sure you want to delete %1$s with prompt:

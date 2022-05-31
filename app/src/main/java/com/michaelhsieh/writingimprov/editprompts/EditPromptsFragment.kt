@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.OnCompleteListener
@@ -56,16 +57,56 @@ EditPromptsAdapter.ItemClickListener {
         )
         recyclerView.addItemDecoration(dividerItemDecoration)
 
+        // Swipe to delete
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val email = getEmail()
+                    if (email != null) {
+                        val promptToDelete = adapter.getItem(viewHolder.adapterPosition)
+                        if (adapter.itemCount <= 1) {
+                            Toasty.error(this@EditPromptsFragment.requireContext(),
+                                R.string.error_delete_all_prompts
+                            ).show()
+                            // Make swiped out view animate back to original position
+                            adapter.notifyItemChanged(viewHolder.adapterPosition)
+                        } else {
+                            deletePrompt(promptToDelete, viewHolder, promptItems, email)
+                        }
+                    } else {
+                        Timber.d("Email is null")
+                        Toasty.error(this@EditPromptsFragment.requireContext(),
+                            R.string.error_email_deleted_writing
+                        ).show()
+                    }
+                }
+
+            }
+
         progressBar = view.findViewById(R.id.pb_loading_prompts)
         progressBar.visibility = View.VISIBLE
 
         getUserPrompts(promptItems, progressBar)
+
+        // swipe to delete
+        // swipe to delete
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         // Add user's new custom prompt to Firestore and display
         editText = view.findViewById(R.id.et_new_prompt)
         addPromptButton = view.findViewById(R.id.btn_add_prompt)
         addPromptButton.setOnClickListener {
             if (editText.text.isEmpty()) {
+                // @EditPromptsFragment
                 Toasty.error(this.requireContext(), getString(R.string.error_create_prompt_empty), Toast.LENGTH_LONG).show()
             } else {
                 val newPromptItem = PromptItem(
@@ -96,6 +137,57 @@ EditPromptsAdapter.ItemClickListener {
 
             }
         }
+    }
+
+    private fun deletePrompt(promptToDelete: PromptItem, viewHolder:RecyclerView.ViewHolder,
+                             promptItems:ArrayList<PromptItem>, email:String) {
+        promptItems.removeAt(viewHolder.adapterPosition)
+        adapter.notifyItemRemoved(viewHolder.adapterPosition)
+
+        // Start delete from Firestore
+        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+            .document(email)
+            .collection(HomeFragment.COLLECTION_PROMPTS)
+
+        collection.whereEqualTo("id", promptToDelete.id)
+            .get()
+            .addOnSuccessListener {
+                for (doc in it.documents) {
+                    // Get Firestore auto-generated document ID which is different from prompt ID field
+                    // and use that to delete document instead
+                    val docRefId = doc.id
+                    collection.document(docRefId).delete()
+                        .addOnSuccessListener {
+                            Toasty.info(
+                                this@EditPromptsFragment.requireContext(),
+                                getString(R.string.deleted_prompt, promptToDelete.prompt),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .addOnFailureListener {
+                            Timber.d(it)
+                            Toasty.info(
+                                this@EditPromptsFragment.requireContext(),
+                                getString(R.string.error_deleted_prompt, promptToDelete.prompt),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            // Make swiped out view animate back to original position
+                            adapter.notifyItemChanged(viewHolder.adapterPosition)
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Timber.d("Error getting docs where equal to id")
+                Timber.d(it)
+
+                Toasty.info(
+                    this@EditPromptsFragment.requireContext(),
+                    getString(R.string.error_deleted_prompt, promptToDelete.prompt),
+                    Toast.LENGTH_SHORT
+                ).show()
+                // Make swiped out view animate back to original position
+                adapter.notifyItemChanged(viewHolder.adapterPosition)
+            }
     }
 
     /** Generates a random prompt from user's custom prompts collection, or
@@ -171,6 +263,7 @@ EditPromptsAdapter.ItemClickListener {
             .collection(HomeFragment.COLLECTION_PROMPTS)
 
         collection
+            .orderBy("timestamp")
             .get()
             .addOnSuccessListener {
                 // Convert the whole Query Snapshot to a list

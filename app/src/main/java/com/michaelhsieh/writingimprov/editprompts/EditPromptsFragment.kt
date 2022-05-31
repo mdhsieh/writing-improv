@@ -5,9 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +30,9 @@ EditPromptsAdapter.ItemClickListener {
 
     // Show progress bar while getting prompts
     private lateinit var progressBar: ProgressBar
+
+    private lateinit var editText: EditText
+    private lateinit var addPromptButton: Button
 
     val db = FirebaseFirestore.getInstance()
 
@@ -59,6 +60,42 @@ EditPromptsAdapter.ItemClickListener {
         progressBar.visibility = View.VISIBLE
 
         getUserPrompts(promptItems, progressBar)
+
+        // Add user's new custom prompt to Firestore and display
+        editText = view.findViewById(R.id.et_new_prompt)
+        addPromptButton = view.findViewById(R.id.btn_add_prompt)
+        addPromptButton.setOnClickListener {
+            if (editText.text.isEmpty()) {
+                Toasty.error(this.requireContext(), getString(R.string.error_create_prompt_empty), Toast.LENGTH_LONG).show()
+            } else {
+                val newPromptItem = PromptItem(
+                    id = UUID.randomUUID().toString(),
+                    prompt = editText.text.toString(),
+                    timestamp = System.currentTimeMillis() / 1000
+                )
+                // Add to RecyclerView
+                promptItems.add(newPromptItem)
+                adapter.notifyItemChanged(promptItems.size - 1)
+                // Automatically scroll to show user where new prompt is
+                (recyclerView.layoutManager as LinearLayoutManager).scrollToPosition(promptItems.size - 1)
+                // Add to user's custom prompts collection
+                val email = getEmail()
+                if (email != null) {
+                    db.collection(HomeFragment.COLLECTION_USERS)
+                        .document(email)
+                        .collection(HomeFragment.COLLECTION_PROMPTS)
+                        .add(newPromptItem)
+                        .addOnSuccessListener {
+                            Timber.d("Successfully added prompt: %s", newPromptItem.prompt)
+                        }
+                        .addOnFailureListener {
+                            // Toast to let user know prompt wasn't saved
+                            Toasty.error(this.requireContext(), getString(R.string.error_create_prompt_empty), Toast.LENGTH_LONG).show()
+                        }
+                }
+
+            }
+        }
     }
 
     /** Generates a random prompt from user's custom prompts collection, or

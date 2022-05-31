@@ -57,6 +57,8 @@
     <string name="error_deleted_writing">Error deleting writing for: %1$s</string>
     <string name="error_deleted_challenge">Error deleting: %1$s</string>
     <string name="error_email_deleted_writing">Error deleting, could not get account information.</string>
+    <string name="error_create_prompt_empty">Please create a new prompt!</string>
+    <string name="error_create_prompt">Error saving your new prompt! Please check your Internet connection.</string>
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
     <string name="prompt_story">What is the story behind this?</string>

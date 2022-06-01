@@ -18,8 +18,16 @@ import com.michaelhsieh.writingimprov.PromptItem
 import com.michaelhsieh.writingimprov.R
 import com.michaelhsieh.writingimprov.WritingItem
 import com.michaelhsieh.writingimprov.home.HomeFragment
+import com.michaelhsieh.writingimprov.httprequest.JsonRandomWordsAPI
+import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
+import com.michaelhsieh.writingimprov.httprequest.RandomWord
+import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.michaelhsieh.writingimprov.mywriting.MyWritingAdapter
 import es.dmoral.toasty.Toasty
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,7 +43,11 @@ EditPromptsAdapter.ItemClickListener {
     private lateinit var editText: EditText
     private lateinit var addPromptButton: Button
 
+    private lateinit var getRandomPromptButton: Button
+
     val db = FirebaseFirestore.getInstance()
+
+    private val BASE_URL:String = "https://random-words-api.vercel.app/"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -136,6 +148,11 @@ EditPromptsAdapter.ItemClickListener {
                 }
 
             }
+        }
+
+        getRandomPromptButton = view.findViewById(R.id.btn_random_prompt)
+        getRandomPromptButton.setOnClickListener {
+            generateRandomPrompt(editText)
         }
     }
 
@@ -285,6 +302,62 @@ EditPromptsAdapter.ItemClickListener {
 
                 pBar.visibility = View.GONE
             }
+    }
+
+    /**
+     * Get a random word with its definition as a new subject prompt
+     * user may want to add.
+     *
+     * Display the prompt in add prompt EditText.
+     * @param editText: The EditText to show the random prompt in
+     */
+    private fun generateRandomPrompt(editText: EditText) {
+        Timber.d("starting get random word")
+
+        // Create Retrofit to get random image
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val jsonRandomWordsAPI: JsonRandomWordsAPI = retrofit.create(JsonRandomWordsAPI::class.java)
+        val call: Call<List<RandomWord>> = jsonRandomWordsAPI.getRandomWord()
+        call.enqueue(object : retrofit2.Callback<List<RandomWord>> {
+            override fun onResponse(
+                call: Call<List<RandomWord>>,
+                response: Response<List<RandomWord>>
+            ) {
+                if (!response.isSuccessful) {
+                    Timber.d("Code: %s", response.code())
+                    // Show error Toasty
+                    Toasty.error(this@EditPromptsFragment.requireContext(),
+                        R.string.error_getting_random_prompt, Toast.LENGTH_LONG,true).show()
+                    return
+                }
+
+                val randomWordList: List<RandomWord>? = response.body()
+                if (randomWordList != null) {
+                    val randomWord = randomWordList[0]
+                    val word = randomWord.word
+                    val definition = randomWord.definition
+                    Timber.d("Got word %s, definition %s", word, definition)
+                    // Clear any previously entered text
+                    editText.text.clear()
+                    // Show the newly generated prompt
+                    val generatedPrompt = getString(R.string.generated_random_prompt, word, definition)
+                    editText.setText(generatedPrompt)
+
+//                    Timber.d("Got response %s", randomWord.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<List<RandomWord>>, t: Throwable) {
+                Timber.e(t.message)
+                Toasty.error(this@EditPromptsFragment.requireContext(),
+                    R.string.error_getting_random_prompt, Toast.LENGTH_LONG,true).show()
+            }
+
+        })
     }
 
     override fun onItemClick(view: View?, position: Int) {

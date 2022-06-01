@@ -120,6 +120,10 @@
     <string name="label_max_time">Max. Time (in minutes):</string>
     <string name="save_practice_times">Save</string>
     <string name="updated_practice_times">Practice times saved</string>
+    <string name="label_bot">writingbot</string>
+    <string name="request_challenge">Request Challenge</string>
+    <string name="label_bot_daily_notification">Daily Notifications</string>
+    <string name="label_bot_generate_random">Generate Random Prompts</string>
     <!--edit prompts-->
     <string name="add_prompt">Add Prompt</string>
     <string name="hint_new_prompt">Write a new prompt</string>

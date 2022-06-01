@@ -130,7 +130,8 @@ class ChallengePromptFragment:Fragment(R.layout.fragment_challenge_prompt) {
                 val myUsername = user?.displayName.toString()
                 val myEmail = user?.email.toString()
                 // Title of writing to inform author is challenge from current user
-                val writingName = "Challenge from " + myUsername
+//                val writingName = "Challenge from " + myUsername
+                val writingName = getString(R.string.challenge_from, myUsername)
 
                 // Get prompt, time from EditText
                 prompt = promptEditText.text.toString()

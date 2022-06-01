@@ -390,7 +390,8 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
                         // Because looking from the challenger's perspective,
                         // Change name from [Challenge from senderUsername] to [Challenge sent to receiverUsername]
                         for (item in items) {
-                            item.name = "Challenge sent to " + challenge.receiverUsername
+//                            item.name = "Challenge sent to " + challenge.receiverUsername
+                            item.name = getString(R.string.challenge_sent_to, challenge.receiverUsername)
                         }
 
                         // add the writings submitted for this challenge
@@ -405,7 +406,8 @@ class SentChallengesFragment:Fragment(R.layout.fragment_sent_challenges),
 //                Timber.d("incomplete challenge: %s", challenge.id)
                 writingItems.add(
                     WritingItem(UUID.randomUUID().toString(),
-                        name = "Challenge sent to " + challenge.receiverUsername,
+//                        name = "Challenge sent to " + challenge.receiverUsername,
+                        name = getString(R.string.challenge_sent_to, challenge.receiverUsername),
                         prompt = challenge.prompt,
                         time = challenge.time,
                         url = challenge.url,

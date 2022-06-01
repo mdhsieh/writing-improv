@@ -87,8 +87,10 @@
     <!-- no challenges -->
     <string name="challenges_empty">You have not received any challenges yet!</string>
     <string name="sent_challenges_empty">You have not sent any challenges to other users yet!</string>
+    <string name="challenge_from">Challenge from %1$s</string>
     <!--    send challenge to username-->
     <string name="send_challenge_to_user">Send challenge to %1$s!</string>
+    <string name="challenge_sent_to">Challenge sent to %1$s</string>
     <!--review sent challenge submitted or not status-->
     <string name="sent_challenge_not_submitted_short">Pending</string>
     <string name="sent_challenge_submitted_short">Submitted</string>

@@ -121,6 +121,7 @@
     <string name="add_prompt">Add Prompt</string>
     <string name="hint_new_prompt">Write a new prompt</string>
     <string name="deleted_prompt">You deleted prompt: %1$s</string>
+    <string name="random_prompt">Random Subject Prompt</string>
     <!--deleted-->
     <string name="deleted_writing">You deleted writing for: %1$s</string>
     <string name="delete_confirmation">Are you sure you want to delete %1$s with prompt:

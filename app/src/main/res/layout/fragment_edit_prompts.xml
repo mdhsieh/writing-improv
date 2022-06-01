@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".editprompts.EditPromptsFragment">
 
+    <Button
+        android:id="@+id/btn_random_prompt"
+        style="@style/ColoredButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/random_prompt"
+        app:layout_constraintBottom_toTopOf="@+id/et_new_prompt"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <EditText
         android:id="@+id/et_new_prompt"
         style="@style/EditWhiteText"
@@ -40,8 +52,8 @@
         android:id="@+id/rv_my_prompts"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/et_new_prompt"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_random_prompt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

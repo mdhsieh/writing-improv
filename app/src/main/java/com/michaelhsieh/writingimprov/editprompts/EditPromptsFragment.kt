@@ -219,10 +219,8 @@ EditPromptsAdapter.ItemClickListener {
                 .addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                     if (task.isSuccessful) {
                         if (task.result?.size()!! > 0) {
-                            for (document in task.result!!) {
-                                Timber.d("Prompts already exist. Get from Firestore")
-                                getPromptsFromFirestore(email, promptData, progressBar)
-                            }
+                            Timber.d("Prompts already exist. Get from Firestore")
+                            getPromptsFromFirestore(email, promptData, progressBar)
                         } else {
                             Timber.d("No prompts exist. Create a new prompts collection")
                             createDefaultPrompts(email, promptData, progressBar)

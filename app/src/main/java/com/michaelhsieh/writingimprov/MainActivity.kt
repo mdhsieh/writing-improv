@@ -479,8 +479,6 @@ class MainActivity : AppCompatActivity() {
     /** Generates a random prompt from user's custom prompts collection, or
      * if not available, generates from a newly created set of default prompts. */
     private fun getUserPrompts(minutes:String) {
-        var isGotPrompts:Boolean = false
-
         val email = getEmail()
         if (email != null) {
             db.collection(HomeFragment.COLLECTION_USERS)
@@ -490,14 +488,8 @@ class MainActivity : AppCompatActivity() {
                 .addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
                     if (task.isSuccessful) {
                         if (task.result?.size()!! > 0) {
-                            for (document in task.result!!) {
-                                Timber.d("Prompts already exist, get from Firestore")
-                                // Only run once
-                                if (!isGotPrompts) {
-                                    getPromptsFromFirestore(email, minutes)
-                                    isGotPrompts = true
-                                }
-                            }
+                            Timber.d("Prompts already exist, get from Firestore")
+                            getPromptsFromFirestore(email, minutes)
                         }
 //                        else {
 //                            Timber.d("No prompts exist, create a new prompts collection")

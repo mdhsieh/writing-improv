@@ -3,12 +3,16 @@ package com.michaelhsieh.writingimprov
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -25,18 +29,31 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
+import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
+import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
+import com.michaelhsieh.writingimprov.settings.SettingsFragment
+import com.michaelhsieh.writingimprov.testresource.CountingIdlingResourceSingleton
+import es.dmoral.toasty.Toasty
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.util.*
 import java.util.zip.ZipException
 import javax.net.ssl.SSLContext
+import kotlin.collections.ArrayList
 
 
 /**
@@ -71,6 +88,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+
+    private val BASE_URL:String = "https://api.unsplash.com/"
+    // Email of account linked to writing bot
+    val botId = "michaelhsieh1997@gmail.com"
+    val botName = "writingbot"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -249,8 +271,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Display notification when writing submitted by other
      * user about one of current user's sent challenges
-     * userEmail: Current user email
-     * otherEmails: All other user's emails
+     * @param userEmail: Current user email
+     * @param otherEmails: All other user's emails
      */
     private fun listenForCompletedChallenges(userEmail:String, otherEmails:ArrayList<String>) {
         for (otherEmail in otherEmails) {
@@ -331,9 +353,9 @@ class MainActivity : AppCompatActivity() {
     /**
      * Display notification to let user know
      * he or she has received a challenge
-     * title: notification title, e.g. challenge title
-     * text: notification text, e.g. challenge prompt
-     * navDest: Resource ID of fragment to navigate to, e.g. ChallengesFragment or SentChallengesFragment
+     * @param title: notification title, e.g. challenge title
+     * @param text: notification text, e.g. challenge prompt
+     * @param navDest: Resource ID of fragment to navigate to, e.g. ChallengesFragment or SentChallengesFragment
      */
     private fun displayNotification(title: String, text: String, navDest:Int) {
         // navigate to challenges fragment
@@ -367,5 +389,253 @@ class MainActivity : AppCompatActivity() {
             // notificationId is a unique int for each notification that you must define
             notify(notificationId, builder.build())
         }
+    }
+
+    /**
+     * Add challenge from writing bot to current user's collection.
+     * This should trigger the listener for challenge notifications
+     * @param myEmail Current user email, to use as Firestore ID
+     * @param myUsername Current user's username
+     */
+    public fun generateBotChallenge() {
+        // Get random time
+        // Check if saved times already exist
+        val sp: SharedPreferences = this.getSharedPreferences(SettingsFragment.KEY_PREFS, Activity.MODE_PRIVATE)
+        var savedMin = sp.getInt(SettingsFragment.KEY_MIN_MINUTES, -1)
+        var savedMax = sp.getInt(SettingsFragment.KEY_MAX_MINUTES, -1)
+        // Default 1 and 3
+        if (savedMin == -1) {
+            savedMin = 1
+        }
+        if (savedMax == -1) {
+            savedMax = 3
+        }
+        val minutes = getRandomTime(savedMin, savedMax).toString()
+        // Now get prompt
+        getUserPrompts(minutes)
+        // If succeed, challenge item prompt text is set
+        // and will get image URL
+        // If that also succeeds, then challenge item thumb and full urls are set
+        // and will then create the challenge item to add in current user's collection
+    }
+
+    private fun createBotChallenge(writingName:String, prompt:String, minutes:String, url: String, thumbUrl:String, botId:String, myEmail: String, myUsername: String) {
+        val challengeItem = ChallengeItem(
+            UUID.randomUUID().toString(),
+            writingName,
+            prompt = prompt,
+            time = minutes,
+            url = url,
+            thumbUrl = thumbUrl,
+            completed = false,
+            senderId = botId,
+            receiverId = myEmail,
+            receiverUsername = myUsername,
+            timestamp = System.currentTimeMillis() / 1000
+        )
+        db.collection("users")
+            .document(myEmail)
+            .collection("challenges")
+            .add(challengeItem)
+            // Show success or error Toasty
+            .addOnSuccessListener {
+                Toasty.info(
+                    this,
+                    getString(R.string.success_bot),
+                    Toast.LENGTH_LONG,
+                    true
+                ).show()
+            }
+            .addOnFailureListener() {
+                Toasty.error(
+                    this,
+                    getString(R.string.error_bot),
+                    Toast.LENGTH_LONG,
+                    true
+                ).show()
+            }
+    }
+
+    /**
+     * Return the user's display name if signed in.
+     * Otherwise, return null.
+     */
+    private fun getUsername():String? {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            return user.displayName
+        }
+        return null
+    }
+
+    /** Generates a random integer time in minutes.
+     * @param min The minimum time limit
+     * @param max The maximum time limit
+     * @return A number from min to max, included */
+    private fun getRandomTime(min:Int, max:Int):Int {
+        return (min..max).random()
+    }
+
+    /** Generates a random prompt from user's custom prompts collection, or
+     * if not available, generates from a newly created set of default prompts. */
+    private fun getUserPrompts(minutes:String) {
+        var isGotPrompts:Boolean = false
+
+        val email = getEmail()
+        if (email != null) {
+            db.collection(HomeFragment.COLLECTION_USERS)
+                .document(email)
+                .collection(HomeFragment.COLLECTION_PROMPTS)
+                .get()
+                .addOnCompleteListener(OnCompleteListener<QuerySnapshot?> { task ->
+                    if (task.isSuccessful) {
+                        if (task.result?.size()!! > 0) {
+                            for (document in task.result!!) {
+                                Timber.d("Prompts already exist, get from Firestore")
+                                // Only run once
+                                if (!isGotPrompts) {
+                                    getPromptsFromFirestore(email, minutes)
+                                    isGotPrompts = true
+                                }
+                            }
+                        }
+//                        else {
+//                            Timber.d("No prompts exist, create a new prompts collection")
+//                            createDefaultPrompts(email)
+//                        }
+                    } else {
+                        Timber.d("Error getting practice prompts: %s", task.exception)
+                        Toasty.error(this, getString(R.string.error_loading_prompts), Toast.LENGTH_LONG).show()
+                    }
+                })
+        }
+    }
+
+    /**
+     * Creates a new collection in Firestore containing default prompts from String resources.
+     * Then generates a random prompt from this collection.
+     */
+//    private fun createDefaultPrompts(userId:String, botId:String, botName:String, writingName:String, minutes:String) {
+//        val promptArray = arrayOf(
+//            getString(R.string.prompt_feel),
+//            getString(R.string.prompt_story),
+//            getString(R.string.prompt_mystery),
+//            getString(R.string.prompt_action),
+//            getString(R.string.prompt_thriller),
+//            getString(R.string.prompt_comedy)
+//        )
+//
+//        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+//            .document(userId)
+//            .collection(HomeFragment.COLLECTION_PROMPTS)
+//
+//        var counter = 0
+//        for (text in promptArray) {
+//            val promptItem = PromptItem(
+//                id = UUID.randomUUID().toString(),
+//                prompt = text,
+//                timestamp = System.currentTimeMillis() / 1000
+//            )
+//            collection.add(promptItem).addOnCompleteListener {
+//                if (counter == promptArray.size) {
+//                    Timber.d("Done adding default prompts")
+//                    getPromptsFromFirestore(userId)
+//                }
+//                counter += 1
+//            }
+//        }
+//
+//    }
+
+    private fun getPromptsFromFirestore(userId: String, minutes:String) {
+        val collection = db.collection(HomeFragment.COLLECTION_USERS)
+            .document(userId)
+            .collection(HomeFragment.COLLECTION_PROMPTS)
+
+        collection
+            .get()
+            .addOnSuccessListener {
+                // Convert the whole Query Snapshot to a list
+                // of objects directly
+                val items: List<PromptItem> =
+                    it.toObjects(PromptItem::class.java)
+
+                val prompt = getRandomPrompt(items)
+                getRandomImageUrl(userId, minutes, prompt)
+
+            }.addOnFailureListener {
+                Timber.e(it)
+                Toasty.error(this, R.string.error_loading_prompts, Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /** Generates a random prompt from array.
+     * @param prompts The List of possible PromptItems */
+    private fun getRandomPrompt(prompts: List<PromptItem>):String {
+        val promptTextList = prompts.map { it.prompt }
+        val promptArray = promptTextList.toTypedArray()
+        Timber.d("Final prompt array to pick from: %s", promptArray.joinToString())
+        // generated random number from 0 to last index included
+        val randNum = (promptArray.indices).random()
+        return promptArray[randNum]
+    }
+
+    /**
+     *  Gets a random image URL and sets variable if successful.
+     *  Otherwise, shows an error Toast.
+     *
+     */
+    private fun getRandomImageUrl(email:String, minutes:String, prompt:String) {
+        Timber.d("starting get url")
+
+        // Create Retrofit to get random image
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val jsonUnsplashApi: JsonUnsplashApi = retrofit.create(JsonUnsplashApi::class.java)
+
+        // pass in access key
+        val call: Call<UnsplashImage> = jsonUnsplashApi.getRandomImage(getString(R.string.access_key))
+
+        call.enqueue(object : retrofit2.Callback<UnsplashImage> {
+            override fun onFailure(call: Call<UnsplashImage>, t: Throwable) {
+                Timber.e(t.message)
+                Toasty.error(this@MainActivity, R.string.error_loading_url, Toast.LENGTH_LONG, true).show()
+            }
+
+            override fun onResponse(call: Call<UnsplashImage>, response: Response<UnsplashImage>) {
+                if (!response.isSuccessful) {
+                    Timber.d("Code: %s", response.code())
+                    // Show error Toasty
+                    Toasty.error(this@MainActivity,
+                        R.string.error_loading_url, Toast.LENGTH_LONG, true).show()
+                    return
+                }
+
+                val image: UnsplashImage? = response.body()
+
+                if (image != null) {
+
+                    val regularUrl = image.urls.asJsonObject.get("regular")
+                    val thumbnailUrl = image.urls.asJsonObject.get("thumb")
+
+                    // Set var url to the new image URL
+                    val url = regularUrl.asString
+                    Timber.d("finished getting url: %s", url)
+
+                    // Set var thumb url to the new image thumbnail URL
+                    val thumbUrl = thumbnailUrl.asString
+                    Timber.d("finished getting thumbnail url: %s", thumbUrl)
+                    val writingName = getString(R.string.challenge_from, botName)
+                    val username = getUsername()
+                    if (username != null) {
+                        createBotChallenge(writingName, prompt, minutes, url, thumbUrl, botId, email, username)
+                    }
+                }
+            }
+
+        })
     }
 }

@@ -124,6 +124,8 @@
     <string name="request_challenge">Request Challenge</string>
     <string name="label_bot_daily_notification">Daily Notifications</string>
     <string name="label_bot_generate_random">Generate Random Prompts</string>
+    <string name="success_bot">You have a new challenge from writingbot!</string>
+    <string name="error_bot">Error generating challenge.</string>
     <!--edit prompts-->
     <string name="add_prompt">Add Prompt</string>
     <string name="hint_new_prompt">Write a new prompt</string>

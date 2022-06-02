@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.michaelhsieh.writingimprov.MainActivity
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.R
 import com.michaelhsieh.writingimprov.practice.PromptFragmentDirections
@@ -76,6 +77,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             val minTime:Int = minTimeEditText.text.toString().toInt()
             val maxTime:Int = maxTimeEditText.text.toString().toInt()
             savePracticeTimes(minTime, maxTime)
+        }
+
+        val requestChallengeButton = view.findViewById<Button>(R.id.btn_request_challenge)
+        requestChallengeButton.setOnClickListener {
+            (this.activity as MainActivity).generateBotChallenge()
         }
     }
 

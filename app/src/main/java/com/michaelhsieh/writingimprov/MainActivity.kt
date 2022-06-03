@@ -149,9 +149,6 @@ class MainActivity : AppCompatActivity() {
 
         // Obtain the FirebaseAnalytics instance.
         firebaseAnalytics = Firebase.analytics
-
-        // Register AlarmManager BroadcastReceiver.
-        registerAlarmBroadcast();
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -406,6 +403,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Must register BroadcastReceiver
+    override fun onStart() {
+        super.onStart()
+
+        // Check if daily notification should be created
+        val sp: SharedPreferences = getSharedPreferences(SettingsFragment.KEY_PREFS, Activity.MODE_PRIVATE)
+        val isDailyNotificationsAllowed = sp.getBoolean(SettingsFragment.KEY_BOT_DAILY_NOTIFICATIONS, true)
+        if (isDailyNotificationsAllowed) {
+            Timber.d("Register alarm to create bot daily challenge notification")
+            // Register AlarmManager BroadcastReceiver.
+            registerAlarmBroadcast()
+        } else {
+            Timber.d("Daily notifications were turned off. Not registering alarm")
+        }
+
+    }
+
     /**
      * Schedule daily push notification by adding new challenge to user's collection
      * at certain hour every day.
@@ -414,7 +428,7 @@ class MainActivity : AppCompatActivity() {
      * which is a BroadcastReceiver that creates the challenge
      */
     fun registerAlarmBroadcast() {
-        Timber.d("Going to register Intent.RegisterAlramBroadcast")
+        Timber.d("Going to register alarm broadcast")
 
         //This is the call back function(BroadcastReceiver) which will be call when your
         //alarm time will reached.
@@ -426,10 +440,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Must register BroadcastReceiver
         // Register the alarm broadcast here
         registerReceiver(receiver, IntentFilter("com.michaelhsieh.writingimprov"))
-        pendingIntent = PendingIntent.getBroadcast(this, 0, Intent("com.myalarm.alarmexample"), 0)
+        pendingIntent = PendingIntent.getBroadcast(this, 0, Intent("com.michaelhsieh.writingimprov"), 0)
         alarmManager = this.getSystemService(ALARM_SERVICE) as AlarmManager
         setAlarmTime(pendingIntent)
     }
@@ -440,20 +453,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setAlarmTime(alarmPendingIntent:PendingIntent?) {
-        // Show at 10:00 am
-        val HOUR_TO_SHOW_PUSH = 10
+        Timber.d("Setting alarm time")
+//        // Show at 3:00 pm
+//        val HOUR_TO_SHOW_PUSH = 15
+//
+//        val calendar = GregorianCalendar.getInstance().apply {
+//            if (get(Calendar.HOUR_OF_DAY) >= HOUR_TO_SHOW_PUSH) {
+//                add(Calendar.DAY_OF_MONTH, 1)
+//            }
+//
+//            set(Calendar.HOUR_OF_DAY, HOUR_TO_SHOW_PUSH)
+//            set(Calendar.MINUTE, 0)
+//            set(Calendar.SECOND, 0)
+//            set(Calendar.MILLISECOND, 0)
+//        }
+//
+//        alarmManager?.setRepeating(
+//            AlarmManager.RTC_WAKEUP,
+//            calendar.timeInMillis,
+//            AlarmManager.INTERVAL_DAY,
+//            alarmPendingIntent
+//        )
 
-        val calendar = GregorianCalendar.getInstance().apply {
-            if (get(Calendar.HOUR_OF_DAY) >= HOUR_TO_SHOW_PUSH) {
-                add(Calendar.DAY_OF_MONTH, 1)
-            }
+        // test
+//        Timber.d("Setting alarm time")
+        // Get the current time and set alarm after 10 seconds from current time
+//        alarmManager?.set(
+//            AlarmManager.RTC_WAKEUP,
+//            System.currentTimeMillis() + 10000,
+//            alarmPendingIntent
+//        )
 
-            set(Calendar.HOUR_OF_DAY, HOUR_TO_SHOW_PUSH)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        // Set the alarm to start at 8:30 a.m.
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 8)
+            set(Calendar.MINUTE, 30)
         }
-
+        // setRepeating() lets you specify a precise custom interval--in this case,
+        // once a day.
         alarmManager?.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
@@ -463,9 +501,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Must deregister BroadcastReceiver when done
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         unregisterAlarmBroadcast()
-        super.onDestroy()
     }
 
     /**

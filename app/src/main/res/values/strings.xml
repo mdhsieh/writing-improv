@@ -62,6 +62,7 @@
     <string name="error_deleted_prompt">Error deleting prompt: %1$s</string>
     <string name="error_delete_all_prompts">You must have at least 1 practice prompt!</string>
     <string name="error_getting_random_prompt">Error getting random prompt. Please check your Internet connection.</string>
+    <string name="error_bot">Error generating challenge.</string>
     <!--    prompts-->
     <string name="prompt_feel">How does this make you feel?</string>
     <string name="prompt_story">What is the story behind this?</string>
@@ -124,8 +125,11 @@
     <string name="request_challenge">Request Challenge</string>
     <string name="label_bot_daily_notification">Daily Notifications</string>
     <string name="label_bot_generate_random">Generate Random Prompts</string>
-    <string name="success_bot">You have a new challenge from writingbot!</string>
-    <string name="error_bot">Error generating challenge.</string>
+<!--    <string name="success_bot">You have a new challenge from writingbot!</string>-->
+    <string name="switch_daily_on">Daily notifications are: on</string>
+    <string name="switch_daily_off">Daily notifications are: off</string>
+    <string name="switch_random_prompts_on">Bot random prompts are: on</string>
+    <string name="switch_random_prompts_off">Bot random prompts are: off</string>
     <!--edit prompts-->
     <string name="add_prompt">Add Prompt</string>
     <string name="hint_new_prompt">Write a new prompt</string>

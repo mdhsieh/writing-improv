@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +41,9 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.ktx.Firebase
 import com.michaelhsieh.writingimprov.home.HomeFragment
 import com.michaelhsieh.writingimprov.home.HomeFragment.Companion.COLLECTION_CHALLENGES
+import com.michaelhsieh.writingimprov.httprequest.JsonRandomWordsAPI
 import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
+import com.michaelhsieh.writingimprov.httprequest.RandomWord
 import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.michaelhsieh.writingimprov.settings.SettingsFragment
 import com.michaelhsieh.writingimprov.testresource.CountingIdlingResourceSingleton
@@ -90,9 +93,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private val BASE_URL:String = "https://api.unsplash.com/"
-    // Email of account linked to writing bot
-    val botId = "michaelhsieh1997@gmail.com"
     val botName = "writingbot"
+    private val RANDOM_WORDS_BASE_URL:String = "https://random-words-api.vercel.app/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -439,12 +441,13 @@ class MainActivity : AppCompatActivity() {
             .add(challengeItem)
             // Show success or error Toasty
             .addOnSuccessListener {
-                Toasty.info(
-                    this,
-                    getString(R.string.success_bot),
-                    Toast.LENGTH_LONG,
-                    true
-                ).show()
+//                Toasty.info(
+//                    this,
+//                    getString(R.string.success_bot),
+//                    Toast.LENGTH_LONG,
+//                    true
+//                ).show()
+                Timber.d("Success creating writing bot challenge")
             }
             .addOnFailureListener() {
                 Toasty.error(
@@ -540,6 +543,10 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     private fun getPromptsFromFirestore(userId: String, minutes:String) {
+        // Check if random prompt should be generated
+        val sp: SharedPreferences = getSharedPreferences(SettingsFragment.KEY_PREFS, Activity.MODE_PRIVATE)
+        val isRandomPromptsAllowed = sp.getBoolean(SettingsFragment.KEY_BOT_RANDOM_PROMPTS, false)
+
         val collection = db.collection(HomeFragment.COLLECTION_USERS)
             .document(userId)
             .collection(HomeFragment.COLLECTION_PROMPTS)
@@ -552,8 +559,12 @@ class MainActivity : AppCompatActivity() {
                 val items: List<PromptItem> =
                     it.toObjects(PromptItem::class.java)
 
-                val prompt = getRandomPrompt(items)
-                getRandomImageUrl(userId, minutes, prompt)
+                if (!isRandomPromptsAllowed) {
+                    val prompt = getRandomPrompt(items)
+                    getRandomImageUrl(userId, minutes, prompt)
+                } else {
+                    generateRandomPrompt(userId, minutes)
+                }
 
             }.addOnFailureListener {
                 Timber.e(it)
@@ -570,6 +581,57 @@ class MainActivity : AppCompatActivity() {
         // generated random number from 0 to last index included
         val randNum = (promptArray.indices).random()
         return promptArray[randNum]
+    }
+
+    /**
+     * Get a random word with its definition as a new subject prompt
+     * for writing bot daily notification.
+     *
+     */
+    private fun generateRandomPrompt(userId: String, minutes:String) {
+        Timber.d("starting get random word")
+
+        // Create Retrofit to get random image
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(RANDOM_WORDS_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val jsonRandomWordsAPI: JsonRandomWordsAPI = retrofit.create(JsonRandomWordsAPI::class.java)
+        val call: Call<List<RandomWord>> = jsonRandomWordsAPI.getRandomWord()
+        call.enqueue(object : retrofit2.Callback<List<RandomWord>> {
+            override fun onResponse(
+                call: Call<List<RandomWord>>,
+                response: Response<List<RandomWord>>
+            ) {
+                if (!response.isSuccessful) {
+                    Timber.d("Code: %s", response.code())
+                    // Show error Toasty
+                    Toasty.error(this@MainActivity,
+                        R.string.error_getting_random_prompt, Toast.LENGTH_LONG,true).show()
+                    return
+                }
+
+                val randomWordList: List<RandomWord>? = response.body()
+                if (randomWordList != null) {
+                    val randomWord = randomWordList[0]
+                    val word = randomWord.word
+                    val definition = randomWord.definition
+                    Timber.d("Got word %s, definition %s", word, definition)
+                    // Show the newly generated prompt
+                    val generatedPrompt = getString(R.string.generated_random_prompt, word, definition)
+                    // Now since done getting prompt, can get image url
+                    getRandomImageUrl(userId, minutes, generatedPrompt)
+                }
+            }
+
+            override fun onFailure(call: Call<List<RandomWord>>, t: Throwable) {
+                Timber.e(t.message)
+                Toasty.error(this@MainActivity,
+                    R.string.error_getting_random_prompt, Toast.LENGTH_LONG,true).show()
+            }
+
+        })
     }
 
     /**
@@ -620,6 +682,10 @@ class MainActivity : AppCompatActivity() {
                     // Set var thumb url to the new image thumbnail URL
                     val thumbUrl = thumbnailUrl.asString
                     Timber.d("finished getting thumbnail url: %s", thumbUrl)
+                    // Get bot ID and writing name here because string resources not available
+                    // before MainActivity created, and don't want to pass too many parameters
+                    // into previous functions
+                    val botId = getString(R.string.bot_email)
                     val writingName = getString(R.string.challenge_from, botName)
                     val username = getUsername()
                     if (username != null) {

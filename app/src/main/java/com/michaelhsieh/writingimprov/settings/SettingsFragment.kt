@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -28,6 +29,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         const val KEY_PREFS = "prefs"
         const val KEY_MIN_MINUTES = "min-minutes"
         const val KEY_MAX_MINUTES = "max-minutes"
+        const val KEY_BOT_DAILY_NOTIFICATIONS = "daily-notifications"
+        const val KEY_BOT_RANDOM_PROMPTS = "random-prompts"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,6 +86,53 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         requestChallengeButton.setOnClickListener {
             (this.activity as MainActivity).generateBotChallenge()
         }
+
+        // Check if daily notification or random prompt settings already set
+        // Default daily notification true
+        val isBotDailyNotifications = sp.getBoolean(KEY_BOT_DAILY_NOTIFICATIONS, true)
+        // Default random prompts false
+        val isBotRandomPrompts = sp.getBoolean(KEY_BOT_RANDOM_PROMPTS, false)
+        // Set the switches to whatever was already set
+        val dailyNotificationSwitch = view.findViewById<SwitchCompat>(R.id.switch_bot_notification)
+        val randomPromptsSwitch = view.findViewById<SwitchCompat>(R.id.switch_bot_random)
+        dailyNotificationSwitch.isChecked = isBotDailyNotifications
+        randomPromptsSwitch.isChecked = isBotRandomPrompts
+        // Change SharedPrefs if switches are toggled
+        dailyNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // The toggle is enabled
+                val editor = sp.edit()
+                editor.putBoolean(KEY_BOT_DAILY_NOTIFICATIONS, true)
+                editor.apply()
+                Toasty.normal(this@SettingsFragment.requireContext(),
+                    R.string.switch_daily_on, Toast.LENGTH_LONG).show()
+            } else {
+                // The toggle is disabled
+                val editor = sp.edit()
+                editor.putBoolean(KEY_BOT_DAILY_NOTIFICATIONS, false)
+                editor.apply()
+                Toasty.normal(this@SettingsFragment.requireContext(),
+                    R.string.switch_daily_off, Toast.LENGTH_LONG).show()
+            }
+        }
+        randomPromptsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // The toggle is enabled
+                val editor = sp.edit()
+                editor.putBoolean(KEY_BOT_RANDOM_PROMPTS, true)
+                editor.apply()
+                Toasty.normal(this@SettingsFragment.requireContext(),
+                    R.string.switch_random_prompts_on, Toast.LENGTH_LONG).show()
+            } else {
+                // The toggle is disabled
+                val editor = sp.edit()
+                editor.putBoolean(KEY_BOT_RANDOM_PROMPTS, false)
+                editor.apply()
+                Toasty.normal(this@SettingsFragment.requireContext(),
+                    R.string.switch_random_prompts_off, Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 
     /**

@@ -92,7 +92,7 @@ class MainActivitySignInPracticeTest {
         )
         textInputEditText.perform(
             scrollTo(),
-            replaceText(resources.getString(R.string.test_username)),
+            replaceText(resources.getString(R.string.test_email)),
             closeSoftKeyboard()
         )
 

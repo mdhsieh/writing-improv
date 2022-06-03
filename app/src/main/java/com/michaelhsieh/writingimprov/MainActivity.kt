@@ -1,18 +1,13 @@
 package com.michaelhsieh.writingimprov
 
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.SharedPreferences
+import android.app.*
+import android.content.*
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -46,7 +41,6 @@ import com.michaelhsieh.writingimprov.httprequest.JsonUnsplashApi
 import com.michaelhsieh.writingimprov.httprequest.RandomWord
 import com.michaelhsieh.writingimprov.httprequest.UnsplashImage
 import com.michaelhsieh.writingimprov.settings.SettingsFragment
-import com.michaelhsieh.writingimprov.testresource.CountingIdlingResourceSingleton
 import es.dmoral.toasty.Toasty
 import retrofit2.Call
 import retrofit2.Response
@@ -56,7 +50,6 @@ import timber.log.Timber
 import java.util.*
 import java.util.zip.ZipException
 import javax.net.ssl.SSLContext
-import kotlin.collections.ArrayList
 
 
 /**
@@ -92,9 +85,26 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
+    // Bot generated challenge
     private val BASE_URL:String = "https://api.unsplash.com/"
     val botName = "writingbot"
     private val RANDOM_WORDS_BASE_URL:String = "https://random-words-api.vercel.app/"
+
+    // Daily notification to show bot generated challenge
+//    private val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+//    private val alarmPendingIntent by lazy {
+////        val intent = Intent(this, AlarmReceiver::class.java)
+//        val intent = Intent(this, BroadcastReceiver::class.java)
+//        PendingIntent.getBroadcast(this, 0, intent, 0)
+//    }
+//    // 10:00 am
+//    private val HOUR_TO_SHOW_PUSH = 10
+    //used for register alarm manager
+    var pendingIntent: PendingIntent? = null
+    //used to store running alarmmanager instance
+    var alarmManager: AlarmManager? = null
+    //Callback function for Alarmmanager event
+    var receiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +149,9 @@ class MainActivity : AppCompatActivity() {
 
         // Obtain the FirebaseAnalytics instance.
         firebaseAnalytics = Firebase.analytics
+
+        // Register AlarmManager BroadcastReceiver.
+        registerAlarmBroadcast();
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -394,6 +407,68 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * Schedule daily push notification by adding new challenge to user's collection
+     * at certain hour every day.
+     *
+     * AlarmManager has pending intent with AlarmReceiver
+     * which is a BroadcastReceiver that creates the challenge
+     */
+    fun registerAlarmBroadcast() {
+        Timber.d("Going to register Intent.RegisterAlramBroadcast")
+
+        //This is the call back function(BroadcastReceiver) which will be call when your
+        //alarm time will reached.
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Timber.d("Your alarm time has been reached")
+                // Now create new daily challenge from bot
+                generateBotChallenge()
+            }
+        }
+
+        // Must register BroadcastReceiver
+        // Register the alarm broadcast here
+        registerReceiver(receiver, IntentFilter("com.michaelhsieh.writingimprov"))
+        pendingIntent = PendingIntent.getBroadcast(this, 0, Intent("com.myalarm.alarmexample"), 0)
+        alarmManager = this.getSystemService(ALARM_SERVICE) as AlarmManager
+        setAlarmTime(pendingIntent)
+    }
+
+    private fun unregisterAlarmBroadcast() {
+        alarmManager!!.cancel(pendingIntent)
+        baseContext.unregisterReceiver(receiver)
+    }
+
+    fun setAlarmTime(alarmPendingIntent:PendingIntent?) {
+        // Show at 10:00 am
+        val HOUR_TO_SHOW_PUSH = 10
+
+        val calendar = GregorianCalendar.getInstance().apply {
+            if (get(Calendar.HOUR_OF_DAY) >= HOUR_TO_SHOW_PUSH) {
+                add(Calendar.DAY_OF_MONTH, 1)
+            }
+
+            set(Calendar.HOUR_OF_DAY, HOUR_TO_SHOW_PUSH)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        alarmManager?.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            alarmPendingIntent
+        )
+    }
+
+    // Must deregister BroadcastReceiver when done
+    override fun onDestroy() {
+        unregisterAlarmBroadcast()
+        super.onDestroy()
+    }
+
+    /**
      * Add challenge from writing bot to current user's collection.
      * This should trigger the listener for challenge notifications
      * @param myEmail Current user email, to use as Firestore ID
@@ -493,11 +568,9 @@ class MainActivity : AppCompatActivity() {
                         if (task.result?.size()!! > 0) {
                             Timber.d("Prompts already exist, get from Firestore")
                             getPromptsFromFirestore(email, minutes)
+                        } else {
+                            Timber.d("No prompts exist")
                         }
-//                        else {
-//                            Timber.d("No prompts exist, create a new prompts collection")
-//                            createDefaultPrompts(email)
-//                        }
                     } else {
                         Timber.d("Error getting practice prompts: %s", task.exception)
                         Toasty.error(this, getString(R.string.error_loading_prompts), Toast.LENGTH_LONG).show()
@@ -505,42 +578,6 @@ class MainActivity : AppCompatActivity() {
                 })
         }
     }
-
-    /**
-     * Creates a new collection in Firestore containing default prompts from String resources.
-     * Then generates a random prompt from this collection.
-     */
-//    private fun createDefaultPrompts(userId:String, botId:String, botName:String, writingName:String, minutes:String) {
-//        val promptArray = arrayOf(
-//            getString(R.string.prompt_feel),
-//            getString(R.string.prompt_story),
-//            getString(R.string.prompt_mystery),
-//            getString(R.string.prompt_action),
-//            getString(R.string.prompt_thriller),
-//            getString(R.string.prompt_comedy)
-//        )
-//
-//        val collection = db.collection(HomeFragment.COLLECTION_USERS)
-//            .document(userId)
-//            .collection(HomeFragment.COLLECTION_PROMPTS)
-//
-//        var counter = 0
-//        for (text in promptArray) {
-//            val promptItem = PromptItem(
-//                id = UUID.randomUUID().toString(),
-//                prompt = text,
-//                timestamp = System.currentTimeMillis() / 1000
-//            )
-//            collection.add(promptItem).addOnCompleteListener {
-//                if (counter == promptArray.size) {
-//                    Timber.d("Done adding default prompts")
-//                    getPromptsFromFirestore(userId)
-//                }
-//                counter += 1
-//            }
-//        }
-//
-//    }
 
     private fun getPromptsFromFirestore(userId: String, minutes:String) {
         // Check if random prompt should be generated
@@ -697,3 +734,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 }
+
+//class AlarmReceiver : BroadcastReceiver() {
+//
+//    // implement showing notification in this function
+//    override fun onReceive(context: Context, intent: Intent) {
+//        generateBotChallenge()
+//    }
+//}

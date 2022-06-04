@@ -9,4 +9,9 @@
     <!--my writing row color-->
     <!-- dark blue -->
     <color name="row">#003c8f</color>
+
+    <!-- rounded button change color in different states give user feedback -->
+    <color name="buttonFocused">#93f6dd</color>
+    <color name="buttonPressed">#29927c</color>
+<!--    <color name="buttonPressed">#808080</color>-->
 </resources>

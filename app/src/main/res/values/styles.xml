@@ -13,7 +13,7 @@
     <style name="ColoredButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textSize">24sp</item>
         <!-- rounded cornders. Background drawable file has same accent color as regular button -->
-        <item name="android:background">@drawable/roundedbutton</item>
+        <item name="android:background">@drawable/button_background</item>
         <!-- padding now that button is rounded -->
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>

@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/button_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_edit_200.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/ic_quill.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/ic_quill_feather.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/roundedbutton.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/roundedbutton_focus.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/roundedbutton_press.xml" value="0.1215" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/author_row.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/challenges_row.xml" value="0.1" />

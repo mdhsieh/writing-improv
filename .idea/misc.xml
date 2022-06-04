@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_edit_200.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/ic_quill.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/roundedbutton.xml" value="0.1215" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/author_row.xml" value="0.11041666666666666" />
@@ -13,7 +15,7 @@
         <entry key="app/src/main/res/layout/fragment_challenge_prompt.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_challenges.xml" value="0.1552652994791667" />
         <entry key="app/src/main/res/layout/fragment_edit_prompts.xml" value="0.13777313232421878" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.17596740722656257" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_my_writing.xml" value="0.2714468629961588" />
         <entry key="app/src/main/res/layout/fragment_my_writing_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_prompt.xml" value="0.165" />
@@ -25,6 +27,8 @@
         <entry key="app/src/main/res/layout/my_writing_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/prompt_row.xml" value="0.11041666666666666" />
         <entry key="app/src/main/res/layout/sent_challenge_row.xml" value="0.1" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1215" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1215" />
       </map>
     </option>
   </component>

@@ -1,8 +1,9 @@
 # Writing Improv
-Have fun with friends and improve your creative writing skills! It's simple:
-1. Pick an image and a writing prompt to send to someone.
-2. They have to write about the prompt with the image before time runs out. But, they don't see the image until they start writing!
-3. You review their writing to see how they did for your challenge.
+Have fun with friends and improve your creative writing skills. It's simple:
+
+1. You get a random image and a writing prompt.
+2. Write about the prompt with the image before time runs out. But, you don't see the image until you start writing.
+3. You review the writing to see how you did for your challenge.
 
 ## Download
 <a href='https://play.google.com/store/apps/details?id=com.michaelhsieh.writingimprov'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height='90'/></a>

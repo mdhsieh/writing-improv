@@ -76,11 +76,11 @@ and in Android Studio set the build variant to `debug`.
 Sync gradle file and run the app.
 
 ## Screenshots
-![Sign In](Capture.PNG)
-![Home](Capture1.PNG)
-![Send Challenge](Capture3.PNG)
-![Writing top view](Capture5.PNG)
-![Writing bottom view](Capture6.PNG)
-![Review sent challenges](Capture7.PNG)
-![Submit a review](Capture9.PNG)
-![My Writing Details](Capture12.PNG)
+![Home](Capture1.png)
+![Practice Prompt](Capture2.png)
+![Writing top view](Capture3.png)
+![Writing bottom view](Capture4.png)
+![My Writing](Capture5.png)
+![Edit prompts](Capture6.png)
+![Send challenge top view](Capture7.png)
+![Send challenge bottom view](Capture8.png)
